@@ -1,0 +1,14 @@
+[Unit]
+Description=Achteruitrij-parkeersensor
+After=multi-user.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/achteruitrijcamera_RPI
+ExecStart=/home/pi/achteruitrijcamera_RPI/.venv/bin/python -m parkeersensor.main
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
