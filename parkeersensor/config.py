@@ -17,7 +17,21 @@ LED_ROOD_PIN = 22      # fysieke pin 15
 # --- Buzzer (actieve buzzer) ---
 BUZZER_PIN = 18        # fysieke pin 12
 
-# --- LCD-display 16x2 met I2C-rugje (PCF8574) ---
+# --- Display ---
+# "st7789"  = 2.0" kleurendisplay GMT020-02-7P (SPI, 240x320)
+# "lcd1602" = 16x2 tekstdisplay met I2C-rugje (PCF8574)
+DISPLAY_TYPE = "st7789"
+
+# GMT020-02-7P (ST7789). SCL -> GPIO 11 (pin 23), SDA -> GPIO 10 (pin 19): vast (SPI0)
+TFT_DC_PIN = 25        # fysieke pin 22
+TFT_RST_PIN = 5        # fysieke pin 29
+TFT_BLK_PIN = 6        # fysieke pin 31; None als BLK op 3.3V zit
+TFT_ROTATIE = 90       # 90 of 270 = liggend (320x240); 0 of 180 = staand
+TFT_INVERT = True      # kleuren negatief? zet dan op False
+TFT_BGR = False        # rood en blauw omgewisseld? zet dan op True
+TFT_SPI_SNELHEID_HZ = 40_000_000  # strepen of storing? probeer 20_000_000
+
+# 16x2 LCD met I2C-rugje (alleen als DISPLAY_TYPE = "lcd1602")
 LCD_I2C_ADRES = 0x27   # soms 0x3F; controleer met: i2cdetect -y 1
 LCD_KOLOMMEN = 16
 LCD_RIJEN = 2
