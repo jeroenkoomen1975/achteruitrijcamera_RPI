@@ -11,7 +11,10 @@ Raspberry Pi 5 is de server en laat de quiz zien op een tv of beamer.
   in een andere volgorde
 - **Snelheid telt:** een goed antwoord levert 500 punten op, plus maximaal 500
   extra punten als je snel antwoordt
+- Een **aftelbalk** loopt leeg zodra een vraag in beeld komt (groen → oranje → rood)
 - Na elke vraag zie je het goede antwoord, wie wat koos, en een korte **uitleg**
+- **Records blijven bewaard en altijd in beeld:** de hoogste score ooit en het
+  snelste goede antwoord ooit, ook na een herstart van de Pi
 - Is er geen tegenstander? Na 15 seconden wachten speel je alleen
 - De lampjes in de knoppen laten zien wat je kunt doen (knipperen = druk om mee
   te doen, je gekozen knop blijft branden, het goede antwoord knippert)
@@ -215,6 +218,27 @@ Alle vragen staan in [`quizserver/vragen.json`](quizserver/vragen.json):
 Na een wijziging: `sudo systemctl restart quiz-server`. Klopt er iets niet in
 het bestand, dan start de server niet en zie je in het logboek welke vraag fout is.
 
+## Records
+
+Onderaan in het midden van het scherm staan altijd twee records:
+
+- 🏆 **Highscore**: de hoogste eindscore ooit, met welke speler die haalde
+- ⚡ **Snelste antwoord**: het snelste góéde antwoord ooit, in seconden
+
+Wordt een record verbroken, dan licht het blok op en zie je op het eindscherm
+"Nieuwe highscore!" of "Nieuw snelheidsrecord!". De records worden direct
+opgeslagen in `data/records.json`, dus ze blijven bewaard als de Pi uitgaat.
+
+Records wissen (bijvoorbeeld aan het begin van een nieuwe open dag):
+
+```bash
+sudo systemctl stop quiz-server
+rm ~/achteruitrijcamera_RPI/quiz/data/records.json
+sudo systemctl start quiz-server
+```
+
+## Instellingen
+
 Tijden en punten (bedenktijd, aantal vragen, enzovoort) pas je aan in
 [`quizserver/config.py`](quizserver/config.py).
 
@@ -253,10 +277,12 @@ quiz/
 │   ├── __main__.py      webserver, WebSocket en UDP
 │   ├── spel.py          spelregels: fases, punten, lampjes
 │   ├── vragen.py        vragen inlezen en kiezen
+│   ├── records.py       highscore en snelste antwoord bewaren
 │   ├── vragen.json      de vragenbank
 │   ├── protocol.py      berichten tussen ESP32 en server
 │   ├── config.py        tijden, punten en poorten
 │   └── static/          het quizscherm (HTML, CSS, JavaScript)
+├── data/              records.json (wordt vanzelf aangemaakt)
 ├── esp32/quizknoppen/   Arduino-code voor de knoppenkasten
 ├── systemd/             automatisch starten van de server
 ├── kiosk/               automatisch openen van het scherm

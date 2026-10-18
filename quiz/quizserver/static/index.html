@@ -64,6 +64,8 @@
       </div>
     </header>
 
+    <div class="tijdbalk" id="tijdbalk" aria-hidden="true"><div class="tijdbalk-vulling"></div></div>
+
     <div class="vraag-kaart">
       <div class="vraag-nr" id="vraag-nr"></div>
       <h2 class="vraag-tekst" id="vraag-tekst"></h2>
@@ -111,8 +113,21 @@
         <div class="einde-detail"></div>
       </div>
     </div>
+    <div class="nieuw-record verborgen" id="nieuw-record"></div>
     <div class="einde-hint" id="einde-hint"></div>
   </section>
+
+  <!-- RECORDS: altijd in beeld -->
+  <aside class="records" id="records">
+    <div class="record" id="record-score">
+      <div class="record-icoon">🏆</div>
+      <div><div class="record-label">Highscore</div><div class="record-waarde">—</div></div>
+    </div>
+    <div class="record" id="record-snelste">
+      <div class="record-icoon">⚡</div>
+      <div><div class="record-label">Snelste antwoord</div><div class="record-waarde">—</div></div>
+    </div>
+  </aside>
 
   <div class="toetsen-hulp verborgen" id="toetsen-hulp">
     Toetsenbord: speler 1 = <b>1 2 3 4</b> · speler 2 = <b>7 8 9 0</b> · <b>Esc</b> = opnieuw · <b>F</b> = volledig scherm · <b>M</b> = geluid aan/uit · <b>H</b> = deze hulp

@@ -15,6 +15,8 @@ from pathlib import Path
 from aiohttp import WSMsgType, web
 
 from . import config, protocol
+from .records import STANDAARD_BESTAND as RECORDS_BESTAND
+from .records import Records
 from .spel import SPELER_NUMMERS, Spel
 from .vragen import STANDAARD_BESTAND, laad_vragen
 
@@ -122,7 +124,7 @@ class _UdpProtocol(asyncio.DatagramProtocol):
 
 
 async def start(args):
-    spel = Spel(laad_vragen(args.vragen))
+    spel = Spel(laad_vragen(args.vragen), records=Records(args.records))
     server = QuizServer(spel)
 
     loop = asyncio.get_running_loop()
@@ -137,7 +139,7 @@ async def start(args):
     await runner.setup()
     await web.TCPSite(runner, "0.0.0.0", args.poort).start()
 
-    log.info("%d vragen geladen", len(spel.bank))
+    log.info("%d vragen geladen, records in %s", len(spel.bank), args.records)
     log.info("Quizscherm: http://localhost:%d  -  knoppen op UDP-poort %d", args.poort, args.udp_poort)
     await server.lus()
 
@@ -147,6 +149,7 @@ def main():
     parser.add_argument("--poort", type=int, default=config.HTTP_POORT, help="HTTP-poort van het scherm")
     parser.add_argument("--udp-poort", type=int, default=config.UDP_POORT, help="UDP-poort voor de knoppen")
     parser.add_argument("--vragen", type=Path, default=STANDAARD_BESTAND, help="pad naar vragen.json")
+    parser.add_argument("--records", type=Path, default=RECORDS_BESTAND, help="waar de records bewaard worden")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", datefmt="%H:%M:%S")
     try:

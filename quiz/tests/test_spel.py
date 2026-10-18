@@ -198,3 +198,58 @@ def test_led_patronen(spel, klok):
     spel.druk(2, 0)
     goed = spel.huidige_vraag.goed
     assert spel.led_patroon(1) == "".join("B" if i == goed else "0" for i in range(4))
+
+
+def test_records_worden_bewaard(klok, tmp_path):
+    from quizserver.records import Records
+
+    pad = tmp_path / "records.json"
+    spel = Spel(laad_vragen(), klok=klok, rng=random.Random(1), records=Records(pad))
+    start_duel(spel, klok)
+    klok.verder(2.5)
+    spel.druk(1, spel.huidige_vraag.goed)
+    klok.verder(1)
+    spel.druk(2, spel.huidige_vraag.goed)  # ook goed, maar trager: geen record
+    assert spel.records.snelste_antwoord["tijd"] == 2.5
+    assert spel.records.snelste_antwoord["speler"] == 1
+    assert spel.nieuwe_records["snelste"]
+
+    for _ in range(len(spel.vragen) - 1):
+        klok.verder(config.UITSLAG_S)
+        spel.tik()
+        klok.verder(config.VRAAG_S)
+        spel.tik()
+    klok.verder(config.UITSLAG_S)
+    spel.tik()
+    assert spel.fase == EINDE
+    hoogste = spel.records.hoogste_score
+    assert hoogste["speler"] == 1 and hoogste["score"] == spel.spelers[1].score
+    assert spel.toestand()["nieuwe_records"] == {"score": True, "snelste": True}
+
+    # Na een herstart zijn de records er nog
+    opnieuw = Records(pad)
+    assert opnieuw.hoogste_score == hoogste
+    assert opnieuw.snelste_antwoord["tijd"] == 2.5
+
+
+def test_record_alleen_bij_verbetering(tmp_path):
+    from quizserver.records import Records
+
+    r = Records(tmp_path / "r.json")
+    assert r.nieuwe_score(1000, 1)
+    assert not r.nieuwe_score(1000, 2)
+    assert not r.nieuwe_score(0, 2)
+    assert r.nieuwe_score(1200, 2)
+    assert r.nieuw_antwoord(3.0, 1)
+    assert not r.nieuw_antwoord(3.2, 2)
+    assert r.nieuw_antwoord(1.1, 2)
+
+
+def test_kapot_recordbestand_geeft_geen_crash(tmp_path):
+    from quizserver.records import Records
+
+    pad = tmp_path / "r.json"
+    pad.write_text("{kapot")
+    r = Records(pad)
+    assert r.hoogste_score is None
+    assert r.nieuwe_score(500, 1)

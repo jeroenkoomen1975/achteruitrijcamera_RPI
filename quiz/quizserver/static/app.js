@@ -51,6 +51,8 @@ function render() {
   const faseVeranderd = !vorige || vorige.fase !== t.fase;
   if (t.fase !== "vraag" && t.fase !== "uitslag") getoondeVraag = -1;
 
+  renderRecords(t);
+
   switch (t.fase) {
     case "lobby":    renderLobby(t); toonScherm("lobby"); break;
     case "aftellen": toonScherm("aftellen"); break;
@@ -66,6 +68,7 @@ function render() {
       goed ? geluid.goed() : geluid.fout();
     }
     if (t.fase === "einde") { geluid.fanfare(); confetti.start(); }
+    if (t.fase === "uitslag" && snelheidsrecordNu(t)) geluid.record();
     if (t.fase !== "einde") confetti.stop();
   }
 
@@ -83,6 +86,27 @@ function render() {
       if (s.klaar && !was.klaar) geluid.meedoen();
     }
   }
+}
+
+// Heeft iemand bij deze vraag net het snelheidsrecord verbroken?
+function snelheidsrecordNu(t) {
+  const rec = t.records.snelste_antwoord;
+  return t.fase === "uitslag" && t.nieuwe_records.snelste && rec != null &&
+    t.spelers.some((s) => s.punten > 0 && s.antwoord_tijd === rec.tijd);
+}
+
+function renderRecords(t) {
+  const { hoogste_score: score, snelste_antwoord: snelste } = t.records;
+  const wie = (nr) => `<span class="wie" data-speler="${nr}">speler ${nr}</span>`;
+  $(".record-waarde", $("#record-score")).innerHTML = score ? `${score.score}${wie(score.speler)}` : "—";
+  $(".record-waarde", $("#record-snelste")).innerHTML =
+    snelste ? `${snelste.tijd.toFixed(2).replace(".", ",")} s${wie(snelste.speler)}` : "—";
+
+  const nieuwScore = t.fase === "einde" && t.nieuwe_records.score;
+  const nieuwSnelste = snelheidsrecordNu(t) || (t.fase === "einde" && t.nieuwe_records.snelste);
+  $("#record-score").classList.toggle("nieuw", nieuwScore);
+  $("#record-snelste").classList.toggle("nieuw", nieuwSnelste);
+  $("#records").classList.toggle("feest", nieuwScore || nieuwSnelste);
 }
 
 function renderLobby(t) {
@@ -142,10 +166,12 @@ function renderVraag(t) {
   }
 
   $("#antwoorden").classList.toggle("onthuld", onthuld);
+  scherm.classList.toggle("onthuld", onthuld);
   $("#timer").classList.toggle("uit", onthuld);
   const uitleg = $("#uitleg");
   uitleg.textContent = onthuld && v.uitleg ? v.uitleg : "";
   uitleg.classList.toggle("zichtbaar", onthuld && !!v.uitleg);
+  pasVraagInKaart();
 
   if (onthuld) {
     $$(".antwoord").forEach((el, i) => {
@@ -200,6 +226,13 @@ function renderEinde(t) {
     titel.innerHTML = `<span class="naam-kleur" data-speler="${t.winnaar}">Speler ${t.winnaar}</span> wint!`;
   }
 
+  const meldingen = [];
+  if (t.nieuwe_records.score) meldingen.push("⭐ Nieuwe highscore!");
+  if (t.nieuwe_records.snelste) meldingen.push("⚡ Nieuw snelheidsrecord!");
+  const banner = $("#nieuw-record");
+  banner.textContent = meldingen.join("   ");
+  banner.classList.toggle("verborgen", meldingen.length === 0);
+
   for (const s of t.spelers) {
     const kaart = $(`.einde-speler[data-speler="${s.nummer}"]`);
     kaart.classList.toggle("verborgen", !s.meedoen);
@@ -207,6 +240,19 @@ function renderEinde(t) {
     kaart.classList.toggle("verloren", t.winnaar > 0 && t.winnaar !== s.nummer);
     telOp($(".einde-score", kaart), s.score, 1500);
     $(".einde-detail", kaart).textContent = `${s.aantal_goed} van de ${t.aantal_vragen} vragen goed`;
+  }
+}
+
+// Maak de vraagtekst kleiner tot alles in de kaart past (lange vragen, of vraag + uitleg).
+function pasVraagInKaart() {
+  const kaart = $(".vraag-kaart");
+  const tekst = $("#vraag-tekst");
+  tekst.style.fontSize = "";
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  let grootte = parseFloat(getComputedStyle(tekst).fontSize);
+  while (kaart.scrollHeight > kaart.clientHeight + 1 && grootte > 1.6 * rem) {
+    grootte -= 0.1 * rem;
+    tekst.style.fontSize = `${grootte}px`;
   }
 }
 
@@ -231,6 +277,16 @@ function frame() {
   requestAnimationFrame(frame);
   if (!toestand) return;
   const rest = resterend();
+
+  const balk = $("#tijdbalk");
+  balk.classList.toggle("uit", toestand.fase !== "vraag");
+  if (toestand.fase === "vraag" && rest != null) {
+    const deel = rest / toestand.duur_ms;  // 1 = net begonnen, 0 = tijd op
+    const vulling = $(".tijdbalk-vulling", balk);
+    vulling.style.transform = `scaleX(${deel})`;
+    vulling.style.setProperty("--balk-kleur", `hsl(${Math.round(deel * 130)}, 85%, 52%)`);
+    balk.classList.toggle("bijna", rest <= 3000);
+  }
 
   if (toestand.fase === "vraag" && rest != null) {
     const sec = Math.ceil(rest / 1000);
@@ -302,6 +358,7 @@ const geluid = (() => {
     nieuweVraag: () => { toon(392, 0, 0.12); toon(587, 0.08, 0.2); },
     goed:       () => { toon(523, 0, 0.15, "triangle"); toon(659, 0.12, 0.15, "triangle"); toon(784, 0.24, 0.35, "triangle"); },
     fout:       () => { toon(220, 0, 0.25, "sawtooth", 0.08); toon(165, 0.2, 0.4, "sawtooth", 0.08); },
+    record:     () => [784, 988, 1175, 1568].forEach((f, i) => toon(f, 0.5 + i * 0.09, 0.25, "square", 0.07)),
     fanfare:    () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => toon(f, i * 0.14, i === 5 ? 0.8 : 0.2, "triangle")),
   };
 })();
@@ -375,6 +432,8 @@ addEventListener("keydown", (e) => {
   } else if (e.key === "m" || e.key === "M") geluidAan = !geluidAan;
   else if (e.key === "h" || e.key === "H") $("#toetsen-hulp").classList.toggle("verborgen");
 });
+
+addEventListener("resize", () => { if (getoondeVraag > 0) pasVraagInKaart(); });
 
 verbind();
 requestAnimationFrame(frame);

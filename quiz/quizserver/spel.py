@@ -13,6 +13,7 @@ import time
 from dataclasses import dataclass
 
 from . import config
+from .records import Records
 from .vragen import Vraag, kies_vragen
 
 LOBBY = "lobby"
@@ -50,8 +51,10 @@ class Speler:
 
 
 class Spel:
-    def __init__(self, vragenbank: list[Vraag], klok=time.monotonic, rng=None):
+    def __init__(self, vragenbank: list[Vraag], klok=time.monotonic, rng=None, records: Records | None = None):
         self.bank = vragenbank
+        self.records = records or Records(pad=None)
+        self.nieuwe_records = {"score": False, "snelste": False}  # verbroken in dit spel
         self.klok = klok
         self.rng = rng or random.Random()
         self.spelers = {n: Speler(n) for n in SPELER_NUMMERS}
@@ -114,6 +117,7 @@ class Spel:
             self.spelers[n].meedoen = True
         self.vragen = kies_vragen(self.bank, config.AANTAL_VRAGEN, self.rng)
         self.vraag_index = -1
+        self.nieuwe_records = {"score": False, "snelste": False}
         self._zet_fase(AFTELLEN, config.AFTELLEN_S)
 
     def _volgende_vraag(self):
@@ -131,7 +135,18 @@ class Spel:
                 speler.punten = config.PUNTEN_GOED + round(config.PUNTEN_SNELHEID_MAX * snelheid)
                 speler.score += speler.punten
                 speler.aantal_goed += 1
+        # Snelste eerst, zodat bij twee goede antwoorden alleen de snelste het record pakt.
+        goed = [s for s in self.deelnemers if s.antwoord == vraag.goed]
+        for speler in sorted(goed, key=lambda s: s.antwoord_tijd):
+            if self.records.nieuw_antwoord(speler.antwoord_tijd, speler.nummer):
+                self.nieuwe_records["snelste"] = True
         self._zet_fase(UITSLAG, config.UITSLAG_S)
+
+    def _naar_einde(self):
+        for speler in sorted(self.deelnemers, key=lambda s: s.score, reverse=True):
+            if self.records.nieuwe_score(speler.score, speler.nummer):
+                self.nieuwe_records["score"] = True
+        self._zet_fase(EINDE, config.EINDE_S)
 
     # --- invoer ---------------------------------------------------------
 
@@ -198,7 +213,7 @@ class Spel:
             if self.vraag_index + 1 < len(self.vragen):
                 self._volgende_vraag()
             else:
-                self._zet_fase(EINDE, config.EINDE_S)
+                self._naar_einde()
         elif self.fase == EINDE:
             self.naar_lobby()
 
@@ -275,5 +290,7 @@ class Spel:
             "vraag": vraag_data,
             "spelers": spelers,
             "winnaar": self.winnaar() if self.fase == EINDE else None,
+            "records": self.records.als_dict(),
+            "nieuwe_records": self.nieuwe_records,
             "categorieen": sorted({(v.categorie_naam, v.icoon) for v in self.bank}),
         }
