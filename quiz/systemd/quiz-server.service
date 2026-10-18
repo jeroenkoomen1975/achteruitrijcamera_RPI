@@ -1,0 +1,15 @@
+[Unit]
+Description=ICT Quiz Battle - quizserver
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/achteruitrijcamera_RPI/quiz
+ExecStart=/home/pi/achteruitrijcamera_RPI/quiz/.venv/bin/python -m quizserver
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

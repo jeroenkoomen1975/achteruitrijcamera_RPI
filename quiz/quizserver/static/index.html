@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ICT Quiz Battle</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="achtergrond" aria-hidden="true"><span></span><span></span><span></span></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div id="geen-verbinding" class="melding verborgen">Geen verbinding met de quizserver… opnieuw proberen</div>
+
+  <!-- LOBBY -->
+  <section id="scherm-lobby" class="scherm">
+    <div class="lobby-kop">
+      <div class="label">Open dag · ICT</div>
+      <h1 class="logo">Quiz <span>Battle</span></h1>
+      <p class="ondertitel">2 spelers · 10 vragen · hoe sneller je antwoordt, hoe meer punten!</p>
+    </div>
+    <div class="chips" id="lobby-chips"></div>
+    <div class="lobby-spelers">
+      <div class="lobby-speler" data-speler="1">
+        <div class="avatar">1</div>
+        <div class="naam">Speler 1</div>
+        <div class="lobby-status"></div>
+        <div class="kast-status"></div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="lobby-speler" data-speler="2">
+        <div class="avatar">2</div>
+        <div class="naam">Speler 2</div>
+        <div class="lobby-status"></div>
+        <div class="kast-status"></div>
+      </div>
+    </div>
+    <div class="lobby-hint" id="lobby-hint"></div>
+  </section>
+
+  <!-- AFTELLEN -->
+  <section id="scherm-aftellen" class="scherm">
+    <div class="aftel-tekst">Maak je klaar!</div>
+    <div class="aftel-getal" id="aftel-getal">3</div>
+    <div class="aftel-uitleg">
+      <div><span class="kleur-a">●</span> A</div>
+      <div><span class="kleur-b">●</span> B</div>
+      <div><span class="kleur-c">●</span> C</div>
+      <div><span class="kleur-d">●</span> D</div>
+    </div>
+    <div class="aftel-tekst klein">Druk op de knop met de kleur van jouw antwoord</div>
+  </section>
+
+  <!-- VRAAG + UITSLAG -->
+  <section id="scherm-vraag" class="scherm">
+    <header class="vraag-kop">
+      <div class="categorie" id="categorie"><span class="icoon"></span><span class="naam"></span></div>
+      <div class="voortgang" id="voortgang"></div>
+      <div class="timer" id="timer">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="timer-bg" cx="50" cy="50" r="44"></circle>
+          <circle class="timer-ring" cx="50" cy="50" r="44" pathLength="100"></circle>
+        </svg>
+        <span class="timer-getal">15</span>
+      </div>
+    </header>
+
+    <div class="vraag-kaart">
+      <div class="vraag-nr" id="vraag-nr"></div>
+      <h2 class="vraag-tekst" id="vraag-tekst"></h2>
+      <div class="uitleg" id="uitleg"></div>
+    </div>
+
+    <div class="antwoorden" id="antwoorden">
+      <div class="antwoord kleur-a" data-knop="0"><div class="letter">A</div><div class="tekst"></div><div class="kiezers"></div></div>
+      <div class="antwoord kleur-b" data-knop="1"><div class="letter">B</div><div class="tekst"></div><div class="kiezers"></div></div>
+      <div class="antwoord kleur-c" data-knop="2"><div class="letter">C</div><div class="tekst"></div><div class="kiezers"></div></div>
+      <div class="antwoord kleur-d" data-knop="3"><div class="letter">D</div><div class="tekst"></div><div class="kiezers"></div></div>
+    </div>
+
+    <footer class="spelers-balk">
+      <div class="speler-kaart" data-speler="1">
+        <div class="avatar">1</div>
+        <div class="info"><div class="naam">Speler 1</div><div class="status"></div></div>
+        <div class="score">0</div>
+        <div class="punten-pop"></div>
+      </div>
+      <div class="speler-kaart rechts" data-speler="2">
+        <div class="avatar">2</div>
+        <div class="info"><div class="naam">Speler 2</div><div class="status"></div></div>
+        <div class="score">0</div>
+        <div class="punten-pop"></div>
+      </div>
+    </footer>
+  </section>
+
+  <!-- EINDE -->
+  <section id="scherm-einde" class="scherm">
+    <div class="trofee" id="trofee">🏆</div>
+    <h1 class="einde-titel" id="einde-titel"></h1>
+    <div class="einde-spelers" id="einde-spelers">
+      <div class="einde-speler" data-speler="1">
+        <div class="avatar">1</div>
+        <div class="naam">Speler 1</div>
+        <div class="einde-score">0</div>
+        <div class="einde-detail"></div>
+      </div>
+      <div class="einde-speler" data-speler="2">
+        <div class="avatar">2</div>
+        <div class="naam">Speler 2</div>
+        <div class="einde-score">0</div>
+        <div class="einde-detail"></div>
+      </div>
+    </div>
+    <div class="einde-hint" id="einde-hint"></div>
+  </section>
+
+  <div class="toetsen-hulp verborgen" id="toetsen-hulp">
+    Toetsenbord: speler 1 = <b>1 2 3 4</b> · speler 2 = <b>7 8 9 0</b> · <b>Esc</b> = opnieuw · <b>F</b> = volledig scherm · <b>M</b> = geluid aan/uit · <b>H</b> = deze hulp
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

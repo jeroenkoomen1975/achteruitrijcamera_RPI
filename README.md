@@ -4,6 +4,9 @@ Een parkeersensor zoals in een auto: een ultrasone sensor meet de afstand tot
 een obstakel achter de auto. Drie LEDs, een buzzer en een 2.0" kleurendisplay
 (GMT020-02-7P) laten zien hoe dichtbij je bent.
 
+> **Ook in deze repo:** [ICT Quiz Battle](quiz/README.md), een quiz voor twee spelers
+> met arcade buttons op twee ESP32's en een Raspberry Pi 5 als server.
+
 ![Voorbeeld van het display: VRIJ, 35 cm, LET OP 15 cm, STOP! 6 cm](docs/scherm_voorbeeld.png)
 
 | Afstand           | LED       | Buzzer                          | Display           |

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=ICT Quiz Battle
+Comment=Quizscherm schermvullend openen
+Exec=/home/pi/achteruitrijcamera_RPI/quiz/kiosk/start_kiosk.sh
+X-GNOME-Autostart-enabled=true

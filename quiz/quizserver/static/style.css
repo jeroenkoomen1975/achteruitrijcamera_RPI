@@ -1,0 +1,387 @@
+/* ICT Quiz Battle - gemaakt voor een tv of beamer (16:9), schaalt mee met het scherm. */
+
+:root {
+  --bg-1: #070b1f;
+  --bg-2: #141a45;
+  --kaart: rgba(255, 255, 255, 0.07);
+  --kaart-rand: rgba(255, 255, 255, 0.14);
+  --tekst: #f4f6ff;
+  --tekst-zacht: #aab2d8;
+
+  --kleur-a: #e5484d;  /* rood   */
+  --kleur-b: #3e7bfa;  /* blauw  */
+  --kleur-c: #23a861;  /* groen  */
+  --kleur-d: #f5b30b;  /* geel   */
+
+  --speler-1: #ff4fa3;
+  --speler-2: #22d3ee;
+  --goed: #3ddc84;
+  --fout: #ff5c5c;
+
+  --rond: 1.2rem;
+}
+
+/* 1rem = 1/54 van de schermhoogte (20px op full-HD), maar nooit breder dan het scherm toelaat */
+html { font-size: min(calc(100vh / 54), calc(100vw / 96)); }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 0%, var(--bg-2), var(--bg-1) 70%);
+  color: var(--tekst);
+  font-family: "Segoe UI", "Noto Sans", "DejaVu Sans", Roboto, system-ui, sans-serif;
+  cursor: none;
+  user-select: none;
+}
+
+.verborgen { display: none !important; }
+
+/* ---------- bewegende achtergrond ---------- */
+.achtergrond { position: fixed; inset: 0; overflow: hidden; z-index: 0; }
+.achtergrond span {
+  position: absolute;
+  width: 45rem; height: 45rem;
+  border-radius: 50%;
+  filter: blur(6rem);
+  opacity: 0.35;
+  animation: zweef 22s ease-in-out infinite alternate;
+}
+.achtergrond span:nth-child(1) { background: #5b3df5; left: -10rem; top: -12rem; }
+.achtergrond span:nth-child(2) { background: #0ea5e9; right: -12rem; bottom: -15rem; animation-delay: -7s; }
+.achtergrond span:nth-child(3) { background: #d9467a; left: 40%; top: 55%; width: 30rem; height: 30rem; opacity: 0.18; animation-delay: -14s; }
+@keyframes zweef {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(8rem, 5rem) scale(1.2); }
+}
+
+#confetti { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+
+.melding {
+  position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
+  z-index: 10;
+  background: #b42318; color: white;
+  padding: 0.8rem 1.6rem; border-radius: 999px;
+  font-size: 1.1rem; font-weight: 600;
+}
+
+.toetsen-hulp {
+  position: fixed; bottom: 0.8rem; left: 50%; transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.5rem 1.2rem; border-radius: 999px;
+  font-size: 0.9rem; color: var(--tekst-zacht);
+}
+.toetsen-hulp b { color: var(--tekst); }
+
+/* ---------- schermen ---------- */
+.scherm {
+  position: absolute; inset: 0;
+  z-index: 1;
+  padding: 2rem 3rem;
+  display: flex; flex-direction: column; align-items: center;
+  opacity: 0; visibility: hidden;
+  transform: scale(0.98);
+  transition: opacity 0.45s ease, transform 0.45s ease, visibility 0.45s;
+}
+.scherm.actief { opacity: 1; visibility: visible; transform: none; }
+
+.avatar {
+  display: grid; place-items: center;
+  width: 3.6rem; height: 3.6rem;
+  border-radius: 50%;
+  font-weight: 800; font-size: 1.8rem;
+  color: #0b1020;
+  background: var(--speler-kleur);
+  box-shadow: 0 0 1.5rem color-mix(in srgb, var(--speler-kleur) 60%, transparent);
+}
+[data-speler="1"] { --speler-kleur: var(--speler-1); }
+[data-speler="2"] { --speler-kleur: var(--speler-2); }
+
+/* ---------- lobby ---------- */
+#scherm-lobby { justify-content: center; gap: 2.4rem; }
+.lobby-kop { text-align: center; }
+.label {
+  display: inline-block;
+  font-size: 1.1rem; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--tekst-zacht);
+  margin-bottom: 0.6rem;
+}
+.logo {
+  font-size: 7.5rem; font-weight: 900; line-height: 1;
+  letter-spacing: -0.03em;
+  text-shadow: 0 0.4rem 2.5rem rgba(91, 61, 245, 0.5);
+}
+.logo span {
+  background: linear-gradient(90deg, var(--speler-1), #a78bfa 50%, var(--speler-2));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.ondertitel { font-size: 1.6rem; color: var(--tekst-zacht); margin-top: 1rem; }
+
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem; max-width: 70rem; }
+.chip {
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  background: var(--kaart); border: 1px solid var(--kaart-rand);
+  font-size: 1.15rem; font-weight: 600;
+  animation: dobber 4s ease-in-out infinite;
+}
+@keyframes dobber { 50% { transform: translateY(-0.35rem); } }
+
+.lobby-spelers { display: flex; align-items: center; gap: 3rem; }
+.vs {
+  font-size: 4rem; font-weight: 900; font-style: italic;
+  color: transparent;
+  -webkit-text-stroke: 0.12rem rgba(255, 255, 255, 0.6);
+}
+.lobby-speler {
+  width: 30rem;
+  padding: 2rem;
+  border-radius: 1.8rem;
+  background: var(--kaart);
+  border: 0.15rem solid var(--kaart-rand);
+  display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+.lobby-speler .avatar { width: 6rem; height: 6rem; font-size: 3rem; }
+.lobby-speler .naam { font-size: 2.2rem; font-weight: 800; }
+.lobby-status { font-size: 1.5rem; font-weight: 700; color: var(--tekst-zacht); animation: knipper 1.4s ease-in-out infinite; }
+.lobby-speler.klaar {
+  border-color: var(--speler-kleur);
+  box-shadow: 0 0 3rem color-mix(in srgb, var(--speler-kleur) 40%, transparent);
+  transform: translateY(-0.5rem);
+}
+.lobby-speler.klaar .lobby-status { color: var(--goed); animation: none; }
+.kast-status { font-size: 1rem; color: var(--tekst-zacht); }
+.kast-status.aan { color: var(--goed); }
+@keyframes knipper { 50% { opacity: 0.35; } }
+
+.lobby-hint { font-size: 1.6rem; font-weight: 600; min-height: 2rem; color: var(--tekst); }
+.lobby-hint b { color: var(--kleur-d); }
+
+/* ---------- aftellen ---------- */
+#scherm-aftellen { justify-content: center; gap: 1.5rem; }
+.aftel-tekst { font-size: 2.6rem; font-weight: 800; }
+.aftel-tekst.klein { font-size: 1.5rem; font-weight: 500; color: var(--tekst-zacht); }
+.aftel-getal {
+  font-size: 18rem; font-weight: 900; line-height: 1;
+  background: linear-gradient(180deg, #fff, #a78bfa);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.aftel-getal.tik { animation: plop 0.9s ease-out; }
+@keyframes plop {
+  0%   { transform: scale(1.6); opacity: 0; }
+  30%  { transform: scale(1);   opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0.4; }
+}
+.aftel-uitleg { display: flex; gap: 2.5rem; font-size: 2rem; font-weight: 800; }
+.aftel-uitleg span { font-size: 2.6rem; vertical-align: middle; }
+.aftel-uitleg .kleur-a { color: var(--kleur-a); }
+.aftel-uitleg .kleur-b { color: var(--kleur-b); }
+.aftel-uitleg .kleur-c { color: var(--kleur-c); }
+.aftel-uitleg .kleur-d { color: var(--kleur-d); }
+
+/* ---------- vraag ---------- */
+#scherm-vraag { gap: 1.4rem; align-items: stretch; }
+
+.vraag-kop { display: flex; align-items: center; justify-content: space-between; height: 5.5rem; }
+.categorie {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.7rem 1.6rem 0.7rem 1rem;
+  border-radius: 999px;
+  background: var(--kaart); border: 1px solid var(--kaart-rand);
+  font-size: 1.6rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.categorie .icoon { font-size: 2.2rem; }
+
+.voortgang { display: flex; gap: 0.6rem; }
+.voortgang span {
+  width: 1.1rem; height: 1.1rem; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  transition: background 0.3s, transform 0.3s;
+}
+.voortgang span.gedaan { background: rgba(255, 255, 255, 0.6); }
+.voortgang span.nu { background: #fff; transform: scale(1.45); box-shadow: 0 0 0.8rem #fff; }
+
+.timer { position: relative; width: 5.5rem; height: 5.5rem; }
+.timer svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.timer circle { fill: none; stroke-width: 9; }
+.timer-bg { stroke: rgba(255, 255, 255, 0.12); }
+.timer-ring { stroke: var(--goed); stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 0; }
+.timer.bijna .timer-ring { stroke: var(--fout); }
+.timer.bijna { animation: hartslag 1s ease-in-out infinite; }
+.timer-getal {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-size: 2.1rem; font-weight: 900;
+}
+.timer.uit { opacity: 0; }
+@keyframes hartslag { 50% { transform: scale(1.1); } }
+
+.vraag-kaart {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem 4rem;
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  color: #11163a;
+  text-align: center;
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.45);
+}
+.vraag-nr { font-size: 1.15rem; font-weight: 800; letter-spacing: 0.25em; text-transform: uppercase; color: #6a6f99; }
+.vraag-tekst { font-size: 3.6rem; font-weight: 800; line-height: 1.2; max-width: 75rem; }
+.vraag-tekst.lang { font-size: 2.8rem; }
+.uitleg {
+  font-size: 1.55rem; line-height: 1.35;
+  max-width: 70rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 1rem;
+  background: #e9fbf1; color: #0f5132;
+  border-left: 0.4rem solid var(--goed);
+  text-align: left;
+  display: none;
+}
+.uitleg.zichtbaar { display: block; animation: omhoog 0.5s ease-out both 0.3s; }
+.uitleg::before { content: "💡 "; }
+
+.antwoorden {
+  display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 7.6rem;
+  gap: 1.2rem;
+}
+.antwoord {
+  position: relative;
+  display: flex; align-items: center; gap: 1.4rem;
+  padding: 0 1.8rem 0 1.2rem;
+  border-radius: var(--rond);
+  background: var(--antwoord-kleur);
+  box-shadow: 0 0.5rem 0 color-mix(in srgb, var(--antwoord-kleur) 60%, black), 0 1rem 2rem rgba(0, 0, 0, 0.35);
+  transition: opacity 0.4s, transform 0.4s, filter 0.4s, box-shadow 0.4s;
+}
+.antwoord.kleur-a { --antwoord-kleur: var(--kleur-a); }
+.antwoord.kleur-b { --antwoord-kleur: var(--kleur-b); }
+.antwoord.kleur-c { --antwoord-kleur: var(--kleur-c); }
+.antwoord.kleur-d { --antwoord-kleur: var(--kleur-d); color: #2b1d00; }
+.letter {
+  flex: none;
+  display: grid; place-items: center;
+  width: 4.8rem; height: 4.8rem;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.22);
+  font-size: 2.6rem; font-weight: 900;
+}
+.antwoord .tekst { font-size: 2.1rem; font-weight: 750; line-height: 1.15; flex: 1; }
+.antwoord .tekst.lang { font-size: 1.65rem; }
+
+/* uitslag */
+.antwoorden.onthuld .antwoord:not(.goed) { opacity: 0.45; filter: grayscale(0.8) brightness(0.7); transform: scale(0.97); }
+.antwoorden.onthuld .antwoord.goed {
+  transform: scale(1.03);
+  box-shadow: 0 0 0 0.35rem #fff, 0 0 3rem var(--antwoord-kleur), 0 1rem 2rem rgba(0, 0, 0, 0.35);
+  animation: wiebel 0.6s ease-out;
+}
+.antwoorden.onthuld .antwoord.goed::after {
+  content: "✓";
+  position: absolute; right: -1rem; top: -1rem;
+  width: 3.2rem; height: 3.2rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: #fff; color: var(--kleur-c);
+  font-size: 2rem; font-weight: 900;
+  box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.4);
+}
+@keyframes wiebel {
+  0% { transform: scale(0.97); } 40% { transform: scale(1.08); } 100% { transform: scale(1.03); }
+}
+.kiezers { display: flex; gap: 0.5rem; }
+.kiezer {
+  display: grid; place-items: center;
+  width: 3rem; height: 3rem; border-radius: 50%;
+  background: var(--speler-kleur); color: #0b1020;
+  font-weight: 900; font-size: 1.5rem;
+  border: 0.2rem solid #fff;
+  animation: plop-in 0.4s ease-out both;
+}
+@keyframes plop-in { from { transform: scale(0); } to { transform: scale(1); } }
+
+/* binnenkomst van een nieuwe vraag */
+.nieuw .vraag-kaart { animation: omhoog 0.5s ease-out both; }
+.nieuw .antwoord { animation: omhoog 0.45s ease-out both; }
+.nieuw .antwoord:nth-child(1) { animation-delay: 0.15s; }
+.nieuw .antwoord:nth-child(2) { animation-delay: 0.22s; }
+.nieuw .antwoord:nth-child(3) { animation-delay: 0.29s; }
+.nieuw .antwoord:nth-child(4) { animation-delay: 0.36s; }
+@keyframes omhoog { from { opacity: 0; transform: translateY(1.5rem); } to { opacity: 1; transform: none; } }
+
+/* spelers onderin */
+.spelers-balk { display: flex; justify-content: space-between; gap: 2rem; height: 5.6rem; }
+.speler-kaart {
+  position: relative;
+  display: flex; align-items: center; gap: 1rem;
+  width: 34rem;
+  padding: 0 1.4rem 0 1rem;
+  border-radius: var(--rond);
+  background: var(--kaart);
+  border: 0.15rem solid color-mix(in srgb, var(--speler-kleur) 55%, transparent);
+  transition: opacity 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.speler-kaart.rechts { flex-direction: row-reverse; text-align: right; padding: 0 1rem 0 1.4rem; }
+.speler-kaart .info { flex: 1; }
+.speler-kaart .naam { font-size: 1.5rem; font-weight: 800; }
+.speler-kaart .status { font-size: 1.15rem; color: var(--tekst-zacht); font-weight: 600; }
+.speler-kaart .score { font-size: 2.6rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+.speler-kaart.uit { opacity: 0.3; }
+.speler-kaart.vast { box-shadow: 0 0 2rem color-mix(in srgb, var(--speler-kleur) 45%, transparent); border-color: var(--speler-kleur); }
+.speler-kaart.vast .status { color: var(--tekst); }
+.speler-kaart.goed .status { color: var(--goed); }
+.speler-kaart.fout .status { color: var(--fout); }
+.punten-pop {
+  position: absolute; top: -2.6rem;
+  font-size: 2.2rem; font-weight: 900; color: var(--goed);
+  text-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.6);
+  opacity: 0;
+}
+.speler-kaart:not(.rechts) .punten-pop { right: 1.4rem; }
+.speler-kaart.rechts .punten-pop { left: 1.4rem; }
+.punten-pop.toon { animation: pop-omhoog 2.2s ease-out both; }
+@keyframes pop-omhoog {
+  0% { opacity: 0; transform: translateY(1rem) scale(0.6); }
+  15% { opacity: 1; transform: translateY(0) scale(1.15); }
+  75% { opacity: 1; transform: translateY(-0.6rem) scale(1); }
+  100% { opacity: 0; transform: translateY(-1.5rem); }
+}
+
+/* ---------- einde ---------- */
+#scherm-einde { justify-content: center; gap: 1.8rem; }
+.trofee { font-size: 9rem; line-height: 1; animation: stuiter 1.6s ease-in-out infinite; filter: drop-shadow(0 0 2rem rgba(245, 179, 11, 0.6)); }
+@keyframes stuiter { 50% { transform: translateY(-1.2rem) rotate(-4deg); } }
+.einde-titel { font-size: 5.5rem; font-weight: 900; text-align: center; }
+.einde-titel .naam-kleur { color: var(--speler-kleur); }
+.einde-spelers { display: flex; gap: 3rem; align-items: flex-end; }
+.einde-speler {
+  width: 26rem; padding: 2.6rem 2rem 2rem;
+  border-radius: 1.8rem;
+  background: var(--kaart); border: 0.15rem solid var(--kaart-rand);
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  transition: transform 0.5s;
+}
+.einde-speler .naam { font-size: 1.8rem; font-weight: 800; }
+.einde-score { font-size: 4.5rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+.einde-detail { font-size: 1.3rem; color: var(--tekst-zacht); }
+.einde-speler.winnaar {
+  transform: scale(1.12);
+  border-color: var(--speler-kleur);
+  box-shadow: 0 0 4rem color-mix(in srgb, var(--speler-kleur) 50%, transparent);
+}
+.einde-speler .avatar { position: relative; }
+.einde-speler.winnaar .avatar::after {
+  content: "👑";
+  position: absolute; left: 50%; top: -2.3rem;
+  transform: translateX(-50%) rotate(12deg);
+  font-size: 2.4rem;
+}
+.einde-speler.verloren { opacity: 0.7; }
+.einde-hint { font-size: 1.5rem; color: var(--tekst-zacht); min-height: 2rem; }
+.einde-hint.knipper { color: var(--tekst); animation: knipper 1.4s ease-in-out infinite; }
