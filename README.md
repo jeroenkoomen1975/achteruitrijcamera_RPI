@@ -194,3 +194,9 @@ python3 -m unittest -v
 | Afstand staat altijd op maximum       | TRIG en ECHO omgewisseld? Spanningsdeler goed aangesloten?         |
 | Afstand springt heen en weer          | Sensor recht naar achteren richten, zet `GEMIDDELDE_VAN` op 5.     |
 | Buzzer piept niet                     | Is het een passieve buzzer? Die heeft een toon nodig; gebruik een actieve buzzer. |
+
+## Ander project in deze repo: Operatie Nachtzender
+
+In de map [`nachtzender/`](nachtzender/README.md) staat een number-station-escaperoom
+voor de open dag (Raspberry Pi 5 + ESP32), met een
+[boodschappenlijstje](nachtzender/BOODSCHAPPENLIJST.md).

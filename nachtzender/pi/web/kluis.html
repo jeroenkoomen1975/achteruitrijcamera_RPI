@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kluis</title>
+<link rel="stylesheet" href="/stijl.css">
+<style>
+  .toetsen { display: grid; grid-template-columns: repeat(3, 80px); gap: 10px; margin: 16px 0; }
+  .toetsen button { height: 70px; font-size: 28px; }
+  #invoer { font-size: 48px; letter-spacing: .3em; min-height: 1.4em; color: var(--accent); }
+</style>
+</head>
+<body>
+  <h1>🔐 De kluis</h1>
+  <div class="paneel">
+    <p class="zwak">Vervangt de ESP32-kluis als die er niet is. Voer de 4 cijfers van de kluiscode in.</p>
+    <div id="invoer"></div>
+    <div class="toetsen" id="toetsen"></div>
+    <div id="melding" style="font-size:24px"></div>
+  </div>
+<script>
+let code = "";
+const invoer = document.getElementById("invoer"), melding = document.getElementById("melding");
+const toon = () => invoer.textContent = code.padEnd(4, "_");
+async function druk(t) {
+  if (t === "*") code = "";
+  else if (t === "#") {
+    const d = await (await fetch("/api/kluis", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ code }) })).json();
+    melding.textContent = (d.open ? "🔓 " : "🔒 ") + d.melding;
+    melding.className = d.open ? "" : "fout";
+    code = "";
+  } else if (code.length < 4) code += t;
+  toon();
+}
+document.getElementById("toetsen").innerHTML = "123456789*0#".split("").map(t => `<button data-t="${t}">${t === "#" ? "✔" : t === "*" ? "✖" : t}</button>`).join("");
+document.getElementById("toetsen").onclick = e => e.target.dataset.t && druk(e.target.dataset.t);
+toon();
+</script>
+</body>
+</html>

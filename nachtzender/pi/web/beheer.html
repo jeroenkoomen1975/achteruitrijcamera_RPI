@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nachtzender beheer</title>
+<link rel="stylesheet" href="/stijl.css">
+</head>
+<body>
+  <h1>🎛️ Spelleider</h1>
+  <div class="paneel">
+    <h2>Nieuwe missie</h2>
+    <form id="form" style="display:flex; gap:8px; flex-wrap:wrap">
+      <input id="team" placeholder="Teamnaam" maxlength="30" required style="flex:1; min-width:200px">
+      <button>▶ Start ronde</button>
+      <button type="button" id="stop">■ Stop</button>
+    </form>
+  </div>
+  <div class="paneel">
+    <h2>Spiekbriefje (niet aan bezoekers laten zien!)</h2>
+    <div id="info" class="zwak">Geen ronde actief.</div>
+  </div>
+  <div class="paneel">
+    <h2>Posten (browserversies)</h2>
+    <p><a href="/radio">/radio</a> netwerken · <a href="/morse">/morse</a> embedded · <a href="/sql">/sql</a> database · <a href="/kluis">/kluis</a> kluis · <a href="/">/</a> scorebord</p>
+  </div>
+  <div class="paneel">
+    <h2>Scores</h2>
+    <button id="wis">Alle scores wissen</button>
+  </div>
+<script>
+const post = (url, data) => fetch(url, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data || {}) });
+document.getElementById("form").onsubmit = async e => {
+  e.preventDefault();
+  await post("/api/ronde", { team: document.getElementById("team").value });
+  document.getElementById("team").value = "";
+  ververs();
+};
+document.getElementById("stop").onclick = () => post("/api/stop").then(ververs);
+document.getElementById("wis").onclick = () => confirm("Echt alle scores wissen?") && post("/api/wis-scores");
+async function ververs() {
+  const d = await (await fetch("/api/beheer")).json();
+  const r = d.ronde, el = document.getElementById("info");
+  if (!r) { el.textContent = "Geen ronde actief."; return; }
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  el.innerHTML = `<table>
+    <tr><th>Ronde</th><td>${r.nummer} – ${esc(r.team)} ${r.opgelost ? "✅ opgelost" : "⏳ bezig"}</td></tr>
+    <tr><th>Cijfertekst (zender)</th><td>${r.cijfertekst.join(" ")}</td></tr>
+    <tr><th>Sleutel (posten 1-4)</th><td>${r.sleutel.join(" ")}</td></tr>
+    <tr><th>Kluiscode</th><td style="color:var(--accent)">${r.code.join(" ")}</td></tr>
+    <tr><th>Pogingen</th><td>${r.pogingen}</td></tr></table>`;
+}
+setInterval(ververs, 2000); ververs();
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Database-post</title>
+<link rel="stylesheet" href="/stijl.css">
+</head>
+<body>
+  <h1>🗄️ Post 4: Databases</h1>
+  <div class="paneel">
+    <p>De inlichtingendienst heeft honderden radioberichten onderschept en in een database gezet.
+    Zoek het bericht dat zender <b>NACHTZENDER</b> stuurde aan agent <b>UIL</b>.</p>
+    <p class="zwak">Tabel <code>uitzendingen</code>: id, tijd, zender, agent, frequentie_khz, bericht</p>
+    <textarea id="query" spellcheck="false">SELECT * FROM uitzendingen LIMIT 10;</textarea>
+    <p><button id="voer">▶ Uitvoeren</button></p>
+    <details class="zwak"><summary>Hint</summary>
+      <p><code>SELECT bericht FROM uitzendingen WHERE agent = 'VOS';</code> geeft alle berichten aan agent VOS.
+      Met <code>AND</code> combineer je twee voorwaarden.</p>
+    </details>
+  </div>
+  <div class="paneel">
+    <div id="uitvoer" class="tabel-scroll zwak">Nog geen resultaat.</div>
+  </div>
+<script>
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+document.getElementById("voer").onclick = async () => {
+  const uit = document.getElementById("uitvoer");
+  const res = await fetch("/api/sql", { method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ query: document.getElementById("query").value }) });
+  const d = await res.json();
+  if (d.fout) { uit.innerHTML = `<span class="fout">${esc(d.fout)}</span>`; return; }
+  uit.innerHTML = `<p>${d.rijen.length} rij(en)</p><table><thead><tr>${d.kolommen.map(k => `<th>${esc(k)}</th>`).join("")}</tr></thead>
+    <tbody>${d.rijen.map(r => `<tr>${r.map(v => `<td>${esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+};
+</script>
+</body>
+</html>
