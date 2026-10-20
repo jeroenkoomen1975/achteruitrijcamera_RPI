@@ -4,6 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nachtzender</title>
 <link rel="stylesheet" href="/stijl.css">
+<link rel="icon" href="data:,">
 <style>
   #cijfers { font-size: clamp(40px, 8vw, 120px); letter-spacing: .15em; white-space: nowrap; }
   .timer { font-size: clamp(36px, 7vw, 80px); color: #fff; }
@@ -13,7 +14,9 @@
 </style>
 </head>
 <body>
-  <h1>📻 NACHTZENDER <span id="live" class="live uit">OFF AIR</span></h1>
+  <h1>📻 NACHTZENDER <span id="live" class="live uit">OFF AIR</span>
+    <button id="geluid" style="float:right; font-size:18px" aria-pressed="false">🔇 Geluid aan</button></h1>
+  <div id="stemmelding" class="zwak" hidden></div>
   <div class="raster">
     <div class="paneel">
       <h2>Onderschept bericht</h2>
@@ -55,6 +58,9 @@ async function ververs() {
     document.getElementById("team").textContent = r ? r.team : "Geen team actief";
     document.getElementById("pogingen").textContent = r ? `Pogingen bij de kluis: ${r.pogingen}` : "";
     basis = r ? { duur: r.duur, sinds: performance.now(), loopt: live } : null;
+    laatste = d;
+    if (bezig && !nogActief(bezigMet) && "speechSynthesis" in window) speechSynthesis.cancel();
+    if (live && geluidAan && !bezig) uitzenden(r.nummer, d.uitzending);
     document.getElementById("posten").innerHTML = d.posten.map((p, i) =>
       `<div class="post"><b>${i + 1}</b><div><div>${esc(p.naam)}</div><div class="zwak">${esc(p.opdracht)}</div></div></div>`).join("");
     document.getElementById("scores").innerHTML = d.scores.map((s, i) =>
@@ -67,6 +73,91 @@ setInterval(() => {
   document.getElementById("timer").textContent = mmss(t);
 }, 250);
 setInterval(ververs, 1000); ververs();
+
+// ---- Geluid in de browser (voor demo's zonder speaker aan de Pi) ----
+// Browsers spelen pas geluid af na een klik, dus het staat standaard uit.
+// Op de Pi zelf praat espeak-ng al; laat de knop daar uit.
+const MELODIE = [[659, .25], [587, .25], [523, .5], [0, .1], [659, .25], [587, .25], [523, .5],
+                 [0, .1], [392, .25], [440, .25], [494, .25], [523, .75]];  // zelfde als omroeper.py
+const PAUZE = 6000;
+let laatste = null, geluidAan = false, bezig = false, bezigMet = null, ctx = null, stem = null;
+
+const nogActief = nummer => geluidAan && laatste && laatste.ronde && !laatste.ronde.opgelost
+  && laatste.ronde.nummer === nummer;
+const wacht = ms => new Promise(r => setTimeout(r, ms));
+async function wachtZolang(ms, nummer) {
+  for (let t = 0; t < ms && nogActief(nummer); t += 100) await wacht(100);
+}
+
+function kiesStem() {
+  const stemmen = speechSynthesis.getVoices().filter(v => v.lang.toLowerCase().startsWith("nl"));
+  stem = stemmen.find(v => /natural|online|google/i.test(v.name)) || stemmen[0] || null;
+  const melding = document.getElementById("stemmelding");
+  melding.hidden = !geluidAan || !!stem || !speechSynthesis.getVoices().length;
+  melding.textContent = "Geen Nederlandse stem gevonden in deze browser. Gebruik Microsoft Edge of Google Chrome, "
+    + "of installeer in Windows de Nederlandse spraak (Instellingen > Tijd en taal > Spraak).";
+}
+if ("speechSynthesis" in window) { speechSynthesis.onvoiceschanged = kiesStem; kiesStem(); }
+
+async function speelMelodie(nummer) {
+  const uit = ctx.createGain();
+  uit.gain.value = 0.25;
+  uit.connect(ctx.destination);
+  let t = ctx.currentTime + 0.05;
+  for (const [freq, duur] of MELODIE) {
+    if (freq) {
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.frequency.value = freq;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(1, t + 0.02);
+      g.gain.setValueAtTime(1, t + duur - 0.03);
+      g.gain.linearRampToValueAtTime(0, t + duur);
+      osc.connect(g).connect(uit);
+      osc.start(t); osc.stop(t + duur);
+    }
+    t += duur;
+  }
+  await wachtZolang((t - ctx.currentTime) * 1000, nummer);
+  uit.disconnect();  // stopt de melodie meteen als de ronde wisselt
+}
+
+function zeg(zin) {
+  return new Promise(klaar => {
+    const u = new SpeechSynthesisUtterance(zin);
+    u.lang = "nl-NL"; u.rate = 0.8; u.pitch = 0.6;
+    if (stem) u.voice = stem;
+    u.onend = u.onerror = klaar;
+    speechSynthesis.speak(u);
+  });
+}
+
+async function uitzenden(nummer, tekst) {
+  bezig = true;
+  bezigMet = nummer;
+  try {
+    await speelMelodie(nummer);
+    // Zin voor zin: lange teksten worden door sommige browsers afgebroken.
+    for (const zin of tekst.split(". ").filter(Boolean)) {
+      if (!nogActief(nummer)) break;
+      if ("speechSynthesis" in window) await zeg(zin);
+      await wacht(250);
+    }
+    await wachtZolang(PAUZE, nummer);
+  } finally {
+    if ("speechSynthesis" in window) speechSynthesis.cancel();
+    bezig = false;
+  }
+}
+
+document.getElementById("geluid").onclick = e => {
+  geluidAan = !geluidAan;
+  ctx = ctx || new AudioContext();
+  ctx.resume();
+  e.target.textContent = geluidAan ? "🔊 Geluid uit" : "🔇 Geluid aan";
+  e.target.setAttribute("aria-pressed", geluidAan);
+  if (!geluidAan && "speechSynthesis" in window) speechSynthesis.cancel();
+  if ("speechSynthesis" in window) kiesStem();
+};
 </script>
 </body>
 </html>

@@ -72,6 +72,14 @@ Open daarna **http://localhost:8080/beheer**, vul een teamnaam in en klik op
 scorebord. De browserversies van de posten werken meteen: `/radio`, `/morse`,
 `/sql` en `/kluis`. Het materiaal voor de Linux-post komt in `pi/posten/linux/`.
 
+**Geluid in de demo:** klik rechtsboven op het scorebord op **🔇 Geluid aan**.
+De browser speelt dan het melodietje af en leest de getallen voor met een
+Nederlandse stem. Dat werkt het mooist in **Microsoft Edge**: die heeft
+natuurlijk klinkende stemmen (Fenna, Maarten). Google Chrome heeft
+"Google Nederlands". Hoor je een Engelse stem die Nederlands probeert, voeg dan
+in Windows de Nederlandse spraak toe via *Instellingen → Tijd en taal → Spraak*.
+Laat deze knop op de Pi zelf uit, want daar praat `espeak-ng` al via de speaker.
+
 ## Installatie op de Raspberry Pi 5
 
 Uitgaande van Raspberry Pi OS (64-bit, met bureaublad). Geef de Pi bij het
