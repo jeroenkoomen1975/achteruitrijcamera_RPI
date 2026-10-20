@@ -1,7 +1,7 @@
 """Maakt per ronde het materiaal voor de posten Linux en Databases.
 
-Linux:     een map met logbestanden; sleuteldeel 3 zit in een verborgen bestand.
-Databases: een SQLite-database met onderschepte berichten; sleuteldeel 4 is
+Linux:     een map met logbestanden; sleutelgroep 3 zit in een verborgen bestand.
+Databases: een SQLite-database met onderschepte berichten; sleutelgroep 4 is
            het bericht van zender NACHTZENDER aan agent UIL.
 """
 
@@ -19,7 +19,7 @@ LEESMIJ = """\
 === MISSIE: LINUX ==========================================================
 
 Je bent ingelogd op de computer van de Nachtzender. Ergens in het archief
-staat SLEUTELDEEL 3. Vind het!
+staat SLEUTELGROEP 3 (vijf cijfers). Vind hem!
 
 Handige commando's:
 
@@ -30,7 +30,7 @@ Handige commando's:
   grep WOORD *.log   zoek WOORD in alle .log-bestanden
   grep -r WOORD .    zoek WOORD in alle bestanden, ook in submappen
 
-Tip: niet elk sleuteldeel dat je vindt is nog geldig...
+Tip: niet elke sleutelgroep die je vindt is nog geldig...
 """
 
 
@@ -57,7 +57,7 @@ def _logbestand(pad, rng, regels=150, extra=None):
     pad.write_text("\n".join(lijnen) + "\n", encoding="utf-8")
 
 
-def maak_linux_post(map_, sleutelcijfer, rng):
+def maak_linux_post(map_, sleutelgroep, rng):
     map_ = Path(map_)
     if map_.exists():
         shutil.rmtree(map_)
@@ -71,13 +71,13 @@ def maak_linux_post(map_, sleutelcijfer, rng):
     # Lokkertjes: oude sleuteldelen die verlopen zijn.
     for i in rng.sample(range(1, 31), 2):
         _logbestand(archief / ("zender_%02d.log" % i), rng,
-                    extra="%s SLEUTELDEEL_3=%d STATUS=VERLOPEN" % (_tijdstempel(rng), rng.randrange(10)))
+                    extra="%s SLEUTELGROEP_3=%s STATUS=VERLOPEN" % (_tijdstempel(rng), _groep(rng)))
 
     _logbestand(archief / "nacht" / ".geheim.log", rng, regels=40,
-                extra="%s SLEUTELDEEL_3=%d STATUS=GELDIG" % (_tijdstempel(rng), sleutelcijfer))
+                extra="%s SLEUTELGROEP_3=%s STATUS=GELDIG" % (_tijdstempel(rng), sleutelgroep))
 
 
-def maak_database_post(pad, sleutelcijfer, rng):
+def maak_database_post(pad, sleutelgroep, rng):
     pad = Path(pad)
     pad.parent.mkdir(parents=True, exist_ok=True)
     tijdelijk = pad.with_suffix(".tmp")
@@ -90,11 +90,11 @@ def maak_database_post(pad, sleutelcijfer, rng):
     # Lokkertjes: wel agent UIL, maar een andere zender (of andersom).
     for zender in rng.sample(ZENDERS[1:], 3):
         rijen.append((_tijdstempel(rng), zender, AGENT, rng.randrange(3000, 9000),
-                      "SLEUTELDEEL 4 = %d" % rng.randrange(10)))
+                      "SLEUTELGROEP 4 = %s" % _groep(rng)))
     for agent in rng.sample(AGENTEN[1:], 3):
         rijen.append((_tijdstempel(rng), ZENDER, agent, rng.randrange(3000, 9000),
-                      "SLEUTELDEEL 4 = %d" % rng.randrange(10)))
-    rijen.append((_tijdstempel(rng), ZENDER, AGENT, 6250, "SLEUTELDEEL 4 = %d" % sleutelcijfer))
+                      "SLEUTELGROEP 4 = %s" % _groep(rng)))
+    rijen.append((_tijdstempel(rng), ZENDER, AGENT, 6250, "SLEUTELGROEP 4 = %s" % sleutelgroep))
     rng.shuffle(rijen)
     rijen.sort(key=lambda r: r[0])
 

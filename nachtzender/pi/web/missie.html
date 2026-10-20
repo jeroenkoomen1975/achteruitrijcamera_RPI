@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missie Nachtzender</title>
+<link rel="stylesheet" href="/stijl.css">
+<link rel="icon" href="data:,">
+<style>
+  .postkaart { display: block; text-decoration: none; color: inherit; }
+  .postkaart:hover .paneel { border-color: var(--accent); }
+  .postkaart .paneel { height: 100%; margin: 0; }
+  .postkaart .ic { font-size: 36px; }
+  .postkaart.ok .paneel { border-color: var(--goed); }
+  .notitie input { font-family: var(--mono); font-size: 22px; letter-spacing: .15em; width: 8.6ch; text-align: center; }
+  .notitie { display: grid; grid-template-columns: max-content repeat(4, max-content); gap: 10px 12px; align-items: center; overflow-x: auto; }
+</style>
+</head>
+<body>
+<main>
+  <h1>🗺️ Operatie Nachtzender</h1>
+  <p class="intro">Elke nacht zendt een geheime zender rijen getallen uit. Wij weten: het is een versleuteld bericht
+  met de <b>code van een kluis</b>. De sleutel is in vier stukken verdeeld en die liggen verspreid over de posten.
+  Vind ze, ontcijfer het bericht en kraak de kluis, voordat de tijd om is!</p>
+
+  <section class="paneel">
+    <h2>Luister naar de zender</h2>
+    <p>Zet het geluid aan en schrijf de 4 groepen van 5 cijfers op. Ze staan ook op het grote scherm.</p>
+    <p><button id="geluid" class="hoofd" aria-pressed="false">🔇 Geluid aan</button>
+      <span class="zwak" id="roep"></span></p>
+    <p id="stemmelding" class="tip" hidden></p>
+    <div class="groepen" id="groepen"></div>
+  </section>
+
+  <section class="paneel">
+    <h2>Jullie missiekaart</h2>
+    <p class="zwak">Noteer hier wat jullie vinden (of op papier). Deze kaart blijft alleen op deze computer staan.</p>
+    <div class="notitie">
+      <span>Bericht</span><input data-k="b1"><input data-k="b2"><input data-k="b3"><input data-k="b4">
+      <span>Sleutel</span><input data-k="s1"><input data-k="s2"><input data-k="s3"><input data-k="s4">
+    </div>
+  </section>
+
+  <h2>De posten</h2>
+  <div class="raster" id="posten"></div>
+</main>
+<script src="/gemeen.js"></script>
+<script>
+NZ.nav("/missie");
+NZ.zender.koppel(document.getElementById("geluid"), document.getElementById("stemmelding"));
+const KAART = [
+  ["/netwerken", "🌐", "1. Netwerken", "Bouw het netwerk en luister het verkeer af."],
+  ["/embedded", "🔌", "2. Embedded / IoT", "Sluit de schakeling aan en ontcijfer de morse."],
+  ["/linux", "🐧", "3. Linux", "Breek in op de computer van de zender."],
+  ["/database", "🗄️", "4. Databases", "Bouw een SQL-query en vind het geheime bericht."],
+  ["/ontcijferen", "🧮", "5. Ontcijferen", "Programmeer de ontcijferaar en lees de kluiscode."],
+  ["/kluis", "🔐", "Finale: de kluis", "Toets de code in en open de kluis."],
+];
+const notities = document.querySelectorAll(".notitie input");
+for (const inp of notities) {
+  inp.maxLength = 5; inp.inputMode = "numeric";
+  try { inp.value = localStorage.getItem("nz-" + inp.dataset.k) || ""; } catch (e) {}
+  inp.oninput = () => { try { localStorage.setItem("nz-" + inp.dataset.k, inp.value); } catch (e) {} };
+}
+let rondeNr = null;
+async function ververs() {
+  let d;
+  try { d = await NZ.status(); } catch (e) { return; }
+  const r = d.ronde;
+  if (r && rondeNr !== null && r.nummer !== rondeNr) {   // nieuwe ronde: kaart leegmaken
+    for (const inp of notities) { inp.value = ""; try { localStorage.removeItem("nz-" + inp.dataset.k); } catch (e) {} }
+  }
+  rondeNr = r ? r.nummer : rondeNr;
+  document.getElementById("roep").textContent = r ? `Roepcode ${r.roepcode} · ${d.stijlen[r.stijl]}` : "Er loopt nog geen missie.";
+  document.getElementById("groepen").innerHTML = r ? r.cijfertekst.map(g => `<span>${g}</span>`).join("") : "";
+  document.getElementById("posten").innerHTML = KAART.map(([href, ic, naam, uitleg], i) => {
+    const ok = r && (i < 4 ? r.gevonden.includes(i + 1) : i === 5 && r.opgelost);
+    return `<a class="postkaart${ok ? " ok" : ""}" href="${href}"><div class="paneel">
+      <div class="ic">${ok ? "✅" : ic}</div><h2>${naam}</h2><p class="zwak">${uitleg}</p></div></a>`;
+  }).join("");
+  NZ.zender.update(d);
+}
+setInterval(ververs, 2000); ververs();
+</script>
+</body>
+</html>

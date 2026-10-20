@@ -1,6 +1,6 @@
 // ===== Nachtzender: RADIO-ONTVANGER (post 1, Netwerken) =====
 // ESP32 + 0,96" OLED (SSD1306, I2C). Haalt elke 2 seconden het bericht op
-// bij de zender en toont de getallen. Het sleuteldeel reist onzichtbaar mee
+// bij de zender en toont de 4 groepen. Sleutelgroep 1 reist onzichtbaar mee
 // in een HTTP-header: dat zien de studenten alleen met Wireshark.
 //
 // Bibliotheken (Library Manager): Adafruit SSD1306, Adafruit GFX, ArduinoJson (v7)
@@ -61,13 +61,24 @@ void loop() {
   if (status == 200) {
     JsonDocument doc;
     if (!deserializeJson(doc, http.getString())) {
-      String groepen;
-      for (JsonVariant g : doc["groepen"].as<JsonArray>()) {
-        if (groepen.length()) groepen += "\n";
-        groepen += g.as<const char*>();
-      }
+      // 4 groepen van 5 cijfers: twee kolommen van 2 regels (tekstgrootte 2 = 12 px per teken)
       bool live = doc["live"];
-      toon(live ? "** LIVE ** NACHTZENDER" : "ruis...", groepen, live ? "Wat reist er nog mee?" : "");
+      scherm.clearDisplay();
+      scherm.setTextColor(SSD1306_WHITE);
+      scherm.setTextSize(1);
+      scherm.setCursor(0, 0);
+      scherm.print(live ? "** LIVE ** NACHTZENDER" : "ruis...");
+      scherm.setTextSize(2);
+      int i = 0;
+      for (JsonVariant g : doc["groepen"].as<JsonArray>()) {
+        scherm.setCursor((i % 2) * 66, 14 + (i / 2) * 20);
+        scherm.print(g.as<const char*>());
+        i++;
+      }
+      scherm.setTextSize(1);
+      scherm.setCursor(0, 56);
+      scherm.print(live ? "Wat reist er nog mee?" : "");
+      scherm.display();
     }
   } else {
     toon("NACHTZENDER", "Geen zender", ("HTTP " + String(status)).c_str());

@@ -7,17 +7,20 @@ versleutelde kluiscode. Teams verzamelen bij vijf posten (één per IT-vak) de
 sleutel, ontcijferen de code en kraken een kluis met een ESP32. Het scorebord
 houdt de snelste teams bij.
 
-| Post | Vak | Wat doen de bezoekers? | Hardware |
+Elke post heeft een eigen pagina in de browser met genummerde stappen en
+**sleepopdrachten**, plus een "echte" variant met hardware voor wie meer wil.
+
+| Post | Vak | In de browser (slepen) | Echte variant |
 |---|---|---|---|
-| 1 | **Netwerken** | Met Wireshark het wifiverkeer van de radio afluisteren en een verborgen HTTP-header vinden | ESP32 + OLED |
-| 2 | **Embedded / IoT** | Zelf een zoemer, led en knop aansluiten en de morse ontcijferen | ESP32 + breadboard |
-| 3 | **Linux** | Via SSH inloggen op de zender en met `ls`, `cat` en `grep` het archief doorzoeken | Pi + laptop |
-| 4 | **Databases** | Met een SQL-query het juiste bericht vinden tussen honderden lokkertjes | laptop (browser) |
-| 5 | **Programmeren** | Een Python-functie afmaken die de one-time pad terugrekent | laptop (Python) |
-| 🔐 | **Finale** | Code intoetsen, de servo draait het slot open | ESP32 + keypad + servo |
+| 1 | **Netwerken** | Netwerk opbouwen, daarna in een mini-Wireshark het live verkeer bekijken en een verborgen HTTP-header vinden | Wireshark op de Pi + ESP32-radio met OLED |
+| 2 | **Embedded / IoT** | Zoemer, led en knop naar de goede pinnen slepen, dan de morse ontcijferen | Zelf aansluiten op een ESP32 + breadboard |
+| 3 | **Linux** | Commando's naar een terminal slepen (of typen) en met `grep` het archief doorzoeken | Inloggen via SSH op de Pi |
+| 4 | **Databases** | Een SQL-query bouwen met blokken en het bericht vinden tussen de lokkertjes | Zelf SQL typen |
+| 5 | **Programmeren** | De ontcijferfunctie afmaken met codeblokken, daarna letters uit het codeboek slepen | `ontcijfer.py` in Thonny |
+| 🔐 | **Finale** | Code intoetsen | ESP32 met keypad en servo als slot |
 
 **Security** loopt als rode draad door alles heen: afluisteren van
-onversleuteld verkeer, inbreken met SSH, en waarom een one-time pad
+onversleuteld verkeer, inbreken op een server, en waarom een one-time pad
 onkraakbaar is.
 
 Wat je moet kopen staat in **[BOODSCHAPPENLIJST.md](BOODSCHAPPENLIJST.md)**;
@@ -25,17 +28,37 @@ de printbare opdrachten staan in **[POSTKAARTEN.md](POSTKAARTEN.md)**.
 
 ## Hoe de puzzel werkt
 
+Het geheime bericht is altijd `KLUIS` + een kluiscode van 4 cijfers. Met een
+codeboek wordt dat 20 cijfers (`01`=A … `26`=Z, `00`=spatie, `30`…`39` = cijfer
+0…9), verdeeld in 4 groepen van 5, zoals echte number stations dat doen:
+
 ```
-kluiscode   4 2 7 1      (geheim, nieuw per ronde)
-sleutel   + 3 0 2 9      (één cijfer per post 1-4)
-            ---------  mod 10
-zender      7 2 9 0      ← dit roept de Pi om
+bericht     K L  U I  S _  1 4  9 9   →  11122 10919 00313 43939
+sleutel   + 74372 69101 74826 14817     (één groep per post 1-4)
+            ------------------------  per cijfer, mod 10
+zender      85494 79010 74139 57746   ← dit roept de Pi om
 ```
 
-Op post 5 rekenen de bezoekers terug: `(7 - 3) % 10 = 4`, enzovoort. Bij elke
-nieuwe ronde kiest de Pi een nieuwe code en sleutel. Het Linux-archief en de
-database worden dan ook opnieuw gemaakt, dus je kunt niet afkijken van het
-vorige team.
+Op post 5 rekenen de bezoekers terug met `(versleuteld - sleutel) % 10` en
+vertalen ze de paren met het codeboek. Bij elke nieuwe ronde kiest de Pi een
+nieuwe code en sleutel, en maakt hij het Linux-archief en de database opnieuw.
+Afkijken van het vorige team heeft dus geen zin.
+
+### De uitzending
+
+Zoals in de Koude Oorlog: herkenningsmelodie, drie keer "Attentie", drie keer
+de roepcode, het aantal groepen, elke groep twee keer, dan alles nog een keer
+en "Einde". Dat duurt ongeveer anderhalve minuut. In het beheerscherm kies je
+per ronde de stijl:
+
+| Stijl | Klinkt als |
+|---|---|
+| Nederlands | "Attentie… drie, vier, negen…" |
+| Koude Oorlog (Duits) | "Achtung… drei, vier, neun…" met "zwo" zoals de Oost-Duitse stations |
+| Iran (Perzisch) | "Tavajjoh…" met Perzische cijfers |
+
+Teams laten elke gevonden sleutelgroep nakijken in het gele vakje op de pagina.
+Dan verschijnt er een ✅ op het scorebord: zo zie je hoe ver ze zijn.
 
 ```
                  wifi "Nachtzender"
@@ -44,9 +67,9 @@ vorige team.
  └────────────┘  GET /api/morse  │    Raspberry Pi 5        │   HDMI 2: Wireshark
  ┌────────────┐◄────────────────►│    nachtzender.py :8080  │──► (post 1)
  │ ESP32 morse│  POST /api/kluis │                          │   USB: speaker
- └────────────┘◄────────────────►│                          │──► 🔊 "zeven… twee…"
+ └────────────┘◄────────────────►│                          │──► 🔊 "Achtung… drei…"
  ┌────────────┐                  └──────────────────────────┘
- │ ESP32 kluis│        laptops: ssh (post 3), /sql (post 4), Python (post 5)
+ │ ESP32 kluis│       laptops: browser op /missie en de postpagina's
  └────────────┘
 ```
 
@@ -67,10 +90,11 @@ cd nachtzender\pi
 python nachtzender.py --stil
 ```
 
-Open daarna **http://localhost:8080/beheer**, vul een teamnaam in en klik op
-*Start ronde*. Open in een ander tabblad **http://localhost:8080/** voor het
-scorebord. De browserversies van de posten werken meteen: `/radio`, `/morse`,
-`/sql` en `/kluis`. Het materiaal voor de Linux-post komt in `pi/posten/linux/`.
+Open daarna **http://localhost:8080/beheer**, vul een teamnaam in, kies een
+zenderstijl en klik op *Start ronde*. Open in andere tabbladen:
+
+- **http://localhost:8080/**: het scorebord voor het grote scherm
+- **http://localhost:8080/missie**: de startpagina voor de teams, met links naar alle posten
 
 **Geluid in de demo:** klik rechtsboven op het scorebord op **🔇 Geluid aan**.
 De browser speelt dan het melodietje af en leest de getallen voor met een
@@ -78,6 +102,7 @@ Nederlandse stem. Dat werkt het mooist in **Microsoft Edge**: die heeft
 natuurlijk klinkende stemmen (Fenna, Maarten). Google Chrome heeft
 "Google Nederlands". Hoor je een Engelse stem die Nederlands probeert, voeg dan
 in Windows de Nederlandse spraak toe via *Instellingen → Tijd en taal → Spraak*.
+Voor de stijl Iran heb je een Perzische stem nodig: Edge heeft die (Dilara, Farid).
 Laat deze knop op de Pi zelf uit, want daar praat `espeak-ng` al via de speaker.
 
 ## Installatie op de Raspberry Pi 5
@@ -104,7 +129,7 @@ sudo usermod -aG wireshark pi      # daarna opnieuw inloggen
 Sluit de USB-speaker aan en test:
 
 ```bash
-espeak-ng -v nl "Hier is de Nachtzender" --stdout | aplay
+espeak-ng -v nl "Attentie, attentie" --stdout | aplay
 ```
 
 Hoor je niets? Kies de speaker als uitvoer via het luidsprekericoon rechtsboven
@@ -194,14 +219,14 @@ slot te doen. Stel de hoeken `DICHT` en `OPEN` af op je kistje.
 4. Op de morsepost de draadjes van zoemer, led en knop weer losmaken.
 5. Klik op *Alle scores wissen*.
 
-**Per team (10-20 minuten)**
-1. Team kiest een naam, jij klikt op *Start ronde*; de zender begint te praten.
-2. Geef de startkaart. Tip: laat het team zich verdelen over de posten.
+**Per team (15-25 minuten)**
+1. Team kiest een naam, jij kiest de zenderstijl en klikt op *Start ronde*; de zender begint te praten.
+2. Geef de startkaart en laat de laptops op `/missie` staan. Tip: laat het team zich verdelen over de posten.
 3. Kluis open → de tijd verschijnt op het scorebord. Snoep pakken, kluis dicht (**A**).
 4. Morsepost weer losmaken voor het volgende team.
 
 **Als er iets misgaat**
-- ESP32 doet het niet? Elke post heeft een browserversie op het beheerscherm.
+- ESP32 doet het niet? Elke post werkt ook helemaal in de browser.
 - Team zit vast? Het spiekbriefje op `/beheer` toont de sleutel en de code.
 - Pi herstart? De scores staan in `/srv/nachtzender/scores.json` en blijven bewaard.
 
@@ -211,17 +236,18 @@ slot te doen. Stel de hoeken `DICHT` en `OPEN` af op je kistje.
 nachtzender/
 ├── pi/
 │   ├── nachtzender.py      webserver + API (start dit)
-│   ├── spel.py             rondes, versleuteling, kluis, scores
+│   ├── spel.py             rondes, codeboek, versleuteling, kluis, scores
 │   ├── posten.py           maakt het Linux-archief en de database per ronde
-│   ├── omroeper.py         melodie + stem via de speaker
+│   ├── terminal.py         veilige mini-terminal voor de Linux-post in de browser
+│   ├── omroeper.py         melodie + stem via de speaker (3 zenderstijlen)
 │   ├── start_open_dag.sh   zender + scorebord in kioskmodus
-│   └── web/                scorebord, beheer en browserversies van de posten
+│   └── web/                scorebord, missie, beheer en de pagina's per post
 ├── esp32/
 │   ├── radio_ontvanger/    post 1
 │   ├── morse_post/         post 2
 │   └── kluis/              finale
 ├── posten-materiaal/
-│   └── ontcijfer.py        startbestand voor post 5 (kopieer naar de laptop)
+│   └── ontcijfer.py        startbestand voor post 5 (gevorderd, kopieer naar de laptop)
 ├── tests/                  python3 -m unittest discover -s tests
 ├── BOODSCHAPPENLIJST.md
 └── POSTKAARTEN.md

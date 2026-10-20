@@ -76,16 +76,14 @@ De studenten bouwen deze schakeling zelf. Koop dus ook wat reserveonderdelen.
 | 🛒 | 1 | Verlengsnoer met 6 stopcontacten | € 10 |
 | 🛒 | 1 | Reserve-ESP32 | € 8 |
 
-## 7. Posten met een laptop
+## 7. Laptops voor de posten
+
+Alle posten werken in de browser, dus elke laptop met Chrome of Edge is goed.
 
 | | Aantal | Onderdeel | Waarvoor |
 |---|---|---|---|
-| 🏫 | 1 | Laptop met browser + SSH (Windows Terminal is genoeg) | Post 3: Linux |
-| 🏫 | 1 | Laptop met browser | Post 4: Databases (`/sql`) |
-| 🏫 | 1 | Laptop met Python + Thonny of VS Code | Post 5: Programmeren |
-
-Weinig laptops? Posten 3 en 4 passen samen op één laptop: SSH in het ene
-venster, de browser in het andere.
+| 🏫 | 3–5 | Laptop met browser | Eén per post (1 t/m 5); met 3 laptops delen een paar posten een laptop |
+| 🏫 | 1 | Laptop met Python + Thonny (optioneel) | Gevorderde variant van post 5 (`ontcijfer.py`) |
 
 ## 8. Aankleding (optioneel, maar het maakt het af)
 

@@ -12,18 +12,58 @@ import threading
 import time
 import wave
 from pathlib import Path
+from xml.sax.saxutils import escape
 
-from spel import AGENT, CIJFERS_NL
+from spel import CIJFERS_NL, GROEPEN
 
 # Herkenningsmelodie (frequentie in Hz, duur in seconden); 0 = stilte.
 MELODIE = [(659, .25), (587, .25), (523, .5), (0, .1), (659, .25), (587, .25), (523, .5),
            (0, .1), (392, .25), (440, .25), (494, .25), (523, .75)]
 
+# Zenderstijlen. 'taal' is voor de browserstem, 'espeak' voor de stem op de Pi.
+STIJLEN = {
+    "nl": {
+        "naam": "Nederlands", "taal": "nl-NL", "espeak": "nl",
+        "cijfers": CIJFERS_NL,
+        "aandacht": "Attentie", "groepen": "Groepen", "herhaal": "Ik herhaal", "einde": "Einde",
+    },
+    "de": {
+        # Oost-Duitse stations zeiden "zwo" in plaats van "zwei": dat verschilt beter van "drei".
+        "naam": "Koude Oorlog (Duits)", "taal": "de-DE", "espeak": "de",
+        "cijfers": ["null", "eins", "zwo", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun"],
+        "aandacht": "Achtung", "groepen": "Gruppen", "herhaal": "Wiederholung", "einde": "Ende",
+    },
+    "fa": {
+        "naam": "Iran (Perzisch)", "taal": "fa-IR", "espeak": "fa",
+        "cijfers": ["صفر", "یک", "دو", "سه", "چهار", "پنج", "شش", "هفت", "هشت", "نه"],
+        "aandacht": "توجه", "groepen": "گروه", "herhaal": "تکرار", "einde": "پایان",
+    },
+}
 
-def uitzendtekst(ronde):
-    cijfers = ". ".join(CIJFERS_NL[c] for c in ronde.cijfertekst)
-    return (f"Hier is de Nachtzender. Bericht voor agent {AGENT.lower()}. "
-            f"{cijfers}. Ik herhaal. {cijfers}. Einde bericht.")
+
+def uitzend_zinnen(ronde):
+    """De uitzending als lijst van zinnen. Elk cijfer is een eigen zin, zodat er
+    tussen de cijfers een pauze valt; een lege string is een lange pauze."""
+    st = STIJLEN.get(ronde.stijl, STIJLEN["nl"])
+    cijfers = st["cijfers"]
+    roep = " ".join(cijfers[int(c)] for c in ronde.roepcode)
+
+    zinnen = [st["aandacht"]] * 3 + [""] + [roep, "", roep, "", roep, ""]
+    zinnen += [f"{st['groepen']} {cijfers[GROEPEN]}", ""]
+    for g in ronde.cijfertekst:
+        for _ in range(2):  # elke groep twee keer, zoals echte stations
+            zinnen += [cijfers[int(c)] for c in g] + [""]
+    zinnen += [st["herhaal"], ""]
+    for g in ronde.cijfertekst:
+        zinnen += [cijfers[int(c)] for c in g] + [""]
+    zinnen += [st["einde"], st["einde"]]
+    return zinnen
+
+
+def ssml(zinnen):
+    """Zinnen naar SSML voor espeak-ng (-m), met echte pauzes tussen de groepen."""
+    delen = ['<break time="900ms"/>' if not z else escape(z) + '. ' for z in zinnen]
+    return "<speak>" + "".join(delen) + "</speak>"
 
 
 def maak_melodie(pad, rate=22050):
@@ -72,11 +112,11 @@ class Omroeper(threading.Thread):
             time.sleep(0.1)
         return True
 
-    def _speel(self, ronde, tekst):
+    def _speel(self, ronde, zinnen):
         """Speel melodie + stem af; breek af zodra er een andere ronde loopt."""
         if not self.geluid:
             # Geen geluid: wacht ongeveer zo lang als het voorlezen zou duren.
-            for _ in range(int(len(tekst) * 0.7)):
+            for _ in range(len(zinnen) * 7):
                 if self.spel.actieve_ronde() is not ronde:
                     return
                 time.sleep(0.1)
@@ -84,8 +124,9 @@ class Omroeper(threading.Thread):
         melodie = subprocess.Popen(self._aplay() + [str(self.melodie)])
         if not self._wacht_op(ronde, [melodie]):
             return
-        stem = subprocess.Popen(["espeak-ng", "-v", "nl", "-s", "120", "-g", "15", "-p", "30",
-                                 "--stdout", tekst], stdout=subprocess.PIPE)
+        stem_naam = STIJLEN.get(ronde.stijl, STIJLEN["nl"])["espeak"]
+        stem = subprocess.Popen(["espeak-ng", "-m", "-v", stem_naam, "-s", "110", "-p", "25",
+                                 "--stdout", ssml(zinnen)], stdout=subprocess.PIPE)
         speaker = subprocess.Popen(self._aplay(), stdin=stem.stdout)
         stem.stdout.close()
         self._wacht_op(ronde, [stem, speaker])
@@ -96,9 +137,10 @@ class Omroeper(threading.Thread):
             if not ronde:
                 time.sleep(1)
                 continue
-            tekst = uitzendtekst(ronde)
-            print(f"[omroeper] ronde {ronde.nummer}: {tekst}")
-            self._speel(ronde, tekst)
+            zinnen = uitzend_zinnen(ronde)
+            print(f"[omroeper] ronde {ronde.nummer} ({ronde.stijl}): roepcode {ronde.roepcode}, "
+                  f"groepen {' '.join(ronde.cijfertekst)}")
+            self._speel(ronde, zinnen)
             # Wacht, maar reageer meteen als er een nieuwe ronde start.
             for _ in range(self.pauze * 10):
                 if self.spel.actieve_ronde() is not ronde:

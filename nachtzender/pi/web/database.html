@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Post 4: Databases</title>
+<link rel="stylesheet" href="/stijl.css">
+<link rel="icon" href="data:,">
+<style>
+  .blokken .tegel { font-family: var(--mono); }
+  .tegel.kw { border-color: #3f78b5; color: #9fd0ff; }
+  .tegel.tabel { border-color: #7a5bb5; color: #d7c3ff; }
+  .tegel.voorw { border-color: #8a6a1d; color: #ffd98a; }
+  #balk { min-height: 74px; background: #0a0d11; }
+  #balk:empty::before { content: "Sleep hier de blokken naartoe om je query te bouwen…"; color: var(--zwak); }
+  .resultaat td { font-family: var(--mono); font-size: 15px; }
+  .resultaat tr.treffer td { background: rgba(255,182,39,.15); }
+</style>
+</head>
+<body>
+<main>
+  <h1>🗄️ Post 4: Databases</h1>
+  <p class="intro">De inlichtingendienst heeft honderden radioberichten onderschept en in een database gezet.
+  Daartussen zit het bericht van zender <b>NACHTZENDER</b> aan agent <b>UIL</b>. Maar pas op: er zitten ook
+  lokberichten tussen!</p>
+
+  <section class="paneel stap" id="stap1">
+    <span class="nr">1</span>
+    <div>
+      <h2>Bouw je query</h2>
+      <p>Een database bevraag je met <b>SQL</b>. Sleep de blokken in de goede volgorde naar de balk. Een blok uit de balk
+      terugslepen haalt het weg. Probeer eerst eens <code>SELECT * FROM uitzendingen</code> om te zien wat erin staat.</p>
+      <p class="zwak">Tabel <code>uitzendingen</code> heeft de kolommen: id, tijd, zender, agent, frequentie_khz, bericht</p>
+      <div class="tegels vak blokken" id="palet">
+        <button class="tegel kw" data-sql="SELECT">SELECT</button>
+        <button class="tegel" data-sql="*">*</button>
+        <button class="tegel" data-sql="bericht">bericht</button>
+        <button class="tegel" data-sql="zender, agent, bericht">zender, agent, bericht</button>
+        <button class="tegel kw" data-sql="FROM">FROM</button>
+        <button class="tegel tabel" data-sql="uitzendingen">uitzendingen</button>
+        <button class="tegel kw" data-sql="WHERE">WHERE</button>
+        <button class="tegel voorw" data-sql="zender = 'NACHTZENDER'">zender = 'NACHTZENDER'</button>
+        <button class="tegel voorw" data-sql="agent = 'UIL'">agent = 'UIL'</button>
+        <button class="tegel voorw" data-sql="agent = 'VOS'">agent = 'VOS'</button>
+        <button class="tegel voorw" data-sql="bericht LIKE '%SLEUTEL%'">bericht LIKE '%SLEUTEL%'</button>
+        <button class="tegel kw" data-sql="AND">AND</button>
+        <button class="tegel kw" data-sql="OR">OR</button>
+        <button class="tegel kw" data-sql="LIMIT 10">LIMIT 10</button>
+        <button class="tegel kw" data-sql="DELETE">DELETE</button>
+      </div>
+      <p style="margin:14px 0 6px"><b>Jouw query:</b></p>
+      <div class="vak blokken" id="balk"></div>
+      <p style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+        <button class="hoofd" id="voer">▶ Uitvoeren</button>
+        <button id="wis">Wis alles</button>
+        <button id="typ">⌨️ Zelf typen</button></p>
+      <textarea id="tekst" hidden spellcheck="false" aria-label="SQL-query"></textarea>
+    </div>
+  </section>
+
+  <section class="paneel stap" id="stap2">
+    <span class="nr">2</span>
+    <div>
+      <h2>Resultaat</h2>
+      <div id="uitvoer" class="tabel-scroll zwak">Nog geen resultaat.</div>
+    </div>
+  </section>
+
+  <section class="paneel stap" id="stap3">
+    <span class="nr">3</span>
+    <div>
+      <h2>Lever de sleutelgroep in</h2>
+      <div id="sleutel"></div>
+      <p class="weetje" style="margin-top:14px"><b>Wist je dat?</b> Elke app die je gebruikt (Instagram, je bank, Magister)
+      slaat zijn gegevens op in een database en vraagt ze op met SQL.</p>
+    </div>
+  </section>
+</main>
+<script src="/gemeen.js"></script>
+<script>
+NZ.nav("/database");
+NZ.sleutelvak(document.getElementById("sleutel"), 4);
+const balk = document.getElementById("balk"), palet = document.getElementById("palet"), tekst = document.getElementById("tekst");
+
+NZ.sleepbaar(document.getElementById("stap1"), (tegel, vak) => {
+  const uitBalk = balk.contains(tegel);
+  if (vak === balk) {
+    // Vanuit het palet een kopie, binnen de balk achteraan zetten.
+    balk.append(uitBalk ? tegel : tegel.cloneNode(true));
+  } else if (vak === palet && uitBalk) {
+    tegel.remove();
+  }
+  tekst.value = query();
+});
+const query = () => [...balk.querySelectorAll(".tegel")].map(t => t.dataset.sql).join(" ");
+
+document.getElementById("wis").onclick = () => { balk.innerHTML = ""; tekst.value = ""; };
+document.getElementById("typ").onclick = e => {
+  tekst.hidden = !tekst.hidden;
+  if (!tekst.hidden) { tekst.value = tekst.value || query(); tekst.focus(); }
+  e.target.textContent = tekst.hidden ? "⌨️ Zelf typen" : "🧩 Terug naar blokken";
+};
+
+document.getElementById("voer").onclick = async () => {
+  const sql = tekst.hidden ? query() : tekst.value;
+  const uit = document.getElementById("uitvoer");
+  if (!sql.trim()) { uit.innerHTML = `<span class="fout-tekst">Je query is nog leeg.</span>`; return; }
+  const d = await NZ.post("/api/sql", { query: sql });
+  if (d.fout) { uit.innerHTML = `<p class="fout-tekst">✖ ${NZ.esc(d.fout)}</p><p class="zwak">Klopt de volgorde? SELECT … FROM … WHERE …</p>`; return; }
+  const iSleutel = d.kolommen.indexOf("bericht");
+  uit.innerHTML = `<p>${d.rijen.length} rij(en)${d.rijen.length >= 200 ? " (alleen de eerste 200)" : ""}</p>
+    <table class="resultaat"><thead><tr>${d.kolommen.map(k => `<th>${NZ.esc(k)}</th>`).join("")}</tr></thead>
+    <tbody>${d.rijen.map(r => `<tr class="${iSleutel >= 0 && String(r[iSleutel]).includes("SLEUTEL") ? "treffer" : ""}">
+      ${r.map(v => `<td>${NZ.esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table>
+    ${d.rijen.length > 1 ? `<p class="zwak" style="margin-top:10px">Meer dan één rij? Maak je WHERE strenger met AND.</p>` : ""}`;
+};
+</script>
+</body>
+</html>

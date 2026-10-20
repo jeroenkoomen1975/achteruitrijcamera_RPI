@@ -7,48 +7,61 @@
 <link rel="icon" href="data:,">
 </head>
 <body>
+<main>
   <h1>🎛️ Spelleider</h1>
-  <div class="paneel">
+  <section class="paneel">
     <h2>Nieuwe missie</h2>
-    <form id="form" style="display:flex; gap:8px; flex-wrap:wrap">
+    <form id="form" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
       <input id="team" placeholder="Teamnaam" maxlength="30" required style="flex:1; min-width:200px">
-      <button>▶ Start ronde</button>
+      <label>Zender: <select id="stijl"></select></label>
+      <button class="hoofd">▶ Start ronde</button>
       <button type="button" id="stop">■ Stop</button>
     </form>
-  </div>
-  <div class="paneel">
-    <h2>Spiekbriefje (niet aan bezoekers laten zien!)</h2>
+  </section>
+  <section class="paneel">
+    <h2>Spiekbriefje <span class="zwak" style="font-size:16px">(niet aan bezoekers laten zien!)</span></h2>
     <div id="info" class="zwak">Geen ronde actief.</div>
-  </div>
-  <div class="paneel">
-    <h2>Posten (browserversies)</h2>
-    <p><a href="/radio">/radio</a> netwerken · <a href="/morse">/morse</a> embedded · <a href="/sql">/sql</a> database · <a href="/kluis">/kluis</a> kluis · <a href="/">/</a> scorebord</p>
-  </div>
-  <div class="paneel">
+  </section>
+  <section class="paneel">
+    <h2>Pagina's</h2>
+    <p><a href="/">Scorebord</a> · <a href="/missie">Missie (teams)</a> · <a href="/netwerken">1 Netwerken</a> ·
+      <a href="/embedded">2 Embedded</a> · <a href="/linux">3 Linux</a> · <a href="/database">4 Database</a> ·
+      <a href="/ontcijferen">5 Ontcijferen</a> · <a href="/kluis">Kluis</a></p>
+  </section>
+  <section class="paneel">
     <h2>Scores</h2>
     <button id="wis">Alle scores wissen</button>
-  </div>
+  </section>
+</main>
+<script src="/gemeen.js"></script>
 <script>
-const post = (url, data) => fetch(url, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data || {}) });
+let stijlenGezet = false;
 document.getElementById("form").onsubmit = async e => {
   e.preventDefault();
-  await post("/api/ronde", { team: document.getElementById("team").value });
+  await NZ.post("/api/ronde", { team: document.getElementById("team").value, stijl: document.getElementById("stijl").value });
   document.getElementById("team").value = "";
   ververs();
 };
-document.getElementById("stop").onclick = () => post("/api/stop").then(ververs);
-document.getElementById("wis").onclick = () => confirm("Echt alle scores wissen?") && post("/api/wis-scores");
+document.getElementById("stop").onclick = () => NZ.post("/api/stop").then(ververs);
+document.getElementById("wis").onclick = () => confirm("Echt alle scores wissen?") && NZ.post("/api/wis-scores");
 async function ververs() {
   const d = await (await fetch("/api/beheer")).json();
+  if (!stijlenGezet) {
+    document.getElementById("stijl").innerHTML = Object.entries(d.stijlen).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
+    stijlenGezet = true;
+  }
   const r = d.ronde, el = document.getElementById("info");
   if (!r) { el.textContent = "Geen ronde actief."; return; }
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  el.innerHTML = `<table>
-    <tr><th>Ronde</th><td>${r.nummer} – ${esc(r.team)} ${r.opgelost ? "✅ opgelost" : "⏳ bezig"}</td></tr>
-    <tr><th>Cijfertekst (zender)</th><td>${r.cijfertekst.join(" ")}</td></tr>
-    <tr><th>Sleutel (posten 1-4)</th><td>${r.sleutel.join(" ")}</td></tr>
-    <tr><th>Kluiscode</th><td style="color:var(--accent)">${r.code.join(" ")}</td></tr>
-    <tr><th>Pogingen</th><td>${r.pogingen}</td></tr></table>`;
+  const posten = [1, 2, 3, 4].map(p => r.gevonden.includes(p) ? `✅${p}` : `⬜${p}`).join(" ");
+  el.innerHTML = `<div class="tabel-scroll"><table>
+    <tr><th>Ronde</th><td>${r.nummer}: ${NZ.esc(r.team)} ${r.opgelost ? "✅ opgelost" : "⏳ bezig"} · ${NZ.esc(d.stijlen[r.stijl])}</td></tr>
+    <tr><th>Roepcode</th><td class="mono">${r.roepcode}</td></tr>
+    <tr><th>Cijfertekst (zender)</th><td class="mono">${r.cijfertekst.join(" ")}</td></tr>
+    <tr><th>Sleutel (post 1 t/m 4)</th><td class="mono">${r.sleutel.join(" ")}</td></tr>
+    <tr><th>Klaartekst</th><td class="mono">${r.klaartekst.join(" ")}</td></tr>
+    <tr><th>Kluiscode</th><td class="mono" style="color:var(--accent); font-size:24px">${r.code}</td></tr>
+    <tr><th>Gevonden</th><td>${posten}</td></tr>
+    <tr><th>Pogingen kluis</th><td>${r.pogingen}</td></tr></table></div>`;
 }
 setInterval(ververs, 2000); ververs();
 </script>

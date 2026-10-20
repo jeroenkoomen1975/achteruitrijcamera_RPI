@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Post 2: Embedded</title>
+<link rel="stylesheet" href="/stijl.css">
+<link rel="icon" href="data:,">
+<style>
+  .bord { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 16px; align-items: stretch; }
+  @media (max-width: 700px) { .bord { grid-template-columns: 1fr; } }
+  .esp { background: #12324f; border: 2px solid #2f6aa0; border-radius: 12px; padding: 14px; font-family: var(--mono);
+    display: flex; flex-direction: column; justify-content: center; text-align: center; gap: 6px; }
+  .esp .chip { background: #0b0f14; border-radius: 6px; padding: 18px 8px; color: var(--zwak); }
+  .pinnen { display: grid; gap: 10px; }
+  .pin { display: grid; grid-template-columns: 110px 1fr; gap: 10px; align-items: center; }
+  .pin .naam { font-family: var(--mono); font-weight: 700; background: var(--paneel2); border-radius: 8px; padding: 10px; text-align: center; }
+  .schema td { font-family: var(--mono); }
+  .lamp { width: 90px; height: 90px; border-radius: 50%; background: #2b1414; border: 3px solid #5a2323; transition: background .05s; }
+  .lamp.aan { background: #ff4d4d; box-shadow: 0 0 40px #ff4d4d; border-color: #ff9a9a; }
+  .afspeel { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+  .grote-knop { width: 110px; height: 110px; border-radius: 50%; font-size: 18px; font-weight: 800;
+    background: #333c47; border: 6px solid #59636f; box-shadow: 0 6px 0 #1b2027; }
+  .grote-knop:active { transform: translateY(4px); box-shadow: 0 2px 0 #1b2027; }
+  .morsetabel { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 6px 14px; font-family: var(--mono); font-size: 22px; }
+  .morsetabel b { color: var(--accent); margin-right: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>🔌 Post 2: Embedded / IoT</h1>
+  <p class="intro">Deze ESP32 kan sleutelgroep 2 in morse seinen, maar hij is nog niet aangesloten! Bouw eerst de schakeling.
+  Op tafel staat de echte ESP32: lukt dat, dan mag je deze stap overslaan.</p>
+
+  <section class="paneel stap" id="stap1">
+    <span class="nr">1</span>
+    <div>
+      <h2>Sluit de onderdelen aan</h2>
+      <p>Sleep elk onderdeel naar de goede pin. Volg het aansluitschema; niet alle onderdelen heb je nodig.</p>
+      <table class="schema" style="max-width:420px; margin-bottom:14px">
+        <thead><tr><th>Onderdeel</th><th>Pin</th></tr></thead>
+        <tbody><tr><td>Knop</td><td>GPIO 27</td></tr><tr><td>Zoemer</td><td>GPIO 25</td></tr><tr><td>Led + weerstand</td><td>GPIO 26</td></tr></tbody>
+      </table>
+      <div class="bord">
+        <div class="esp"><div>ESP32</div><div class="chip">WROOM-32</div><div>⚡ USB</div></div>
+        <div class="pinnen">
+          <div class="pin"><span class="naam">GPIO 25</span><div class="vak" data-max="1" data-goed="zoemer"></div></div>
+          <div class="pin"><span class="naam">GPIO 26</span><div class="vak" data-max="1" data-goed="led"></div></div>
+          <div class="pin"><span class="naam">GPIO 27</span><div class="vak" data-max="1" data-goed="knop"></div></div>
+        </div>
+      </div>
+      <p style="margin-top:14px">Onderdelen:</p>
+      <div class="tegels vak" id="bak">
+        <button class="tegel" data-id="servo" data-thuis="bak">⚙️ Servomotor</button>
+        <button class="tegel" data-id="led" data-thuis="bak">💡 Led + weerstand</button>
+        <button class="tegel" data-id="temp" data-thuis="bak">🌡️ Temperatuursensor</button>
+        <button class="tegel" data-id="knop" data-thuis="bak">🔘 Knop</button>
+        <button class="tegel" data-id="zoemer" data-thuis="bak">🔊 Zoemer</button>
+      </div>
+      <p style="margin-top:12px"><button class="hoofd" id="stroom">⚡ Stroom aan</button>
+        <span class="melding" id="m1" role="status"></span></p>
+    </div>
+  </section>
+
+  <section class="paneel stap dicht" id="stap2">
+    <span class="nr">2</span>
+    <div>
+      <h2>Druk op de knop en luister</h2>
+      <p>De ESP32 seint 5 cijfers. <b>Kort</b> piepje = punt ( · ), <b>lang</b> piepje = streep ( − ).
+      Tussen twee cijfers zit een langere stilte. Schrijf elk cijfer op!</p>
+      <div class="afspeel">
+        <button class="grote-knop" id="knop">DRUK</button>
+        <div class="lamp" id="lamp" aria-hidden="true"></div>
+        <label>Tempo <select id="tempo"><option value="300">langzaam</option><option value="200" selected>normaal</option><option value="120">snel</option></select></label>
+        <span class="melding" id="m2" role="status"></span>
+      </div>
+      <h2 style="margin-top:20px">Morsetabel</h2>
+      <div class="morsetabel">
+        <div><b>0</b>−−−−−</div><div><b>1</b>·−−−−</div><div><b>2</b>··−−−</div><div><b>3</b>···−−</div><div><b>4</b>····−</div>
+        <div><b>5</b>·····</div><div><b>6</b>−····</div><div><b>7</b>−−···</div><div><b>8</b>−−−··</div><div><b>9</b>−−−−·</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="paneel stap dicht" id="stap3">
+    <span class="nr">3</span>
+    <div>
+      <h2>Lever de sleutelgroep in</h2>
+      <div id="sleutel"></div>
+      <p class="weetje" style="margin-top:14px"><b>Wist je dat?</b> In je wasmachine, auto en zelfs je tandenborstel zit een
+      kleine computer zoals deze ESP32. Dat heet <i>embedded</i>: een computer die ingebouwd is in een apparaat.</p>
+    </div>
+  </section>
+</main>
+<script src="/gemeen.js"></script>
+<script>
+NZ.nav("/embedded");
+NZ.sleutelvak(document.getElementById("sleutel"), 2);
+NZ.sleepbaar(document.getElementById("stap1"), (tegel, vak) => {
+  for (const v of document.querySelectorAll(".pin .vak")) v.classList.remove("goed", "fout");
+  NZ.verplaats(tegel, vak);
+});
+
+document.getElementById("stroom").onclick = () => {
+  let goed = 0;
+  for (const vak of document.querySelectorAll(".pin .vak")) {
+    const t = vak.querySelector(".tegel");
+    const ok = t && t.dataset.id === vak.dataset.goed;
+    vak.classList.toggle("goed", !!ok);
+    vak.classList.toggle("fout", !ok);
+    goed += ok ? 1 : 0;
+  }
+  const m = document.getElementById("m1");
+  if (goed === 3) {
+    m.className = "melding goed"; m.textContent = "✔ De schakeling werkt!";
+    document.getElementById("stap1").classList.add("klaar");
+    for (const id of ["stap2", "stap3"]) document.getElementById(id).classList.remove("dicht");
+  } else {
+    m.className = "melding fout"; m.textContent = "✖ Er komt rook uit… kijk nog eens naar het schema.";
+  }
+};
+
+// ---- morse afspelen ----
+const lamp = document.getElementById("lamp");
+let ctx = null, speelt = false;
+async function toon(ms) {
+  const osc = ctx.createOscillator(), g = ctx.createGain();
+  osc.frequency.value = 750; g.gain.value = 0.2;
+  osc.connect(g).connect(ctx.destination);
+  osc.start();
+  lamp.classList.add("aan");
+  await NZ.wacht(ms);
+  osc.stop();
+  lamp.classList.remove("aan");
+}
+document.getElementById("knop").onclick = async () => {
+  if (speelt) return;
+  ctx = ctx || new AudioContext();
+  await ctx.resume();
+  const m = document.getElementById("m2");
+  const d = await (await fetch("/api/morse")).json();
+  if (!d.morse) { m.className = "melding fout"; m.textContent = "Geen missie actief."; return; }
+  m.textContent = "";
+  speelt = true;
+  const eenheid = Number(document.getElementById("tempo").value);
+  for (const teken of d.morse) {
+    if (teken === " ") { await NZ.wacht(eenheid * 4); continue; }
+    await toon(teken === "." ? eenheid : 3 * eenheid);
+    await NZ.wacht(eenheid);
+  }
+  speelt = false;
+};
+</script>
+</body>
+</html>

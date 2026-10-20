@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Post 1: Netwerken</title>
+<link rel="stylesheet" href="/stijl.css">
+<link rel="icon" href="data:,">
+<style>
+  .keten { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: center; margin: 12px 0; }
+  .keten .vak { min-height: 90px; justify-content: center; }
+  .verbinding { text-align: center; color: var(--zwak); font-size: 14px; }
+  .verbinding b { display: block; font-size: 22px; color: var(--tekst); }
+  @media (max-width: 700px) { .keten { grid-template-columns: 1fr; } .verbinding b { transform: rotate(90deg); } }
+  .ws { font-family: var(--mono); font-size: 14px; background: #0a0d11; border: 1px solid var(--rand); border-radius: 8px; }
+  .ws-lijst { max-height: 260px; overflow-y: auto; }
+  .ws table td, .ws table th { padding: 4px 8px; white-space: nowrap; }
+  .ws tbody tr { cursor: pointer; }
+  .ws tbody tr:hover { background: var(--paneel2); }
+  .ws tbody tr.gekozen { background: #1d4f7a; }
+  .ws tr.antw td:nth-child(5) { color: var(--goed); }
+  .ws-detail { border-top: 1px solid var(--rand); padding: 10px; min-height: 120px; }
+  .ws-detail details { margin: 2px 0; }
+  .ws-detail summary { cursor: pointer; }
+  .ws-detail pre { margin: 4px 0 4px 18px; white-space: pre-wrap; word-break: break-all; color: var(--tekst); }
+  .ws-balk { display: flex; gap: 10px; align-items: center; padding: 8px; border-bottom: 1px solid var(--rand); flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<main>
+  <h1>🌐 Post 1: Netwerken</h1>
+  <p class="intro">De radio-ontvanger (een ESP32) vraagt elke 2 seconden over wifi het nieuwste bericht op bij de zender.
+  Op het schermpje zie je alleen getallen, maar in het netwerkverkeer reist meer mee…</p>
+
+  <section class="paneel stap" id="stap1">
+    <span class="nr">1</span>
+    <div>
+      <h2>Bouw het netwerk</h2>
+      <p>Sleep de apparaten op de goede plek. Het bericht gaat van de ontvanger, via de wifi-router, over een kabel naar de server.</p>
+      <div class="keten" id="keten">
+        <div class="vak" data-max="1" data-goed="esp"><span class="vak-label">Luistert mee via wifi</span></div>
+        <div class="verbinding"><b>⇢</b>wifi</div>
+        <div class="vak" data-max="1" data-goed="router"><span class="vak-label">Verbindt alle apparaten</span></div>
+        <div class="verbinding"><b>⇢</b>netwerkkabel</div>
+        <div class="vak" data-max="1" data-goed="pi"><span class="vak-label">De server (zender)</span></div>
+      </div>
+      <div class="tegels vak" id="bak1">
+        <button class="tegel" data-id="pi" data-thuis="bak1">🖥️ Raspberry Pi</button>
+        <button class="tegel" data-id="koffie" data-thuis="bak1">☕ Koffiezetapparaat</button>
+        <button class="tegel" data-id="esp" data-thuis="bak1">📻 ESP32-radio</button>
+        <button class="tegel" data-id="printer" data-thuis="bak1">🖨️ Printer</button>
+        <button class="tegel" data-id="router" data-thuis="bak1">📶 Wifi-router</button>
+      </div>
+      <p style="margin-top:12px"><button class="hoofd" id="test">🔌 Verbinding testen</button>
+        <span class="melding" id="m1" role="status"></span></p>
+    </div>
+  </section>
+
+  <section class="paneel stap dicht" id="stap2">
+    <span class="nr">2</span>
+    <div>
+      <h2>Luister het verkeer af</h2>
+      <p>Hieronder zie je de echte berichten die over het netwerk gaan, net als in <b>Wireshark</b>.
+      Klik op een <b>antwoord</b> van de zender (<code>HTTP 200 OK</code>) en klap de lagen open. Bekijk vooral de <b>headers</b>:
+      staat daar iets wat niet op het schermpje van de radio komt?</p>
+      <div class="ws">
+        <div class="ws-balk"><span>Filter: <code>http</code></span>
+          <button id="pauze">⏸ Pauze</button><span class="zwak" id="aantal"></span></div>
+        <div class="ws-lijst"><table>
+          <thead><tr><th>Nr</th><th>Tijd</th><th>Van</th><th>Naar</th><th>Protocol</th><th>Info</th></tr></thead>
+          <tbody id="pakketten"></tbody></table></div>
+        <div class="ws-detail" id="detail"><span class="zwak">Klik op een pakket om de inhoud te zien.</span></div>
+      </div>
+      <div class="tip">Echte Wireshark? Die staat op het tweede scherm van de Pi. Kies <code>wlan0</code>, typ als filter
+      <code>http</code> en klik op een regel met <code>200 OK</code>.</div>
+    </div>
+  </section>
+
+  <section class="paneel stap dicht" id="stap3">
+    <span class="nr">3</span>
+    <div>
+      <h2>Lever de sleutelgroep in</h2>
+      <div id="sleutel"></div>
+      <p class="weetje" style="margin-top:14px"><b>Wist je dat?</b> Alles wat via <code>http</code> (zonder s) gaat, kan iedereen op
+      hetzelfde netwerk meelezen. Daarom gebruiken websites <code>https</code>: dan is alles versleuteld.</p>
+    </div>
+  </section>
+</main>
+<script src="/gemeen.js"></script>
+<script>
+NZ.nav("/netwerken");
+NZ.sleutelvak(document.getElementById("sleutel"), 1);
+NZ.sleepbaar(document.getElementById("stap1"), (tegel, vak) => {
+  for (const v of document.querySelectorAll("#keten .vak")) v.classList.remove("goed", "fout");
+  NZ.verplaats(tegel, vak);
+});
+
+document.getElementById("test").onclick = () => {
+  let goed = 0;
+  for (const vak of document.querySelectorAll("#keten .vak")) {
+    const t = vak.querySelector(".tegel");
+    const ok = t && t.dataset.id === vak.dataset.goed;
+    vak.classList.toggle("goed", !!ok);
+    vak.classList.toggle("fout", !ok);
+    goed += ok ? 1 : 0;
+  }
+  const m = document.getElementById("m1");
+  if (goed === 3) {
+    m.className = "melding goed"; m.textContent = "✔ Verbinding! Het verkeer loopt.";
+    document.getElementById("stap1").classList.add("klaar");
+    for (const id of ["stap2", "stap3"]) document.getElementById(id).classList.remove("dicht");
+    start();
+  } else {
+    m.className = "melding fout"; m.textContent = `✖ ${3 - goed} apparaat/apparaten staan nog niet goed.`;
+  }
+};
+
+// ---- mini-Wireshark: haalt echt /api/radio op en toont verzoek + antwoord ----
+const pakketten = [];
+let nr = 0, gepauzeerd = false, gestart = false, gekozen = null;
+const t0 = performance.now();
+const tijd = () => ((performance.now() - t0) / 1000).toFixed(3);
+
+async function vang() {
+  if (gepauzeerd) return;
+  const verzoek = { nr: ++nr, tijd: tijd(), van: "esp32-radio", naar: "nachtzender", protocol: "HTTP",
+    info: "GET /api/radio HTTP/1.1",
+    eerste: "GET /api/radio HTTP/1.1",
+    headers: [["Host", location.host], ["User-Agent", "ESP32HTTPClient"], ["Connection", "close"]], body: "" };
+  let res;
+  try { res = await fetch("/api/radio", { cache: "no-store" }); } catch (e) { return; }
+  const body = await res.text();
+  const headers = [...res.headers.entries()].map(([k, v]) => [k.replace(/(^|-)\w/g, c => c.toUpperCase()), v]);
+  const antwoord = { nr: ++nr, tijd: tijd(), van: "nachtzender", naar: "esp32-radio", protocol: "HTTP", antw: true,
+    info: `HTTP/1.0 ${res.status} OK (application/json)`, eerste: `HTTP/1.0 ${res.status} OK`, headers, body };
+  pakketten.push(verzoek, antwoord);
+  while (pakketten.length > 40) pakketten.shift();
+  teken();
+}
+
+function teken() {
+  document.getElementById("pakketten").innerHTML = pakketten.map(p =>
+    `<tr data-nr="${p.nr}" class="${p.antw ? "antw" : ""}${gekozen === p.nr ? " gekozen" : ""}"><td>${p.nr}</td><td>${p.tijd}</td>
+     <td>${p.van}</td><td>${p.naar}</td><td>${p.protocol}</td><td>${NZ.esc(p.info)}</td></tr>`).join("");
+  document.getElementById("aantal").textContent = `${nr} pakketten gevangen`;
+}
+
+document.getElementById("pakketten").onclick = e => {
+  const rij = e.target.closest("tr");
+  if (!rij) return;
+  const p = pakketten.find(x => x.nr === Number(rij.dataset.nr));
+  if (!p) return;
+  gekozen = p.nr;
+  teken();
+  const lengte = p.body.length + p.headers.reduce((n, [k, v]) => n + k.length + v.length + 4, 0) + 60;
+  document.getElementById("detail").innerHTML = `
+    <details><summary>Frame ${p.nr}: ${lengte} bytes</summary><pre>Gevangen op tijdstip ${p.tijd} s</pre></details>
+    <details><summary>802.11 (wifi): ${p.van} → ${p.naar}</summary><pre>Het radiosignaal tussen de ESP32 en de router.</pre></details>
+    <details><summary>Internet Protocol (IP)</summary><pre>Adressen zorgen dat het bericht bij het juiste apparaat aankomt.</pre></details>
+    <details><summary>Transmission Control Protocol (TCP), poort 8080</summary><pre>Zorgt dat alle stukjes heel en op volgorde aankomen.</pre></details>
+    <details open><summary><b>Hypertext Transfer Protocol (HTTP)</b></summary>
+      <details><summary>${NZ.esc(p.eerste)}</summary><pre>De eerste regel: ${p.antw ? "het antwoord van de server (200 = gelukt)" : "het verzoek: geef mij /api/radio"}</pre></details>
+      <details><summary>Headers (${p.headers.length})</summary><pre>${p.headers.map(([k, v]) => NZ.esc(`${k}: ${v}`)).join("\n")}</pre></details>
+      ${p.body ? `<details><summary>Inhoud (JSON)</summary><pre>${NZ.esc(p.body)}</pre></details>` : ""}
+    </details>`;
+};
+document.getElementById("pauze").onclick = e => {
+  gepauzeerd = !gepauzeerd;
+  e.target.textContent = gepauzeerd ? "▶ Verder" : "⏸ Pauze";
+};
+function start() {
+  if (gestart) return;
+  gestart = true;
+  vang();
+  setInterval(vang, 2000);
+}
+</script>
+</body>
+</html>

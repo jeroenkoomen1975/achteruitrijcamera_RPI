@@ -6,158 +6,96 @@
 <link rel="stylesheet" href="/stijl.css">
 <link rel="icon" href="data:,">
 <style>
-  #cijfers { font-size: clamp(40px, 8vw, 120px); letter-spacing: .15em; white-space: nowrap; }
-  .timer { font-size: clamp(36px, 7vw, 80px); color: #fff; }
-  .ondertitel { min-height: 3em; font-size: 22px; }
-  .post { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--rand); }
-  .post b { color: var(--accent); min-width: 1.5em; }
+  main { max-width: none; padding: 20px 24px; }
+  .kop { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .kop h1 { margin: 0; color: var(--accent); letter-spacing: .08em; font-size: clamp(30px, 4vw, 54px); }
+  .kop .rechts { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .groot { grid-template-columns: 3fr 2fr; }
+  @media (max-width: 900px) { .groot { grid-template-columns: 1fr; } }
+  .roep { font-family: var(--mono); font-size: 22px; color: var(--zwak); margin-bottom: 14px; }
+  .roep b { color: var(--tekst); letter-spacing: .2em; }
+  .groepen { font-size: clamp(40px, 5.4vw, 96px); display: grid; grid-template-columns: repeat(2, max-content); gap: 4px 6vw; }
+  .timer { font-family: var(--mono); font-size: clamp(54px, 7vw, 110px); line-height: 1.1; }
+  .team { font-size: 32px; font-weight: 700; }
+  .voortgang { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 16px; }
+  .vg { text-align: center; padding: 10px 4px; border-radius: 10px; background: var(--paneel2); border: 2px solid var(--rand); font-size: 15px; }
+  .vg .ic { font-size: 28px; display: block; }
+  .vg.ok { border-color: var(--goed); background: rgba(61,220,132,.1); }
+  .stijl { padding: 4px 12px; border-radius: 999px; background: var(--paneel2); border: 1px solid var(--rand); font-size: 16px; }
 </style>
 </head>
 <body>
-  <h1>📻 NACHTZENDER <span id="live" class="live uit">OFF AIR</span>
-    <button id="geluid" style="float:right; font-size:18px" aria-pressed="false">🔇 Geluid aan</button></h1>
-  <div id="stemmelding" class="zwak" hidden></div>
-  <div class="raster">
-    <div class="paneel">
+<main>
+  <div class="kop">
+    <h1>📻 NACHTZENDER</h1><span id="live" class="live uit">OFF AIR</span>
+    <div class="rechts"><span id="stijl" class="stijl" hidden></span>
+      <button id="geluid" aria-pressed="false">🔇 Geluid aan</button></div>
+  </div>
+  <p id="stemmelding" class="tip" hidden></p>
+  <div class="raster groot">
+    <section class="paneel">
       <h2>Onderschept bericht</h2>
-      <div class="cijfers" id="cijfers">- - - -</div>
-      <div class="ondertitel zwak" id="uitzending">Wachten op de volgende uitzending…</div>
-    </div>
-    <div class="paneel">
+      <div class="roep" id="roep">Wachten op de volgende uitzending…</div>
+      <div class="groepen" id="groepen"></div>
+    </section>
+    <section class="paneel">
       <h2>Missie</h2>
-      <div id="team" style="font-size:28px">Geen team actief</div>
+      <div class="team" id="team">Geen team actief</div>
       <div class="timer" id="timer">00:00</div>
-      <div class="zwak" id="pogingen"></div>
-    </div>
+      <div class="voortgang" id="voortgang"></div>
+    </section>
   </div>
   <div class="raster">
-    <div class="paneel">
-      <h2>Posten</h2>
-      <div class="zwak" style="margin-bottom:8px">Verzamel de 4 sleutelcijfers, ontcijfer het bericht en open de kluis.</div>
-      <div id="posten"></div>
-    </div>
-    <div class="paneel">
+    <section class="paneel">
+      <h2>Zo werkt het</h2>
+      <ol style="margin:0; padding-left: 1.3em; font-size: 20px">
+        <li>Luister naar de zender en noteer de <b>4 groepen</b> van 5 cijfers.</li>
+        <li>Haal bij post 1 t/m 4 de <b>4 sleutelgroepen</b> op.</li>
+        <li>Ontcijfer het bericht bij post 5.</li>
+        <li>Kraak de kluis. De klok loopt!</li>
+      </ol>
+    </section>
+    <section class="paneel">
       <h2>Snelste agenten</h2>
       <table><thead><tr><th>#</th><th>Team</th><th>Tijd</th><th>Pogingen</th></tr></thead><tbody id="scores"></tbody></table>
-    </div>
+    </section>
   </div>
+</main>
+<script src="/gemeen.js"></script>
 <script>
-const mmss = s => String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(Math.floor(s % 60)).padStart(2, "0");
-const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const POSTEN = [["🌐", "Netwerken"], ["🔌", "Embedded"], ["🐧", "Linux"], ["🗄️", "Database"], ["🔐", "Kluis"]];
 let basis = null;
+NZ.zender.koppel(document.getElementById("geluid"), document.getElementById("stemmelding"));
+
 async function ververs() {
-  try {
-    const d = await (await fetch("/api/status")).json();
-    const r = d.ronde;
-    const live = r && !r.opgelost;
-    const lamp = document.getElementById("live");
-    lamp.textContent = live ? "ON AIR" : "OFF AIR";
-    lamp.className = "live" + (live ? "" : " uit");
-    document.getElementById("cijfers").textContent = r ? r.cijfertekst.join(" ") : "- - - -";
-    document.getElementById("uitzending").textContent = d.uitzending || (r && r.opgelost ? "Missie geslaagd! Kluis gekraakt." : "Wachten op de volgende uitzending…");
-    document.getElementById("team").textContent = r ? r.team : "Geen team actief";
-    document.getElementById("pogingen").textContent = r ? `Pogingen bij de kluis: ${r.pogingen}` : "";
-    basis = r ? { duur: r.duur, sinds: performance.now(), loopt: live } : null;
-    laatste = d;
-    if (bezig && !nogActief(bezigMet) && "speechSynthesis" in window) speechSynthesis.cancel();
-    if (live && geluidAan && !bezig) uitzenden(r.nummer, d.uitzending);
-    document.getElementById("posten").innerHTML = d.posten.map((p, i) =>
-      `<div class="post"><b>${i + 1}</b><div><div>${esc(p.naam)}</div><div class="zwak">${esc(p.opdracht)}</div></div></div>`).join("");
-    document.getElementById("scores").innerHTML = d.scores.map((s, i) =>
-      `<tr><td>${i + 1}</td><td>${esc(s.team)}</td><td>${mmss(s.tijd)}</td><td>${s.pogingen}</td></tr>`).join("")
-      || `<tr><td colspan="4" class="zwak">Nog geen scores</td></tr>`;
-  } catch (e) { /* zender even weg: volgende keer opnieuw */ }
+  let d;
+  try { d = await NZ.status(); } catch (e) { return; }
+  const r = d.ronde, live = r && !r.opgelost;
+  const lamp = document.getElementById("live");
+  lamp.textContent = live ? "ON AIR" : "OFF AIR";
+  lamp.className = "live" + (live ? "" : " uit");
+  document.getElementById("roep").innerHTML = !r ? "Wachten op de volgende uitzending…"
+    : r.opgelost ? "Missie geslaagd! Kluis gekraakt." : `Roepcode <b>${r.roepcode}</b> · 4 groepen`;
+  document.getElementById("groepen").innerHTML = r ? r.cijfertekst.map(g => `<span>${g}</span>`).join("") : "";
+  const stijl = document.getElementById("stijl");
+  stijl.hidden = !r;
+  if (r) stijl.textContent = "📡 " + d.stijlen[r.stijl];
+  document.getElementById("team").textContent = r ? r.team : "Geen team actief";
+  basis = r ? { duur: r.duur, sinds: performance.now(), loopt: live } : null;
+  document.getElementById("voortgang").innerHTML = POSTEN.map(([ic, naam], i) => {
+    const ok = r && (i < 4 ? r.gevonden.includes(i + 1) : r.opgelost);
+    return `<div class="vg${ok ? " ok" : ""}"><span class="ic">${ok ? "✅" : ic}</span>${naam}</div>`;
+  }).join("");
+  document.getElementById("scores").innerHTML = d.scores.map((s, i) =>
+    `<tr><td>${i + 1}</td><td>${NZ.esc(s.team)}</td><td class="mono">${NZ.mmss(s.tijd)}</td><td>${s.pogingen}</td></tr>`).join("")
+    || `<tr><td colspan="4" class="zwak">Nog geen scores</td></tr>`;
+  NZ.zender.update(d);
 }
 setInterval(() => {
   const t = !basis ? 0 : basis.duur + (basis.loopt ? (performance.now() - basis.sinds) / 1000 : 0);
-  document.getElementById("timer").textContent = mmss(t);
+  document.getElementById("timer").textContent = NZ.mmss(t);
 }, 250);
 setInterval(ververs, 1000); ververs();
-
-// ---- Geluid in de browser (voor demo's zonder speaker aan de Pi) ----
-// Browsers spelen pas geluid af na een klik, dus het staat standaard uit.
-// Op de Pi zelf praat espeak-ng al; laat de knop daar uit.
-const MELODIE = [[659, .25], [587, .25], [523, .5], [0, .1], [659, .25], [587, .25], [523, .5],
-                 [0, .1], [392, .25], [440, .25], [494, .25], [523, .75]];  // zelfde als omroeper.py
-const PAUZE = 6000;
-let laatste = null, geluidAan = false, bezig = false, bezigMet = null, ctx = null, stem = null;
-
-const nogActief = nummer => geluidAan && laatste && laatste.ronde && !laatste.ronde.opgelost
-  && laatste.ronde.nummer === nummer;
-const wacht = ms => new Promise(r => setTimeout(r, ms));
-async function wachtZolang(ms, nummer) {
-  for (let t = 0; t < ms && nogActief(nummer); t += 100) await wacht(100);
-}
-
-function kiesStem() {
-  const stemmen = speechSynthesis.getVoices().filter(v => v.lang.toLowerCase().startsWith("nl"));
-  stem = stemmen.find(v => /natural|online|google/i.test(v.name)) || stemmen[0] || null;
-  const melding = document.getElementById("stemmelding");
-  melding.hidden = !geluidAan || !!stem || !speechSynthesis.getVoices().length;
-  melding.textContent = "Geen Nederlandse stem gevonden in deze browser. Gebruik Microsoft Edge of Google Chrome, "
-    + "of installeer in Windows de Nederlandse spraak (Instellingen > Tijd en taal > Spraak).";
-}
-if ("speechSynthesis" in window) { speechSynthesis.onvoiceschanged = kiesStem; kiesStem(); }
-
-async function speelMelodie(nummer) {
-  const uit = ctx.createGain();
-  uit.gain.value = 0.25;
-  uit.connect(ctx.destination);
-  let t = ctx.currentTime + 0.05;
-  for (const [freq, duur] of MELODIE) {
-    if (freq) {
-      const osc = ctx.createOscillator(), g = ctx.createGain();
-      osc.frequency.value = freq;
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(1, t + 0.02);
-      g.gain.setValueAtTime(1, t + duur - 0.03);
-      g.gain.linearRampToValueAtTime(0, t + duur);
-      osc.connect(g).connect(uit);
-      osc.start(t); osc.stop(t + duur);
-    }
-    t += duur;
-  }
-  await wachtZolang((t - ctx.currentTime) * 1000, nummer);
-  uit.disconnect();  // stopt de melodie meteen als de ronde wisselt
-}
-
-function zeg(zin) {
-  return new Promise(klaar => {
-    const u = new SpeechSynthesisUtterance(zin);
-    u.lang = "nl-NL"; u.rate = 0.8; u.pitch = 0.6;
-    if (stem) u.voice = stem;
-    u.onend = u.onerror = klaar;
-    speechSynthesis.speak(u);
-  });
-}
-
-async function uitzenden(nummer, tekst) {
-  bezig = true;
-  bezigMet = nummer;
-  try {
-    await speelMelodie(nummer);
-    // Zin voor zin: lange teksten worden door sommige browsers afgebroken.
-    for (const zin of tekst.split(". ").filter(Boolean)) {
-      if (!nogActief(nummer)) break;
-      if ("speechSynthesis" in window) await zeg(zin);
-      await wacht(250);
-    }
-    await wachtZolang(PAUZE, nummer);
-  } finally {
-    if ("speechSynthesis" in window) speechSynthesis.cancel();
-    bezig = false;
-  }
-}
-
-document.getElementById("geluid").onclick = e => {
-  geluidAan = !geluidAan;
-  ctx = ctx || new AudioContext();
-  ctx.resume();
-  e.target.textContent = geluidAan ? "🔊 Geluid uit" : "🔇 Geluid aan";
-  e.target.setAttribute("aria-pressed", geluidAan);
-  if (!geluidAan && "speechSynthesis" in window) speechSynthesis.cancel();
-  if ("speechSynthesis" in window) kiesStem();
-};
 </script>
 </body>
 </html>

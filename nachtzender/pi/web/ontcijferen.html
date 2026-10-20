@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Post 5: Ontcijferen</title>
+<link rel="stylesheet" href="/stijl.css">
+<link rel="icon" href="data:,">
+<style>
+  .werkblad { display: grid; grid-template-columns: max-content repeat(4, max-content); gap: 10px 14px; align-items: center; overflow-x: auto; }
+  .werkblad input { font-family: var(--mono); font-size: 24px; letter-spacing: .2em; width: 9.4ch; text-align: center; }
+  .werkblad input.ok { border-color: var(--goed); }
+  .werkblad input.nok { border-color: var(--fout); }
+  .code { font-family: var(--mono); font-size: 20px; background: #0a0d11; border: 1px solid var(--rand); border-radius: 10px; padding: 16px; line-height: 2.2; overflow-x: auto; }
+  .code .kw { color: #9fd0ff; } .code .com { color: #7d8b99; }
+  .code .vak { display: inline-flex; min-width: 90px; min-height: 48px; vertical-align: middle; padding: 4px; margin: 0 2px; }
+  .paren { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 10px; }
+  .paar { text-align: center; }
+  .paar .getal { font-family: var(--mono); font-size: 26px; color: var(--accent); }
+  .paar .vak { justify-content: center; min-height: 54px; }
+  .letters .tegel { font-family: var(--mono); min-width: 46px; justify-content: center; padding: 8px 10px; }
+  .codeboek { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 4px 10px; font-family: var(--mono); font-size: 16px; }
+  .codeboek b { color: var(--accent); }
+  .uitkomst { font-family: var(--mono); font-size: clamp(30px, 6vw, 54px); letter-spacing: .15em; color: var(--goed); }
+</style>
+</head>
+<body>
+<main>
+  <h1>🧮 Post 5: Ontcijferen</h1>
+  <p class="intro">De zender gebruikt een <b>one-time pad</b>: bij elk cijfer van het bericht is een geheim sleutelcijfer
+  opgeteld (en alleen het laatste cijfer gehouden). Met de 4 sleutelgroepen kun je dat terugdraaien.</p>
+
+  <section class="paneel stap" id="stap1">
+    <span class="nr">1</span>
+    <div>
+      <h2>Vul het werkblad in</h2>
+      <p>Het bericht hoor je van de zender (het staat ook op het grote scherm). De sleutelgroepen haal je bij post 1 t/m 4.</p>
+      <div class="werkblad">
+        <b>Bericht</b><input data-r="b" data-i="0"><input data-r="b" data-i="1"><input data-r="b" data-i="2"><input data-r="b" data-i="3">
+        <b>Sleutel</b><input data-r="s" data-i="0"><input data-r="s" data-i="1"><input data-r="s" data-i="2"><input data-r="s" data-i="3">
+        <span></span><span class="zwak">post 1</span><span class="zwak">post 2</span><span class="zwak">post 3</span><span class="zwak">post 4</span>
+      </div>
+      <p class="melding" id="m1" role="status" style="margin:10px 0 0"></p>
+    </div>
+  </section>
+
+  <section class="paneel stap" id="stap2">
+    <span class="nr">2</span>
+    <div>
+      <h2>Programmeer de ontcijferaar</h2>
+      <p>Versleutelen ging zo: <code>versleuteld = (bericht + sleutel) % 10</code>.
+      Voorbeeld: bericht <b>3</b>, sleutel <b>9</b> → (3 + 9) % 10 = 12 % 10 = <b>2</b>.
+      Sleep de blokken op de juiste plek zodat de functie het <b>terugdraait</b>.</p>
+      <div class="code" id="code"><span class="com"># % betekent: de rest na delen door 10</span><br>
+        <span class="kw">def</span> ontcijfer(versleuteld, sleutel):<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> (<span class="vak" data-max="1" data-plek="0"></span><span class="vak" data-max="1" data-plek="1"></span><span class="vak" data-max="1" data-plek="2"></span>) % 10</div>
+      <div class="tegels vak" id="blokken" style="margin-top:12px">
+        <button class="tegel code" data-tok="versleuteld" data-thuis="blokken">versleuteld</button>
+        <button class="tegel code" data-tok="+" data-thuis="blokken">+</button>
+        <button class="tegel code" data-tok="sleutel" data-thuis="blokken">sleutel</button>
+        <button class="tegel code" data-tok="*" data-thuis="blokken">*</button>
+        <button class="tegel code" data-tok="-" data-thuis="blokken">-</button>
+        <button class="tegel code" data-tok="10" data-thuis="blokken">10</button>
+      </div>
+      <p style="margin-top:12px"><button class="hoofd" id="voer">▶ Uitvoeren</button>
+        <span class="melding" id="m2" role="status"></span></p>
+      <div id="cijfers" class="mono" style="font-size:22px; letter-spacing:.1em"></div>
+    </div>
+  </section>
+
+  <section class="paneel stap dicht" id="stap3">
+    <span class="nr">3</span>
+    <div>
+      <h2>Vertaal met het codeboek</h2>
+      <p>Elk paar cijfers is een letter of cijfer. Zoek het op in het codeboek en sleep het juiste teken onder elk paar.</p>
+      <details open style="margin-bottom:12px"><summary><b>Codeboek</b></summary>
+        <div class="codeboek" id="codeboek" style="margin-top:8px"></div></details>
+      <div class="paren" id="paren"></div>
+      <div class="tegels vak letters" id="letters" style="margin-top:14px"></div>
+      <div id="klaar" hidden style="margin-top:16px">
+        <p>Het ontcijferde bericht:</p>
+        <div class="uitkomst" id="uitkomst"></div>
+        <p style="margin-top:10px"><a href="/kluis"><button class="hoofd">🔐 Naar de kluis!</button></a></p>
+      </div>
+    </div>
+  </section>
+  <p class="weetje"><b>Wist je dat?</b> Een one-time pad is wiskundig onkraakbaar, zolang je de sleutel maar één keer
+  gebruikt. Spionnen in de Koude Oorlog kregen boekjes vol willekeurige getallen en scheurden elke gebruikte pagina eruit.</p>
+</main>
+<script src="/gemeen.js"></script>
+<script>
+NZ.nav("/ontcijferen");
+
+// ---- codeboek: A=01 ... Z=26, spatie=00, cijfer 0-9 = 30-39 (zelfde als spel.py) ----
+// (een lijst, want een object zet sleutels als "10" vóór "00")
+const CODELIJST = [["00", "␣"]];
+for (let i = 0; i < 26; i++) CODELIJST.push([String(i + 1).padStart(2, "0"), String.fromCharCode(65 + i)]);
+for (let i = 0; i < 10; i++) CODELIJST.push(["3" + i, String(i)]);
+const CODEBOEK = Object.fromEntries(CODELIJST);
+document.getElementById("codeboek").innerHTML = CODELIJST.map(([k, v]) => `<div><b>${k}</b> = ${v}</div>`).join("");
+document.getElementById("letters").innerHTML = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789␣"]
+  .map(t => `<button class="tegel" data-teken="${t}">${t}</button>`).join("");
+
+// ---- stap 1: werkblad ----
+const velden = [...document.querySelectorAll(".werkblad input")];
+for (const v of velden) { v.maxLength = 5; v.inputMode = "numeric"; v.autocomplete = "off"; }
+const rij = r => velden.filter(v => v.dataset.r === r).map(v => v.value.replace(/\D/g, ""));
+let zender = null;
+async function controleerVeld(v) {
+  const waarde = v.value.replace(/\D/g, "");
+  v.classList.remove("ok", "nok");
+  if (waarde.length !== 5) return;
+  let goed;
+  if (v.dataset.r === "s") goed = (await NZ.post("/api/controleer", { post: Number(v.dataset.i) + 1, waarde })).goed;
+  else goed = !!zender && zender[Number(v.dataset.i)] === waarde;
+  v.classList.add(goed ? "ok" : "nok");
+  const m = document.getElementById("m1");
+  const fout = velden.filter(x => x.classList.contains("nok")).length;
+  const ok = velden.filter(x => x.classList.contains("ok")).length;
+  m.className = "melding " + (fout ? "fout" : "goed");
+  m.textContent = fout ? `✖ ${fout} groep(en) kloppen niet.` : ok === 8 ? "✔ Werkblad compleet!" : `✔ ${ok} van de 8 groepen kloppen.`;
+  if (ok === 8) document.getElementById("stap1").classList.add("klaar");
+}
+for (const v of velden) v.addEventListener("input", () => controleerVeld(v));
+(async function volgZender() {
+  try { const d = await NZ.status(); zender = d.ronde ? d.ronde.cijfertekst : null; } catch (e) {}
+  setTimeout(volgZender, 3000);
+})();
+
+// ---- stap 2: programma ----
+NZ.sleepbaar(document.getElementById("stap2"), NZ.verplaats);
+const reken = (a, op, b) => op === "+" ? a + b : op === "-" ? a - b : op === "*" ? a * b : NaN;
+const mod10 = x => ((x % 10) + 10) % 10;   // net als Python: altijd 0 t/m 9
+
+function functie() {
+  const tok = [0, 1, 2].map(i => document.querySelector(`#code .vak[data-plek="${i}"] .tegel`)?.dataset.tok);
+  if (tok.includes(undefined)) return { fout: "Vul alle drie de plekken in." };
+  const [a, op, b] = tok;
+  const waarde = (t, v, s) => t === "versleuteld" ? v : t === "sleutel" ? s : t === "10" ? 10 : NaN;
+  if (!["+", "-", "*"].includes(op)) return { fout: "In het midden hoort een rekenteken (+, - of *)." };
+  if ([a, b].some(t => ["+", "-", "*"].includes(t))) return { fout: "Links en rechts hoort een getal of variabele." };
+  return { f: (v, s) => mod10(reken(waarde(a, v, s), op, waarde(b, v, s))), tekst: `(${a} ${op} ${b}) % 10` };
+}
+
+document.getElementById("voer").onclick = () => {
+  const m = document.getElementById("m2"), uit = document.getElementById("cijfers");
+  const { f, fout, tekst } = functie();
+  if (fout) { m.className = "melding fout"; m.textContent = fout; return; }
+  const test = f(2, 9);
+  if (test !== 3) {
+    m.className = "melding fout";
+    m.textContent = `✖ Test: ontcijfer(2, 9) moet 3 geven, maar ${tekst} geeft ${test}.`;
+    uit.textContent = "";
+    return;
+  }
+  const b = rij("b").join(""), s = rij("s").join("");
+  if (b.length !== 20 || s.length !== 20) {
+    m.className = "melding fout"; m.textContent = "✔ Je programma werkt! Vul nu eerst het hele werkblad (stap 1) in.";
+    return;
+  }
+  const klaar = [...b].map((c, i) => f(Number(c), Number(s[i]))).join("");
+  m.className = "melding goed"; m.textContent = "✔ Je programma werkt! Dit is het ontcijferde bericht:";
+  uit.textContent = klaar.match(/.{5}/g).join(" ");
+  document.getElementById("stap2").classList.add("klaar");
+  maakParen(klaar);
+};
+
+// ---- stap 3: codeboek ----
+function maakParen(klaar) {
+  const paren = klaar.match(/../g);
+  document.getElementById("paren").innerHTML = paren.map((p, i) =>
+    `<div class="paar"><div class="getal">${p}</div><div class="vak" data-max="1" data-goed="${CODEBOEK[p] || "?"}" data-i="${i}"></div></div>`).join("");
+  document.getElementById("stap3").classList.remove("dicht");
+  document.getElementById("klaar").hidden = true;
+  if (paren.some(p => !CODEBOEK[p])) {
+    document.getElementById("paren").insertAdjacentHTML("afterend",
+      `<p class="fout-tekst" id="onbekend">Sommige paren staan niet in het codeboek. Klopt het werkblad wel?</p>`);
+  } else {
+    document.getElementById("onbekend")?.remove();
+  }
+}
+NZ.sleepbaar(document.getElementById("stap3"), (tegel, vak) => {
+  const bron = tegel.closest(".paar .vak");
+  const haalWeg = () => { if (bron) { bron.classList.remove("goed", "fout"); tegel.remove(); } };
+  if (!vak.dataset.goed) { haalWeg(); return; }        // terug naar de letterbak = weghalen
+  if (vak === bron) return;
+  vak.querySelector(".tegel")?.remove();
+  const kopie = tegel.cloneNode(true);
+  kopie.classList.remove("gekozen");
+  vak.append(kopie);
+  vak.classList.toggle("goed", kopie.dataset.teken === vak.dataset.goed);
+  vak.classList.toggle("fout", kopie.dataset.teken !== vak.dataset.goed);
+  haalWeg();                                           // verslepen tussen twee vakjes
+  const vakken = [...document.querySelectorAll("#paren .vak")];
+  if (vakken.every(v => v.classList.contains("goed"))) {
+    document.getElementById("uitkomst").textContent = vakken.map(v => v.dataset.goed.replace("␣", " ")).join("");
+    document.getElementById("klaar").hidden = false;
+    document.getElementById("stap3").classList.add("klaar");
+  }
+});
+</script>
+</body>
+</html>

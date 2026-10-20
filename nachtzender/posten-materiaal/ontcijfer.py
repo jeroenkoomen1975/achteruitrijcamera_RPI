@@ -1,28 +1,44 @@
-# ===================== POST 5: PROGRAMMEREN =====================
+# ===================== POST 5: PROGRAMMEREN (gevorderd) =====================
 #
-# De Nachtzender versleutelt de kluiscode met een "one-time pad":
+# De Nachtzender versleutelt zijn bericht met een "one-time pad":
 #
-#     versleuteld cijfer = (kluiscode-cijfer + sleutel-cijfer) mod 10
+#     versleuteld cijfer = (bericht-cijfer + sleutel-cijfer) % 10
 #
-# Voorbeeld: kluiscode 3, sleutel 9  ->  (3 + 9) mod 10 = 12 mod 10 = 2
+# Voorbeeld: bericht 3, sleutel 9  ->  (3 + 9) % 10 = 12 % 10 = 2
 #
-# Jullie hebben het versleutelde bericht (van de zender) en de 4
-# sleutelcijfers (van de posten). Vul ze hieronder in, maak de functie
-# af en druk op Run (F5).
+# Vul hieronder de 4 groepen van de zender en de 4 sleutelgroepen van de
+# posten in, maak de twee functies af en druk op Run (F5).
 
-bericht = [0, 0, 0, 0]   # de 4 cijfers die de zender omroept
-sleutel = [0, 0, 0, 0]   # sleuteldeel 1, 2, 3 en 4
+bericht = ["00000", "00000", "00000", "00000"]   # de 4 groepen van de zender
+sleutel = ["00000", "00000", "00000", "00000"]   # sleutelgroep 1, 2, 3 en 4
 
 
 def ontcijfer(versleuteld, sleutel):
-    # TODO: we moeten de versleuteling terugdraaien.
-    # Tip: het tegenovergestelde van optellen is ...
-    # Tip: % 10 betekent "mod 10" (de rest na delen door 10)
+    """Draai de versleuteling terug voor één cijfer."""
+    # TODO: het tegenovergestelde van optellen is ...
+    # Tip: % 10 betekent "de rest na delen door 10"
     return 0
 
 
-kluiscode = []
-for i in range(4):
-    kluiscode.append(ontcijfer(bericht[i], sleutel[i]))
+def codeboek(paar):
+    """Zet twee cijfers om in een teken: 01=A ... 26=Z, 00=spatie, 30-39 = cijfer 0-9."""
+    getal = int(paar)
+    if getal == 0:
+        return " "
+    if 1 <= getal <= 26:
+        return chr(ord("A") + getal - 1)
+    # TODO: maak de cijfers 30 t/m 39 af (30 = "0", 31 = "1", ...)
+    return "?"
 
-print("De kluiscode is:", kluiscode)
+
+cijfers = ""
+for groep, sleutelgroep in zip(bericht, sleutel):
+    for c, s in zip(groep, sleutelgroep):
+        cijfers += str(ontcijfer(int(c), int(s)))
+
+print("Ontcijferde cijfers:", cijfers)
+
+tekst = ""
+for i in range(0, len(cijfers), 2):
+    tekst += codeboek(cijfers[i:i + 2])
+print("Het bericht luidt:  ", tekst)

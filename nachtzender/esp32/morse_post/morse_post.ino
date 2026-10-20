@@ -1,7 +1,7 @@
 // ===== Nachtzender: MORSE-POST (post 2, Embedded / IoT) =====
 // De studenten bouwen zelf de schakeling op het breadboard (zie kaartje).
-// Druk op de knop: de ESP32 vraagt sleuteldeel 2 op bij de zender en
-// seint het als morse met de zoemer en de led.
+// Druk op de knop: de ESP32 vraagt sleutelgroep 2 (5 cijfers) op bij de zender
+// en seint die als morse met de zoemer en de led.
 //
 // Geen extra bibliotheken nodig.
 // Aansluiten:  actieve zoemer + -> GPIO25, - -> GND
@@ -19,7 +19,7 @@ const char* ZENDER_URL = "http://192.168.8.10:8080/api/morse";  // IP van de Pi
 const int ZOEMER = 25;
 const int LED = 26;
 const int KNOP = 27;
-const int EENHEID = 200;  // ms: punt = 1, streep = 3, pauze = 1 eenheid
+const int EENHEID = 200;  // ms: punt = 1, streep = 3, pauze = 1, tussen cijfers = 4 eenheden
 
 void toon(int duur) {
   digitalWrite(ZOEMER, HIGH);
@@ -44,7 +44,7 @@ String haalMorse() {
   http.begin(ZENDER_URL);
   String morse;
   if (http.GET() == 200) {
-    // Antwoord ziet eruit als {"teken": "4", "morse": "....-"}
+    // Antwoord ziet eruit als {"tekens": "38211", "morse": "...-- ---.. ..--- .---- .----"}
     String body = http.getString();
     int start = body.indexOf("\"morse\": \"");
     if (start >= 0) {
@@ -78,7 +78,11 @@ void loop() {
       knipperFout();
     }
     for (char teken : morse) {
-      toon(teken == '.' ? EENHEID : 3 * EENHEID);
+      if (teken == ' ') {
+        delay(4 * EENHEID);  // stilte tussen twee cijfers
+      } else {
+        toon(teken == '.' ? EENHEID : 3 * EENHEID);
+      }
     }
     delay(500);  // knop loslaten
   }

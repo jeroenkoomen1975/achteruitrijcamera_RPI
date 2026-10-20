@@ -2,39 +2,60 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kluis</title>
+<title>De kluis</title>
 <link rel="stylesheet" href="/stijl.css">
 <link rel="icon" href="data:,">
 <style>
-  .toetsen { display: grid; grid-template-columns: repeat(3, 80px); gap: 10px; margin: 16px 0; }
-  .toetsen button { height: 70px; font-size: 28px; }
-  #invoer { font-size: 48px; letter-spacing: .3em; min-height: 1.4em; color: var(--accent); }
+  .kluis { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: start; }
+  @media (max-width: 640px) { .kluis { grid-template-columns: 1fr; } }
+  .toetsen { display: grid; grid-template-columns: repeat(3, 84px); gap: 10px; }
+  .toetsen button { height: 74px; font-size: 30px; font-family: var(--mono); }
+  #invoer { font-family: var(--mono); font-size: 56px; letter-spacing: .35em; color: var(--accent); margin-bottom: 14px; }
+  #slot { font-size: 120px; line-height: 1; }
+  #melding { font-size: 24px; font-weight: 700; margin-top: 12px; min-height: 1.5em; }
 </style>
 </head>
 <body>
+<main>
   <h1>🔐 De kluis</h1>
-  <div class="paneel">
-    <p class="zwak">Vervangt de ESP32-kluis als die er niet is. Voer de 4 cijfers van de kluiscode in.</p>
-    <div id="invoer"></div>
-    <div class="toetsen" id="toetsen"></div>
-    <div id="melding" style="font-size:24px"></div>
-  </div>
+  <p class="intro">Toets de 4 cijfers van de kluiscode in en druk op ✔. Staat de echte kluis (ESP32 met keypad) op tafel?
+  Gebruik die dan: toets de code en druk op <code>#</code>.</p>
+  <section class="paneel kluis">
+    <div>
+      <div id="invoer" aria-live="polite">____</div>
+      <div class="toetsen" id="toetsen"></div>
+    </div>
+    <div>
+      <div id="slot" aria-hidden="true">🔒</div>
+      <div id="melding" role="status"></div>
+    </div>
+  </section>
+</main>
+<script src="/gemeen.js"></script>
 <script>
+NZ.nav("/kluis");
 let code = "";
-const invoer = document.getElementById("invoer"), melding = document.getElementById("melding");
+const invoer = document.getElementById("invoer"), melding = document.getElementById("melding"), slot = document.getElementById("slot");
 const toon = () => invoer.textContent = code.padEnd(4, "_");
 async function druk(t) {
-  if (t === "*") code = "";
-  else if (t === "#") {
-    const d = await (await fetch("/api/kluis", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ code }) })).json();
-    melding.textContent = (d.open ? "🔓 " : "🔒 ") + d.melding;
-    melding.className = d.open ? "" : "fout";
+  if (t === "✖") code = "";
+  else if (t === "✔") {
+    const d = await NZ.post("/api/kluis", { code });
+    slot.textContent = d.open ? "🔓" : "🔒";
+    melding.textContent = d.open ? `${d.melding} Tijd: ${NZ.mmss(d.tijd)}` : d.melding;
+    melding.className = d.open ? "goed-tekst" : "fout-tekst";
     code = "";
   } else if (code.length < 4) code += t;
   toon();
 }
-document.getElementById("toetsen").innerHTML = "123456789*0#".split("").map(t => `<button data-t="${t}">${t === "#" ? "✔" : t === "*" ? "✖" : t}</button>`).join("");
-document.getElementById("toetsen").onclick = e => e.target.dataset.t && druk(e.target.dataset.t);
+document.getElementById("toetsen").innerHTML = [..."123456789✖0✔"].map(t =>
+  `<button data-t="${t}" ${t === "✔" ? 'class="hoofd" aria-label="Bevestig"' : t === "✖" ? 'aria-label="Wissen"' : ""}>${t}</button>`).join("");
+document.getElementById("toetsen").onclick = e => { const b = e.target.closest("button"); if (b) druk(b.dataset.t); };
+document.addEventListener("keydown", e => {
+  if (/^[0-9]$/.test(e.key)) druk(e.key);
+  else if (e.key === "Enter") druk("✔");
+  else if (e.key === "Backspace" || e.key === "Escape") druk("✖");
+});
 toon();
 </script>
 </body>
