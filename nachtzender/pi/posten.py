@@ -54,7 +54,7 @@ def _logbestand(pad, rng, regels=150, extra=None):
     if extra:
         lijnen.insert(rng.randrange(len(lijnen)), extra)
     pad.parent.mkdir(parents=True, exist_ok=True)
-    pad.write_text("\n".join(lijnen) + "\n")
+    pad.write_text("\n".join(lijnen) + "\n", encoding="utf-8")
 
 
 def maak_linux_post(map_, sleutelcijfer, rng):
@@ -63,7 +63,7 @@ def maak_linux_post(map_, sleutelcijfer, rng):
         shutil.rmtree(map_)
     archief = map_ / "archief"
     archief.mkdir(parents=True)
-    (map_ / "LEESMIJ.txt").write_text(LEESMIJ)
+    (map_ / "LEESMIJ.txt").write_text(LEESMIJ, encoding="utf-8")
 
     for i in range(1, 31):
         _logbestand(archief / ("zender_%02d.log" % i), rng)

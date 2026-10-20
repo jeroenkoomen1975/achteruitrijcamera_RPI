@@ -38,7 +38,7 @@ def voer_sql_uit(db_pad, query, max_rijen=200):
         raise ValueError("Alleen SELECT-query's zijn toegestaan.")
     if not Path(db_pad).exists():
         raise ValueError("Er is nog geen database: start eerst een ronde.")
-    db = sqlite3.connect(f"file:{db_pad}?mode=ro", uri=True, timeout=2)
+    db = sqlite3.connect(Path(db_pad).resolve().as_uri() + "?mode=ro", uri=True, timeout=2)
     start = time.monotonic()
     db.set_progress_handler(lambda: time.monotonic() - start > 2, 10000)
     try:

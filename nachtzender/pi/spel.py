@@ -74,7 +74,7 @@ class Spel:
     def _laad_scores(self):
         if self.scores_pad and self.scores_pad.exists():
             try:
-                return json.loads(self.scores_pad.read_text())
+                return json.loads(self.scores_pad.read_text(encoding="utf-8"))
             except (OSError, ValueError):
                 pass
         return []
@@ -82,7 +82,7 @@ class Spel:
     def _bewaar_scores(self):
         if self.scores_pad:
             self.scores_pad.parent.mkdir(parents=True, exist_ok=True)
-            self.scores_pad.write_text(json.dumps(self.scores, indent=2))
+            self.scores_pad.write_text(json.dumps(self.scores, indent=2), encoding="utf-8")
 
     def nieuwe_ronde(self, team):
         team = (team or "").strip()[:30] or "Team zonder naam"

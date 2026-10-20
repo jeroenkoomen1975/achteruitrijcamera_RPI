@@ -59,6 +59,14 @@ cd nachtzender/pi
 python3 nachtzender.py --stil
 ```
 
+**Op Windows (PowerShell)** gebruik je `python` (of `py`) en typ je de
+commando's los onder elkaar, want Windows PowerShell kent `&&` niet:
+
+```powershell
+cd nachtzender\pi
+python nachtzender.py --stil
+```
+
 Open daarna **http://localhost:8080/beheer**, vul een teamnaam in en klik op
 *Start ronde*. Open in een ander tabblad **http://localhost:8080/** voor het
 scorebord. De browserversies van de posten werken meteen: `/radio`, `/morse`,
