@@ -194,3 +194,9 @@ python3 -m unittest -v
 | Afstand staat altijd op maximum       | TRIG en ECHO omgewisseld? Spanningsdeler goed aangesloten?         |
 | Afstand springt heen en weer          | Sensor recht naar achteren richten, zet `GEMIDDELDE_VAN` op 5.     |
 | Buzzer piept niet                     | Is het een passieve buzzer? Die heeft een toon nodig; gebruik een actieve buzzer. |
+
+## Extra: scrumboard voor studentengroepen
+
+In de map [`scrumboard/`](scrumboard/README.md) staat een losse website waarop
+studenten per groep een scrumboard kunnen bijhouden. Hij kan op dezelfde Pi
+draaien: `python3 -m scrumboard.server` en open `http://<ip-van-de-pi>:8000`.

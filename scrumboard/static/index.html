@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scrumboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Startscherm: groep kiezen of maken -->
+  <main id="start" class="start" hidden>
+    <h1>Scrumboard</h1>
+    <p class="sub">Kies je groep of maak een nieuwe groep aan.</p>
+
+    <section class="paneel">
+      <h2>Groepen</h2>
+      <ul id="groepen" class="groepen"></ul>
+      <p id="geen-groepen" class="leeg" hidden>Er zijn nog geen groepen.</p>
+    </section>
+
+    <section class="paneel">
+      <h2>Nieuwe groep</h2>
+      <form id="nieuwe-groep" class="formulier">
+        <label>Groepsnaam <input name="naam" maxlength="60" required placeholder="Bijv. Groep 3 – Webshop"></label>
+        <label>Pincode (4–8 cijfers) <input name="pin" inputmode="numeric" pattern="\d{4,8}" required></label>
+        <p class="hint">Deel de pincode alleen met je groepsgenoten.</p>
+        <button>Groep maken</button>
+        <p class="fout" role="alert"></p>
+      </form>
+    </section>
+  </main>
+
+  <!-- Het bord van één groep -->
+  <div id="bord-scherm" hidden>
+    <header class="kop">
+      <div class="kop-links">
+        <button id="terug" class="knop-tekst" title="Andere groep kiezen">← Groepen</button>
+        <h1 id="groepsnaam"></h1>
+      </div>
+      <div class="sprint" id="sprint" title="Klik om de sprint aan te passen" role="button" tabindex="0">
+        <strong id="sprint-naam"></strong>
+        <span id="sprint-data"></span>
+        <span id="sprint-doel" class="doel"></span>
+      </div>
+      <div class="voortgang" title="Storypoints klaar / in de sprint">
+        <div class="balk"><div id="voortgang-balk"></div></div>
+        <span id="voortgang-tekst"></span>
+      </div>
+    </header>
+
+    <div class="leden-rij">
+      <span class="label">Team:</span>
+      <div id="leden" class="leden"></div>
+      <form id="nieuw-lid" class="nieuw-lid">
+        <input name="naam" maxlength="60" placeholder="Naam toevoegen" required>
+        <button class="knop-klein">+</button>
+      </form>
+      <label class="filter">Toon:
+        <select id="filter"><option value="">iedereen</option></select>
+      </label>
+    </div>
+
+    <main id="bord" class="bord"></main>
+  </div>
+
+  <!-- Pincode invoeren -->
+  <dialog id="pin-dialoog">
+    <form method="dialog" class="formulier">
+      <h2>Inloggen bij <span id="pin-groep"></span></h2>
+      <label>Pincode <input name="pin" inputmode="numeric" autocomplete="off" required></label>
+      <p class="fout" role="alert"></p>
+      <div class="knoppen">
+        <button value="annuleer" formnovalidate class="knop-tekst">Annuleren</button>
+        <button value="ok">Inloggen</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Kaartje bewerken -->
+  <dialog id="kaart-dialoog">
+    <form method="dialog" class="formulier">
+      <h2 id="kaart-kop">Kaartje</h2>
+      <label>Titel <input name="titel" maxlength="120" required></label>
+      <label>Omschrijving / acceptatiecriteria
+        <textarea name="omschrijving" rows="5" maxlength="2000" placeholder="Als ... wil ik ... zodat ..."></textarea>
+      </label>
+      <div class="rij">
+        <label>Wie <select name="eigenaar"></select></label>
+        <label>Storypoints
+          <select name="punten">
+            <option value="">–</option>
+            <option>0</option><option>1</option><option>2</option><option>3</option>
+            <option>5</option><option>8</option><option>13</option><option>20</option>
+          </select>
+        </label>
+      </div>
+      <div class="rij">
+        <label>Prioriteit
+          <select name="prioriteit">
+            <option value="laag">laag</option>
+            <option value="normaal">normaal</option>
+            <option value="hoog">hoog</option>
+          </select>
+        </label>
+        <label>Kolom <select name="kolom"></select></label>
+      </div>
+      <p class="fout" role="alert"></p>
+      <div class="knoppen">
+        <button value="verwijder" formnovalidate class="knop-gevaar" id="kaart-verwijder">Verwijderen</button>
+        <span class="vul"></span>
+        <button value="annuleer" formnovalidate class="knop-tekst">Annuleren</button>
+        <button value="ok">Opslaan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Sprint bewerken -->
+  <dialog id="sprint-dialoog">
+    <form method="dialog" class="formulier">
+      <h2>Sprint</h2>
+      <label>Naam <input name="naam" maxlength="60" required></label>
+      <label>Sprintdoel <textarea name="doel" rows="3" maxlength="300"></textarea></label>
+      <div class="rij">
+        <label>Start <input type="date" name="start"></label>
+        <label>Eind <input type="date" name="eind"></label>
+      </div>
+      <p class="hint">Nieuwe sprint? Haal de afgeronde kaartjes weg met de knop hieronder en pas naam en data aan.</p>
+      <p class="fout" role="alert"></p>
+      <div class="knoppen">
+        <button value="opruimen" formnovalidate class="knop-tekst" id="sprint-opruimen">Kolom ‘Klaar’ leegmaken</button>
+        <span class="vul"></span>
+        <button value="annuleer" formnovalidate class="knop-tekst">Annuleren</button>
+        <button value="ok">Opslaan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+[Unit]
+Description=Scrumboard voor studentengroepen
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/achteruitrijcamera_RPI
+ExecStart=/usr/bin/python3 -m scrumboard.server --poort 8000 --database /home/pi/scrumboard.db
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
