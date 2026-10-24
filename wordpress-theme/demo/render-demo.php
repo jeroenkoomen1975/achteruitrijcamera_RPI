@@ -1,6 +1,6 @@
 <?php
 /**
- * Rendert de Blueline-homepage zonder WordPress naar een statische demo.
+ * Rendert de Koomen.IT-homepage zonder WordPress naar een statische demo.
  *
  * Gebruik: php wordpress-theme/demo/render-demo.php > wordpress-theme/demo/index.html
  *
@@ -9,7 +9,7 @@
  */
 
 define( 'ABSPATH', __DIR__ . '/' );
-$theme = dirname( __DIR__ ) . '/blueline';
+$theme = dirname( __DIR__ ) . '/koomenit';
 
 // --- Algemene stubs ---------------------------------------------------------
 function add_action() {}
@@ -30,10 +30,10 @@ function absint( $n ) { return abs( (int) $n ); }
 function antispambot( $e ) { return $e; }
 function get_theme_mod( $key, $default = false ) { return $default; }
 function get_template_directory() { return $GLOBALS['theme']; }
-function get_template_directory_uri() { return '.'; }
+function get_template_directory_uri() { return '../koomenit'; }
 function home_url( $p = '' ) { return '#'; }
 function get_option( $k ) { return 'show_on_front' === $k ? 'posts' : 0; }
-function get_bloginfo( $k = 'name' ) { return 'name' === $k ? 'Blueline IT' : 'IT-dienstverlening'; }
+function get_bloginfo( $k = 'name' ) { return 'name' === $k ? 'koomen.it' : 'Training, Onderwijs & Advies'; }
 function bloginfo( $k ) { echo 'charset' === $k ? 'UTF-8' : esc_html( get_bloginfo( $k ) ); }
 function language_attributes() { echo 'lang="nl-NL"'; }
 function body_class() { echo 'class="home"'; }
@@ -48,9 +48,9 @@ function get_footer() { require $GLOBALS['theme'] . '/footer.php'; }
 function get_template_part( $slug, $name ) { require $GLOBALS['theme'] . "/{$slug}-{$name}.php"; }
 
 function wp_head() {
-	echo '<link rel="stylesheet" href="' . esc_attr( blueline_fonts_url() ) . '">' . "\n";
-	echo '<title>Blueline – demo</title>' . "\n";
-	echo "<style>\n" . file_get_contents( $GLOBALS['theme'] . '/style.css' ) . "\n" . blueline_customizer_css() . "\n</style>\n";
+	echo '<link rel="stylesheet" href="' . esc_attr( koomenit_fonts_url() ) . '">' . "\n";
+	echo '<title>Koomen.IT – demo</title>' . "\n";
+	echo "<style>\n" . file_get_contents( $GLOBALS['theme'] . '/style.css' ) . "\n" . koomenit_customizer_css() . "\n</style>\n";
 }
 function wp_footer() {
 	echo "<script>\n" . file_get_contents( $GLOBALS['theme'] . '/assets/js/main.js' ) . "\n</script>\n";
@@ -58,8 +58,8 @@ function wp_footer() {
 
 function wp_nav_menu( $args ) {
 	$items = 'footer' === $args['theme_location']
-		? array( 'Over ons', 'Werken bij', 'Nieuws', 'Privacy', 'Contact' )
-		: array( 'Home' => '#', 'Diensten' => '#diensten', 'Over ons' => '#over-ons', 'Vacatures' => '#nieuws', 'Contact' => '#contact' );
+		? array( 'Over Koomen.IT', 'Nieuws', 'Kennisbank', 'Privacyverklaring', 'Contact' )
+		: array( 'Home' => '#', 'Training' => '#aanbod', 'Onderwijs' => '#aanbod', 'Advies' => '#aanbod', 'Over' => '#over-ons', 'Contact' => '#contact' );
 	echo '<ul class="' . esc_attr( isset( $args['menu_class'] ) ? $args['menu_class'] : 'menu' ) . '">';
 	$first = true;
 	foreach ( $items as $label => $url ) {
@@ -75,9 +75,9 @@ function wp_nav_menu( $args ) {
 
 // --- Loop-stubs met demoberichten -------------------------------------------
 $GLOBALS['demo_posts'] = array(
-	array( 'Vacature: Senior Cloud Engineer (Azure)', 'Vacatures', 'Voor een grote opdrachtgever in de Randstad zoeken we een ervaren cloud engineer die complexe Azure-omgevingen ontwerpt, bouwt en beheert.', '12 oktober 2026' ),
-	array( 'Zo bereid je je organisatie voor op NIS2', 'Kennis', 'De nieuwe Europese cybersecurityrichtlijn raakt meer organisaties dan je denkt. Onze consultants zetten de belangrijkste stappen voor je op een rij.', '3 oktober 2026' ),
-	array( 'Nieuwe trainingen in DevOps en Kubernetes', 'Training', 'Ons opleidingsaanbod is uitgebreid met praktijkgerichte trainingen voor developers en beheerders die willen groeien in moderne platformen.', '24 september 2026' ),
+	array( 'Voorbeeld: workshop Git voor teams', 'Training', 'In één dag van losse bestanden naar een vaste werkwijze met branches, pull requests en code reviews. Dit is een voorbeeldbericht.', '14 oktober 2026' ),
+	array( 'Voorbeeld: Python leren in het mbo', 'Onderwijs', 'Hoe je programmeerlessen opbouwt rond kleine, echte projecten waar studenten direct resultaat zien. Dit is een voorbeeldbericht.', '2 oktober 2026' ),
+	array( 'Voorbeeld: vijf vragen voor je cloudkeuze', 'Advies', 'Voordat je kiest voor een cloudplatform: deze vragen helpen je om kosten, beheer en kennis in balans te houden. Dit is een voorbeeldbericht.', '20 september 2026' ),
 );
 $GLOBALS['demo_i'] = -1;
 

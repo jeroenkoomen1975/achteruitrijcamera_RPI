@@ -7,39 +7,45 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<script>document.documentElement.classList.add('js');</script>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap">
-<title>Blueline – demo</title>
+<title>Koomen.IT – demo</title>
 <style>
 /*
-Theme Name: Blueline
-Theme URI: https://example.com/blueline
+Theme Name: Koomen.IT
+Theme URI: https://koomen.it
 Author: Jeroen Koomen
-Description: Modern, zakelijk en volledig aanpasbaar WordPress-thema met een blauwe uitstraling, gemaakt voor IT-dienstverleners, detacheerders en consultancybureaus. Alle homepage-secties, kleuren, lettertypes en teksten zijn in te stellen via de Customizer.
+Description: Modern en volledig aanpasbaar WordPress-thema in de huisstijl van Koomen.IT (Training, Onderwijs & Advies): navy en teal, met het netwerkmotief uit het logo. Alle homepage-secties, kleuren, lettertypes en teksten zijn in te stellen via de Customizer.
 Version: 1.0.0
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: blueline
+Text Domain: koomenit
 Tags: blue, business, one-column, two-columns, custom-colors, custom-logo, custom-menu, featured-images, footer-widgets, theme-options, translation-ready, wide-blocks
 */
 
 /* ---------- Basis ---------- */
 :root {
-	--bl-primary: #1d4ed8;
-	--bl-secondary: #0ea5e9;
-	--bl-dark: #0b1b3f;
-	--bl-light: #f1f6ff;
-	--bl-text: #334155;
-	--bl-muted: #64748b;
-	--bl-border: #e2e8f0;
+	/* Koomen.IT: navy letter, teal code-tag, grijze netwerkknooppunten. */
+	--bl-primary: #0e2a47;
+	--bl-secondary: #1f8a8a;
+	--bl-teal-light: #3cb8b0;
+	--bl-steel: #4c7a9e;
+	--bl-node: #8b97a3;
+	--bl-line: #bac4cc;
+	--bl-dark: #0b0e14;
+	--bl-light: #f2f5f8;
+	--bl-text: #3d4a58;
+	--bl-muted: #5c6773;
+	--bl-border: #dfe5ea;
 	--bl-white: #ffffff;
-	--bl-radius: 14px;
+	--bl-radius: 10px;
 	--bl-overlay: 0.85;
-	--bl-font-head: "Plus Jakarta Sans", system-ui, sans-serif;
+	--bl-font-head: "Inter", system-ui, sans-serif;
 	--bl-font-body: "Inter", system-ui, sans-serif;
-	--bl-shadow: 0 10px 30px -12px rgba(11, 27, 63, 0.18);
-	--bl-shadow-lg: 0 24px 60px -20px rgba(11, 27, 63, 0.35);
+	--bl-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+	--bl-shadow: 0 8px 24px -12px rgba(14, 42, 71, 0.18);
+	--bl-shadow-lg: 0 20px 48px -20px rgba(14, 42, 71, 0.35);
 	--bl-container: 1200px;
 	--bl-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -65,9 +71,10 @@ h1, h2, h3, h4, h5, h6 {
 	margin: 0 0 0.6em;
 	color: var(--bl-dark);
 	font-family: var(--bl-font-head);
-	font-weight: 800;
-	line-height: 1.2;
-	letter-spacing: -0.02em;
+	font-weight: 700;
+	line-height: 1.15;
+	letter-spacing: -0.025em;
+	text-wrap: balance;
 }
 h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
 h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
@@ -76,6 +83,7 @@ h3 { font-size: 1.3rem; }
 p { margin: 0 0 1.2em; }
 a { color: var(--bl-primary); text-decoration: none; transition: color 0.2s; }
 a:hover { color: var(--bl-secondary); }
+::selection { background: var(--bl-teal-light); color: var(--bl-primary); }
 img { max-width: 100%; height: auto; display: block; }
 
 .container { width: 100%; max-width: var(--bl-container); margin: 0 auto; padding: 0 24px; }
@@ -90,44 +98,40 @@ img { max-width: 100%; height: auto; display: block; }
 	padding: 10px 16px; background: var(--bl-white); border-radius: 8px;
 }
 
-:focus-visible { outline: 3px solid var(--bl-secondary); outline-offset: 2px; }
+:focus-visible { outline: 3px solid var(--bl-teal-light); outline-offset: 2px; }
 
 .bl-icon { width: 1.2em; height: 1.2em; flex-shrink: 0; }
 
 /* ---------- Knoppen ---------- */
 .btn {
 	display: inline-flex; align-items: center; gap: 0.5em;
-	padding: 0.9em 1.6em; border: 2px solid transparent; border-radius: 999px;
-	font-family: var(--bl-font-head); font-weight: 700; font-size: 1rem; line-height: 1;
+	padding: 0.9em 1.5em; border: 2px solid transparent; border-radius: var(--bl-radius);
+	font-family: var(--bl-font-head); font-weight: 600; font-size: 1rem; line-height: 1;
 	cursor: pointer; transition: transform 0.25s var(--bl-ease), box-shadow 0.25s, background 0.25s, color 0.25s;
 }
 .btn .bl-icon { width: 1em; height: 1em; transition: transform 0.25s var(--bl-ease); }
 .btn:hover { transform: translateY(-2px); }
 .btn:hover .bl-icon { transform: translateX(3px); }
 .btn--sm { padding: 0.7em 1.3em; font-size: 0.95rem; }
-.btn--primary {
-	background: linear-gradient(135deg, var(--bl-primary), var(--bl-secondary));
-	color: var(--bl-white); box-shadow: 0 10px 24px -10px var(--bl-primary);
-}
-.btn--primary:hover { color: var(--bl-white); box-shadow: 0 16px 30px -10px var(--bl-primary); }
-.btn--white { background: var(--bl-white); color: var(--bl-primary); }
-.btn--white:hover { color: var(--bl-dark); box-shadow: var(--bl-shadow-lg); }
+.btn--primary { background: var(--bl-primary); color: var(--bl-white); }
+.btn--primary:hover { background: var(--bl-secondary); color: var(--bl-white); box-shadow: var(--bl-shadow); }
+.btn--white { background: var(--bl-teal-light); color: var(--bl-primary); }
+.btn--white:hover { background: var(--bl-white); color: var(--bl-primary); box-shadow: var(--bl-shadow-lg); }
 .btn--ghost { border-color: rgba(255, 255, 255, 0.5); color: var(--bl-white); }
 .btn--ghost:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--bl-white); color: var(--bl-white); }
 .btn--outline { border-color: var(--bl-primary); color: var(--bl-primary); }
 .btn--outline:hover { background: var(--bl-primary); color: var(--bl-white); }
 
 .eyebrow {
-	display: inline-block; margin-bottom: 1rem; padding: 0.35em 0.9em;
-	background: color-mix(in srgb, var(--bl-primary) 10%, transparent);
-	color: var(--bl-primary); border-radius: 999px;
-	font-family: var(--bl-font-head); font-size: 0.8rem; font-weight: 700;
+	display: inline-flex; align-items: center; gap: 0.6em; margin-bottom: 1rem;
+	color: var(--bl-secondary); font-family: var(--bl-font-head); font-size: 0.82rem; font-weight: 600;
 	letter-spacing: 0.08em; text-transform: uppercase;
 }
-.eyebrow--light { background: rgba(255, 255, 255, 0.14); color: var(--bl-white); }
+.eyebrow::before { content: "</>"; font-family: var(--bl-font-mono); font-weight: 700; letter-spacing: 0; text-transform: none; }
+.eyebrow--light { color: var(--bl-teal-light); }
 
 /* ---------- Topbalk & header ---------- */
-.topbar { background: var(--bl-dark); color: rgba(255, 255, 255, 0.75); font-size: 0.85rem; }
+.topbar { background: var(--bl-primary); color: rgba(255, 255, 255, 0.75); font-size: 0.85rem; }
 .topbar__inner { display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 40px; }
 .topbar__contact { display: flex; gap: 1.5rem; }
 .topbar a { display: inline-flex; align-items: center; gap: 0.4em; color: rgba(255, 255, 255, 0.85); }
@@ -142,14 +146,14 @@ img { max-width: 100%; height: auto; display: block; }
 .site-header.is-scrolled { box-shadow: var(--bl-shadow); border-color: var(--bl-border); }
 .site-header__inner { display: flex; align-items: center; justify-content: space-between; min-height: 80px; gap: 2rem; }
 
-.site-title { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--bl-dark); font-family: var(--bl-font-head); font-weight: 800; font-size: 1.35rem; letter-spacing: -0.02em; }
-.site-title:hover { color: var(--bl-dark); }
-.site-title__mark {
-	display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px;
-	background: linear-gradient(135deg, var(--bl-primary), var(--bl-secondary)); color: var(--bl-white);
-	font-size: 1.2rem; box-shadow: 0 8px 18px -8px var(--bl-primary);
-}
+.site-title { display: inline-flex; align-items: center; gap: 0.75rem; color: var(--bl-primary); font-family: var(--bl-font-head); }
+.site-title:hover { color: var(--bl-primary); }
+.site-title__icon { width: auto; height: 52px; }
+.site-title__words { display: flex; flex-direction: column; line-height: 1.1; }
+.site-title__text { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; }
+.site-title__tagline { margin-top: 0.2em; color: var(--bl-muted); font-size: 0.78rem; font-weight: 500; }
 .site-title--light, .site-title--light:hover { color: var(--bl-white); }
+.site-title--light .site-title__tagline { color: var(--bl-line); }
 .custom-logo { max-height: 56px; width: auto; }
 
 .main-navigation { display: flex; align-items: center; gap: 2rem; }
@@ -157,15 +161,15 @@ img { max-width: 100%; height: auto; display: block; }
 .main-navigation li { position: relative; }
 .main-navigation a {
 	display: block; padding: 0.6em 0.9em; border-radius: 10px;
-	color: var(--bl-dark); font-family: var(--bl-font-head); font-weight: 600; font-size: 0.98rem;
+	color: var(--bl-primary); font-family: var(--bl-font-head); font-weight: 500; font-size: 0.98rem;
 }
 .main-navigation .menu > li > a::after {
-	content: ""; display: block; height: 2px; margin-top: 2px; background: var(--bl-primary);
+	content: ""; display: block; height: 2px; margin-top: 2px; background: var(--bl-secondary);
 	transform: scaleX(0); transition: transform 0.3s var(--bl-ease);
 }
 .main-navigation .menu > li > a:hover::after,
 .main-navigation .current-menu-item > a::after { transform: scaleX(1); }
-.main-navigation .current-menu-item > a { color: var(--bl-primary); }
+.main-navigation .current-menu-item > a { color: var(--bl-secondary); }
 .main-navigation .sub-menu {
 	position: absolute; top: 100%; left: 0; min-width: 220px; margin: 0; padding: 0.5rem;
 	list-style: none; background: var(--bl-white); border-radius: var(--bl-radius); box-shadow: var(--bl-shadow-lg);
@@ -173,11 +177,11 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .main-navigation li:hover > .sub-menu,
 .main-navigation li:focus-within > .sub-menu { opacity: 1; visibility: visible; transform: none; }
-.main-navigation .sub-menu a:hover { background: var(--bl-light); color: var(--bl-primary); }
+.main-navigation .sub-menu a:hover { background: var(--bl-light); color: var(--bl-secondary); }
 .main-navigation .header-cta { color: var(--bl-white); }
 
 .menu-toggle { display: none; flex-direction: column; gap: 5px; padding: 10px; background: none; border: 0; cursor: pointer; }
-.menu-toggle__bar { width: 24px; height: 2px; background: var(--bl-dark); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+.menu-toggle__bar { width: 24px; height: 2px; background: var(--bl-primary); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
 .menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(2) { opacity: 0; }
 .menu-toggle[aria-expanded="true"] .menu-toggle__bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
@@ -185,29 +189,31 @@ img { max-width: 100%; height: auto; display: block; }
 /* ---------- Hero ---------- */
 .hero {
 	position: relative; overflow: hidden; isolation: isolate;
-	padding: clamp(5rem, 12vw, 9rem) 0 clamp(7rem, 14vw, 11rem);
-	background: var(--bl-dark) center / cover no-repeat; color: var(--bl-white);
+	padding: clamp(4.5rem, 10vw, 7.5rem) 0 clamp(6.5rem, 12vw, 9.5rem);
+	background: var(--bl-primary) center / cover no-repeat; color: var(--bl-white);
 }
 .hero__overlay {
-	position: absolute; inset: 0; z-index: -1;
+	position: absolute; inset: 0; z-index: -2;
 	background:
-		radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--bl-secondary) 55%, transparent), transparent 45%),
-		linear-gradient(120deg, var(--bl-dark) 10%, var(--bl-primary) 100%);
+		radial-gradient(circle at 78% 45%, color-mix(in srgb, var(--bl-steel) 45%, transparent), transparent 50%),
+		var(--bl-primary);
 }
 .hero--image .hero__overlay { opacity: var(--bl-overlay); }
-.hero__shapes span {
-	position: absolute; z-index: -1; border-radius: 50%;
-	border: 1px solid rgba(255, 255, 255, 0.15); animation: bl-float 14s ease-in-out infinite;
-}
-.hero__shapes span:nth-child(1) { width: 520px; height: 520px; right: -120px; top: -140px; }
-.hero__shapes span:nth-child(2) { width: 320px; height: 320px; right: 12%; bottom: -80px; animation-delay: -4s; background: rgba(255, 255, 255, 0.04); }
-.hero__shapes span:nth-child(3) { width: 140px; height: 140px; left: 55%; top: 18%; animation-delay: -8s; background: color-mix(in srgb, var(--bl-secondary) 30%, transparent); border: 0; filter: blur(2px); }
-@keyframes bl-float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-20px, 24px); } }
+.hero__network { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; opacity: 0.55; }
+.hero__lines path { fill: none; stroke: var(--bl-steel); stroke-width: 1.5; opacity: 0.6; }
+.hero__nodes circle { fill: var(--bl-node); opacity: 0.7; animation: bl-pulse 6s ease-in-out infinite; }
+.hero__nodes circle:nth-child(3n) { animation-delay: -2s; }
+.hero__nodes circle:nth-child(3n+1) { animation-delay: -4s; }
+@keyframes bl-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+@keyframes bl-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
 
-.hero__content { max-width: 720px; }
+.hero__inner { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: center; gap: 3rem; }
+.hero__content { max-width: 680px; }
 .hero__title { color: var(--bl-white); margin-bottom: 0.4em; }
-.hero__text { max-width: 600px; font-size: 1.2rem; color: rgba(255, 255, 255, 0.85); margin-bottom: 2.2rem; }
+.hero__text { max-width: 580px; font-size: 1.18rem; color: var(--bl-line); margin-bottom: 2.2rem; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+.hero__visual { display: flex; justify-content: center; }
+.hero__visual img { width: min(300px, 100%); filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.35)); animation: bl-float 9s ease-in-out infinite; }
 .hero__wave { position: absolute; left: 0; bottom: -1px; width: 100%; height: 80px; fill: var(--bl-white); }
 
 /* ---------- Secties ---------- */
@@ -218,8 +224,8 @@ img { max-width: 100%; height: auto; display: block; }
 .section-head--row .section-title { margin: 0; }
 .section-title { position: relative; }
 .section-head:not(.section-head--row) .section-title::after {
-	content: ""; display: block; width: 56px; height: 4px; margin: 0.6em auto 0; border-radius: 4px;
-	background: linear-gradient(90deg, var(--bl-primary), var(--bl-secondary));
+	content: ""; display: block; width: 48px; height: 3px; margin: 0.6em auto 0; border-radius: 3px;
+	background: var(--bl-secondary);
 }
 .section-intro { color: var(--bl-muted); font-size: 1.15rem; }
 
@@ -233,19 +239,19 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .card::before {
 	content: ""; position: absolute; inset: 0 0 auto; height: 4px;
-	background: linear-gradient(90deg, var(--bl-primary), var(--bl-secondary));
+	background: var(--bl-secondary);
 	transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--bl-ease);
 }
 .card:hover { transform: translateY(-8px); box-shadow: var(--bl-shadow-lg); border-color: transparent; }
 .card:hover::before { transform: scaleX(1); }
 .card__icon {
 	display: grid; place-items: center; width: 60px; height: 60px; margin-bottom: 1.4rem;
-	border-radius: calc(var(--bl-radius) - 2px); color: var(--bl-primary);
-	background: color-mix(in srgb, var(--bl-primary) 10%, transparent);
+	border-radius: calc(var(--bl-radius) - 2px); color: var(--bl-secondary);
+	background: color-mix(in srgb, var(--bl-secondary) 12%, transparent);
 	transition: background 0.35s, color 0.35s;
 }
 .card__icon .bl-icon { width: 28px; height: 28px; }
-.card:hover .card__icon { background: linear-gradient(135deg, var(--bl-primary), var(--bl-secondary)); color: var(--bl-white); }
+.card:hover .card__icon { background: var(--bl-secondary); color: var(--bl-white); }
 .card__text { color: var(--bl-muted); margin-bottom: 1rem; }
 .card__link { display: inline-flex; align-items: center; gap: 0.4em; font-family: var(--bl-font-head); font-weight: 700; }
 
@@ -255,8 +261,8 @@ img { max-width: 100%; height: auto; display: block; }
 .media-placeholder {
 	position: relative; aspect-ratio: 5 / 4; border-radius: calc(var(--bl-radius) * 1.5);
 	background:
-		radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--bl-secondary) 60%, transparent), transparent 55%),
-		linear-gradient(135deg, var(--bl-primary), var(--bl-dark));
+		radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--bl-steel) 55%, transparent), transparent 60%),
+		var(--bl-primary);
 	box-shadow: var(--bl-shadow-lg);
 }
 .media-placeholder::before {
@@ -268,20 +274,21 @@ img { max-width: 100%; height: auto; display: block; }
 	padding: 1rem 1.3rem; background: var(--bl-white); color: var(--bl-dark); border-radius: var(--bl-radius);
 	box-shadow: var(--bl-shadow-lg); font-family: var(--bl-font-head); animation: bl-float 10s ease-in-out infinite;
 }
-.media-placeholder__card .bl-icon { width: 28px; height: 28px; color: var(--bl-primary); }
+.media-placeholder__card .bl-icon { width: 28px; height: 28px; color: var(--bl-secondary); }
 .media-placeholder__card--alt { left: auto; right: -1.5rem; top: 2rem; bottom: auto; animation-delay: -5s; }
 .checklist { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem 1.5rem; margin: 1.5rem 0 2rem; padding: 0; list-style: none; }
 .checklist li { display: flex; align-items: center; gap: 0.6rem; color: var(--bl-dark); font-weight: 600; }
 .checklist .bl-icon {
 	width: 24px; height: 24px; padding: 4px; border-radius: 50%;
-	background: var(--bl-primary); color: var(--bl-white); stroke-width: 3;
+	background: var(--bl-secondary); color: var(--bl-white); stroke-width: 3;
 }
 
 /* Cijfers */
-.stats { background: linear-gradient(120deg, var(--bl-dark), var(--bl-primary)); color: var(--bl-white); padding: 4rem 0; }
+.stats { background: var(--bl-primary); color: var(--bl-white); padding: 4rem 0; border-top: 3px solid var(--bl-secondary); }
 .stats__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 2rem; text-align: center; }
 .stat__number { display: block; font-family: var(--bl-font-head); font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 800; line-height: 1.1; }
-.stat__label { color: rgba(255, 255, 255, 0.75); font-weight: 500; }
+.stat__number { color: var(--bl-teal-light); }
+.stat__label { color: var(--bl-line); font-weight: 500; }
 
 /* Berichten */
 .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.8rem; }
@@ -294,15 +301,15 @@ img { max-width: 100%; height: auto; display: block; }
 .post-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--bl-ease); }
 .post-card:hover .post-card__media img { transform: scale(1.06); }
 .post-card__placeholder {
-	display: grid; place-items: center; height: 100%; color: rgba(255, 255, 255, 0.9);
-	background: linear-gradient(135deg, var(--bl-primary), var(--bl-secondary));
+	display: grid; place-items: center; height: 100%; color: var(--bl-teal-light);
+	background: radial-gradient(circle at 70% 30%, color-mix(in srgb, var(--bl-steel) 60%, transparent), transparent 60%), var(--bl-primary);
 }
 .post-card__placeholder .bl-icon { width: 48px; height: 48px; }
 .post-card__body { display: flex; flex-direction: column; flex: 1; padding: 1.6rem; }
-.post-card__cat { align-self: flex-start; margin-bottom: 0.8rem; color: var(--bl-primary); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.post-card__cat { align-self: flex-start; margin-bottom: 0.8rem; color: var(--bl-secondary); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
 .post-card__title { font-size: 1.25rem; }
 .post-card__title a { color: var(--bl-dark); }
-.post-card__title a:hover { color: var(--bl-primary); }
+.post-card__title a:hover { color: var(--bl-secondary); }
 .post-card__excerpt { color: var(--bl-muted); font-size: 0.98rem; }
 .post-card__meta { margin-top: auto; color: var(--bl-muted); font-size: 0.85rem; }
 
@@ -311,27 +318,29 @@ img { max-width: 100%; height: auto; display: block; }
 .cta {
 	position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem;
 	padding: clamp(2.5rem, 5vw, 4rem); border-radius: calc(var(--bl-radius) * 1.8); color: var(--bl-white);
-	background: linear-gradient(120deg, var(--bl-primary), var(--bl-secondary));
+	background:
+		radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--bl-steel) 55%, transparent), transparent 45%),
+		var(--bl-primary);
 	box-shadow: var(--bl-shadow-lg);
 }
 .cta::after {
-	content: ""; position: absolute; right: -80px; top: -80px; width: 280px; height: 280px;
-	border-radius: 50%; background: rgba(255, 255, 255, 0.12);
+	content: "</>"; position: absolute; right: 2rem; top: 0.5rem;
+	color: var(--bl-teal-light); opacity: 0.12; font: 700 9rem/1 var(--bl-font-mono); pointer-events: none;
 }
 .cta__content { position: relative; z-index: 1; max-width: 620px; }
 .cta__title { color: var(--bl-white); margin-bottom: 0.3em; }
-.cta__text { margin: 0; color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; }
+.cta__text { margin: 0; color: var(--bl-line); font-size: 1.1rem; }
 .cta .btn { position: relative; z-index: 1; }
 
 /* ---------- Binnenpagina's ---------- */
 .page-hero {
 	padding: clamp(3.5rem, 8vw, 6rem) 0; color: var(--bl-white); text-align: center;
 	background:
-		radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--bl-secondary) 50%, transparent), transparent 45%),
-		linear-gradient(120deg, var(--bl-dark), var(--bl-primary));
+		radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--bl-steel) 50%, transparent), transparent 45%),
+		var(--bl-primary);
 }
 .page-hero__title { color: var(--bl-white); margin: 0; font-size: clamp(2rem, 4.5vw, 3rem); }
-.page-hero__subtitle, .page-hero__meta { margin: 0.8rem auto 0; max-width: 640px; color: rgba(255, 255, 255, 0.8); }
+.page-hero__subtitle, .page-hero__meta { margin: 0.8rem auto 0; max-width: 640px; color: var(--bl-line); }
 
 .layout--sidebar { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 3rem; }
 .entry-thumbnail { margin: 0 0 2rem; }
@@ -339,7 +348,7 @@ img { max-width: 100%; height: auto; display: block; }
 .entry-content > * { margin-bottom: 1.4rem; }
 .entry-content h2, .entry-content h3 { margin-top: 2.2rem; }
 .entry-content blockquote {
-	margin: 2rem 0; padding: 1.2rem 1.6rem; border-left: 4px solid var(--bl-primary);
+	margin: 2rem 0; padding: 1.2rem 1.6rem; border-left: 4px solid var(--bl-secondary);
 	background: var(--bl-light); border-radius: 0 var(--bl-radius) var(--bl-radius) 0; font-size: 1.15rem;
 }
 .entry-content .alignwide { max-width: 1100px; margin-left: auto; margin-right: auto; }
@@ -349,7 +358,7 @@ img { max-width: 100%; height: auto; display: block; }
 
 .post-navigation .nav-links { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 3rem 0; }
 .post-navigation a { display: block; height: 100%; padding: 1.2rem; border: 1px solid var(--bl-border); border-radius: var(--bl-radius); color: var(--bl-dark); font-weight: 700; }
-.post-navigation a:hover { border-color: var(--bl-primary); }
+.post-navigation a:hover { border-color: var(--bl-secondary); }
 .post-navigation .nav-next { text-align: right; }
 .nav-label { display: block; color: var(--bl-muted); font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
 
@@ -366,7 +375,7 @@ img { max-width: 100%; height: auto; display: block; }
 	width: 100%; padding: 0.85em 1.1em; border: 1px solid var(--bl-border); border-radius: 12px;
 	font: inherit; color: var(--bl-dark); background: var(--bl-white); transition: border-color 0.2s, box-shadow 0.2s;
 }
-.search-field:focus, input:focus, textarea:focus { outline: 0; border-color: var(--bl-primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--bl-primary) 15%, transparent); }
+.search-field:focus, input:focus, textarea:focus { outline: 0; border-color: var(--bl-secondary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--bl-secondary) 18%, transparent); }
 
 .comment-list { padding: 0; list-style: none; }
 .comment-list .comment-body { padding: 1.2rem 0; border-bottom: 1px solid var(--bl-border); }
@@ -380,7 +389,7 @@ img { max-width: 100%; height: auto; display: block; }
 .error-404 .search-form { max-width: 480px; margin: 2rem auto; }
 
 /* ---------- Footer ---------- */
-.site-footer { background: var(--bl-dark); color: rgba(255, 255, 255, 0.7); font-size: 0.97rem; }
+.site-footer { background: var(--bl-dark); color: var(--bl-node); font-size: 0.97rem; }
 .site-footer__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 3rem; padding: 4.5rem 24px 3.5rem; }
 .site-footer__brand p { margin: 1.2rem 0; }
 .site-footer a { color: rgba(255, 255, 255, 0.75); }
@@ -390,10 +399,10 @@ img { max-width: 100%; height: auto; display: block; }
 .site-footer .widget { padding: 0; background: none; }
 .footer-title { color: var(--bl-white); font-size: 1.05rem; margin-bottom: 1.2rem; }
 .footer-contact li { display: flex; gap: 0.7rem; align-items: flex-start; }
-.footer-contact .bl-icon { margin-top: 0.3em; color: var(--bl-secondary); }
+.footer-contact .bl-icon { margin-top: 0.3em; color: var(--bl-teal-light); }
 .social-links { display: flex; gap: 0.6rem; }
 .social-link { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); transition: background 0.25s, transform 0.25s; }
-.social-link:hover { background: var(--bl-primary); transform: translateY(-3px); }
+.social-link:hover { background: var(--bl-secondary); transform: translateY(-3px); }
 .social-link .bl-icon { width: 18px; height: 18px; }
 .site-footer__bottom { padding: 1.4rem 0; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 0.88rem; }
 
@@ -424,6 +433,10 @@ img { max-width: 100%; height: auto; display: block; }
 	.main-navigation .sub-menu { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; padding-left: 1rem; }
 	.header-cta { justify-content: center; }
 	.split { grid-template-columns: 1fr; }
+	.hero__inner { grid-template-columns: 1fr; }
+	.hero__visual { display: none; }
+	.site-title__icon { height: 44px; }
+	.site-title__text { font-size: 1.3rem; }
 	.media-placeholder__card { left: 1rem; }
 	.media-placeholder__card--alt { right: 1rem; }
 }
@@ -442,7 +455,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 @media (max-width: 782px) { .admin-bar .site-header { top: 46px; } }
 
-:root{--bl-primary:#1d4ed8;--bl-secondary:#0ea5e9;--bl-dark:#0b1b3f;--bl-light:#f1f6ff;--bl-text:#334155;--bl-radius:14px;--bl-overlay:0.85;--bl-font-head:"Plus Jakarta Sans", system-ui, sans-serif;--bl-font-body:"Inter", system-ui, sans-serif;}
+:root{--bl-primary:#0e2a47;--bl-secondary:#1f8a8a;--bl-steel:#4c7a9e;--bl-node:#8b97a3;--bl-dark:#0b0e14;--bl-light:#f2f5f8;--bl-text:#3d4a58;--bl-radius:10px;--bl-overlay:0.85;--bl-font-head:"Inter", system-ui, sans-serif;--bl-font-body:"Inter", system-ui, sans-serif;}
 </style>
 </head>
 
@@ -451,10 +464,9 @@ img { max-width: 100%; height: auto; display: block; }
 
 	<div class="topbar">
 		<div class="container topbar__inner">
-			<span class="topbar__text">Jouw partner in IT-talent en oplossingen</span>
+			<span class="topbar__text">Training, Onderwijs &amp; Advies in IT</span>
 			<div class="topbar__contact">
-													<a href="tel:+310201234567"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg> +31 (0)20 123 45 67</a>
-																	<a href="mailto:info@voorbeeld.nl"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg> info@voorbeeld.nl</a>
+																					<a href="mailto:info@koomen.it"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg> info@koomen.it</a>
 							</div>
 		</div>
 	</div>
@@ -463,8 +475,11 @@ img { max-width: 100%; height: auto; display: block; }
 	<div class="container site-header__inner">
 		<div class="site-branding">
 							<a class="site-title" href="#" rel="home">
-					<span class="site-title__mark" aria-hidden="true">B</span>
-					<span class="site-title__text">Blueline IT</span>
+					<img class="site-title__icon" src="../koomenit/assets/img/logo-icon.png" alt="" width="258" height="320">
+					<span class="site-title__words">
+						<span class="site-title__text">koomen.it</span>
+													<span class="site-title__tagline">Training, Onderwijs &amp; Advies</span>
+											</span>
 				</a>
 					</div>
 
@@ -476,7 +491,7 @@ img { max-width: 100%; height: auto; display: block; }
 		</button>
 
 		<nav id="site-navigation" class="main-navigation" aria-label="Hoofdmenu">
-			<ul class="menu"><li class="current-menu-item"><a href="#">Home</a></li><li class=""><a href="#diensten">Diensten</a></li><li class=""><a href="#over-ons">Over ons</a></li><li class=""><a href="#nieuws">Vacatures</a></li><li class=""><a href="#contact">Contact</a></li></ul>										<a class="btn btn--primary btn--sm header-cta" href="#contact">Neem contact op</a>
+			<ul class="menu"><li class="current-menu-item"><a href="#">Home</a></li><li class=""><a href="#aanbod">Training</a></li><li class=""><a href="#aanbod">Onderwijs</a></li><li class=""><a href="#aanbod">Advies</a></li><li class=""><a href="#over-ons">Over</a></li><li class=""><a href="#contact">Contact</a></li></ul>										<a class="btn btn--primary btn--sm header-cta" href="#contact">Neem contact op</a>
 					</nav>
 	</div>
 </header>
@@ -484,46 +499,54 @@ img { max-width: 100%; height: auto; display: block; }
 <main id="primary" class="site-main site-main--front">
 	<section class="hero">
 	<div class="hero__overlay" aria-hidden="true"></div>
-	<div class="hero__shapes" aria-hidden="true"><span></span><span></span><span></span></div>
+	<svg class="hero__network" viewBox="0 0 1440 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+		<g class="hero__lines">
+			<path d="M80 120 340 60 520 210 300 330 80 120zM520 210 760 90 980 170 860 360 520 210zM300 330 140 520 470 600 860 360M980 170 1240 80 1380 300 1160 470 860 360M1160 470 1300 600M470 600 760 520 1160 470"/>
+		</g>
+		<g class="hero__nodes">
+			<circle cx="80" cy="120" r="7"/><circle cx="340" cy="60" r="6"/><circle cx="520" cy="210" r="8"/><circle cx="300" cy="330" r="6"/>
+			<circle cx="760" cy="90" r="6"/><circle cx="980" cy="170" r="8"/><circle cx="860" cy="360" r="7"/><circle cx="140" cy="520" r="6"/>
+			<circle cx="470" cy="600" r="7"/><circle cx="1240" cy="80" r="6"/><circle cx="1380" cy="300" r="8"/><circle cx="1160" cy="470" r="7"/>
+			<circle cx="1300" cy="600" r="6"/><circle cx="760" cy="520" r="5"/>
+		</g>
+	</svg>
 	<div class="container hero__inner">
 		<div class="hero__content reveal">
-							<span class="eyebrow eyebrow--light">IT-dienstverlening</span>
-						<h1 class="hero__title">Wij verbinden IT-talent met ambitieuze organisaties</h1>
-			<p class="hero__text">Detachering, consultancy, training en outsourcing. Met de juiste mensen en kennis brengen we jouw IT-organisatie naar een hoger niveau.</p>
+							<span class="eyebrow eyebrow--light">Training · Onderwijs · Advies</span>
+						<h1 class="hero__title">IT-kennis die blijft hangen</h1>
+			<p class="hero__text">Praktijkgerichte trainingen, lessen en advies over IT. Voor professionals, teams en onderwijsinstellingen die technologie écht willen begrijpen en toepassen.</p>
 			<div class="hero__actions">
-									<a class="btn btn--white" href="#diensten">Onze diensten <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg></a>
-													<a class="btn btn--ghost" href="#nieuws">Bekijk vacatures</a>
+									<a class="btn btn--white" href="#aanbod">Bekijk het aanbod <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg></a>
+													<a class="btn btn--ghost" href="#contact">Plan een kennismaking</a>
 							</div>
 		</div>
-	</div>
+					<div class="hero__visual" aria-hidden="true">
+				<img src="../koomenit/assets/img/logo-icon-light.png" alt="" width="258" height="320">
+			</div>
+			</div>
 	<svg class="hero__wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 80V40c240 30 480 40 720 20S1200 0 1440 30v50z"/></svg>
 </section>
-<section id="diensten" class="section section--services">
+<section id="aanbod" class="section section--services">
 	<div class="container">
 		<div class="section-head reveal">
-			<h2 class="section-title">Onze diensten</h2>
-							<p class="section-intro">Van een enkele specialist tot een compleet team: wij leveren maatwerk.</p>
+			<h2 class="section-title">Aanbod</h2>
+							<p class="section-intro">Drie manieren om IT-kennis over te dragen, steeds afgestemd op de groep en het doel.</p>
 					</div>
 		<div class="cards">
 							<article class="card reveal">
-					<div class="card__icon"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-					<h3 class="card__title">Detachering</h3>
-					<p class="card__text">Ervaren IT-professionals die direct inzetbaar zijn binnen jouw organisatie.</p>
-									</article>
-							<article class="card reveal">
-					<div class="card__icon"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg></div>
-					<h3 class="card__title">Consultancy</h3>
-					<p class="card__text">Advies en begeleiding bij strategie, architectuur en implementatie.</p>
+					<div class="card__icon"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></div>
+					<h3 class="card__title">Training</h3>
+					<p class="card__text">IT-trainingen en workshops op maat, van programmeren en cloud tot security. Veel oefenen, weinig sheets.</p>
 									</article>
 							<article class="card reveal">
 					<div class="card__icon"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg></div>
-					<h3 class="card__title">Training</h3>
-					<p class="card__text">Opleidingstrajecten die jouw team klaarstomen voor de toekomst.</p>
+					<h3 class="card__title">Onderwijs</h3>
+					<p class="card__text">Lessen, lesmateriaal en curriculumontwikkeling voor mbo, hbo en bedrijfsopleidingen.</p>
 									</article>
 							<article class="card reveal">
-					<div class="card__icon"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M17.5 19H7a5 5 0 1 1 .9-9.9A6 6 0 0 1 19 11a4 4 0 0 1-1.5 8z"/></svg></div>
-					<h3 class="card__title">Outsourcing</h3>
-					<p class="card__text">Wij nemen IT-taken of complete projecten zorgeloos van je over.</p>
+					<div class="card__icon"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg></div>
+					<h3 class="card__title">Advies</h3>
+					<p class="card__text">Onafhankelijk advies over IT-architectuur, tooling en het opbouwen van digitale vaardigheden in je team.</p>
 									</article>
 					</div>
 	</div>
@@ -541,43 +564,39 @@ img { max-width: 100%; height: auto; display: block; }
 				</div>
 					</div>
 		<div class="split__content reveal">
-							<span class="eyebrow">Over ons</span>
-						<h2 class="section-title">Mensen maken het verschil in IT</h2>
-			<p>Wij geloven dat technologie pas waarde krijgt door de mensen die ermee werken. Daarom investeren we in de groei van onze professionals en in duurzame relaties met onze opdrachtgevers.</p>
+							<span class="eyebrow">Over Koomen.IT</span>
+						<h2 class="section-title">Techniek uitleggen zodat het klikt</h2>
+			<p>Goede IT begint bij begrip. Koomen.IT vertaalt complexe onderwerpen naar heldere uitleg en concrete oefeningen, zodat deelnemers de kennis direct kunnen toepassen in hun eigen werk.</p>
 							<ul class="checklist">
-											<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Persoonlijke begeleiding</li>
-											<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Gecertificeerde specialisten</li>
-											<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Landing binnen enkele weken</li>
-											<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Langdurige samenwerkingen</li>
+											<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Praktijkgericht en concreet</li>
+											<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Afgestemd op het niveau van de groep</li>
+											<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Voor onderwijs én bedrijfsleven</li>
+											<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>Persoonlijk contact</li>
 									</ul>
-										<a class="btn btn--primary" href="#">Meer over ons <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg></a>
+										<a class="btn btn--primary" href="#">Meer over Koomen.IT <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg></a>
 					</div>
 	</div>
 </section>
 <section class="stats">
 	<div class="container stats__grid">
 					<div class="stat reveal">
-				<span class="stat__number"><span class="js-count" data-target="250">250</span>+</span>
-				<span class="stat__label">IT-professionals</span>
+				<span class="stat__number"><span class="js-count" data-target="3">3</span></span>
+				<span class="stat__label">Kerngebieden</span>
 			</div>
 					<div class="stat reveal">
-				<span class="stat__number"><span class="js-count" data-target="120">120</span>+</span>
-				<span class="stat__label">Opdrachtgevers</span>
+				<span class="stat__number"><span class="js-count" data-target="100">100</span>%</span>
+				<span class="stat__label">Maatwerk</span>
 			</div>
 					<div class="stat reveal">
-				<span class="stat__number"><span class="js-count" data-target="10">10</span></span>
-				<span class="stat__label">Jaar ervaring</span>
-			</div>
-					<div class="stat reveal">
-				<span class="stat__number"><span class="js-count" data-target="98">98</span>%</span>
-				<span class="stat__label">Klanttevredenheid</span>
+				<span class="stat__number"><span class="js-count" data-target="1">1</span></span>
+				<span class="stat__label">Vast aanspreekpunt</span>
 			</div>
 			</div>
 </section>
 <section id="nieuws" class="section">
 	<div class="container">
 		<div class="section-head section-head--row reveal">
-			<h2 class="section-title">Laatste nieuws &amp; vacatures</h2>
+			<h2 class="section-title">Nieuws &amp; kennisbank</h2>
 					</div>
 		<div class="post-grid">
 			<article id="post-1" class="post-card reveal">
@@ -585,10 +604,10 @@ img { max-width: 100%; height: auto; display: block; }
 					<span class="post-card__placeholder"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></span>
 			</a>
 	<div class="post-card__body">
-							<span class="post-card__cat">Vacatures</span>
-				<h3 class="post-card__title"><a href="#">Vacature: Senior Cloud Engineer (Azure)</a></h3>
-		<p class="post-card__excerpt">Voor een grote opdrachtgever in de Randstad zoeken we een ervaren cloud engineer die complexe Azure-omgevingen ontwerpt, bouwt en beheert.</p>
-		<div class="post-card__meta"><span class="posted-on"><time datetime="2026-10-01">12 oktober 2026</time></span><span class="byline"> · Redactie</span></div>
+							<span class="post-card__cat">Training</span>
+				<h3 class="post-card__title"><a href="#">Voorbeeld: workshop Git voor teams</a></h3>
+		<p class="post-card__excerpt">In één dag van losse bestanden naar een vaste werkwijze met branches, pull requests en code reviews. Dit is een…</p>
+		<div class="post-card__meta"><span class="posted-on"><time datetime="2026-10-01">14 oktober 2026</time></span><span class="byline"> · Redactie</span></div>
 	</div>
 </article>
 <article id="post-2" class="post-card reveal">
@@ -596,10 +615,10 @@ img { max-width: 100%; height: auto; display: block; }
 					<span class="post-card__placeholder"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></span>
 			</a>
 	<div class="post-card__body">
-							<span class="post-card__cat">Kennis</span>
-				<h3 class="post-card__title"><a href="#">Zo bereid je je organisatie voor op NIS2</a></h3>
-		<p class="post-card__excerpt">De nieuwe Europese cybersecurityrichtlijn raakt meer organisaties dan je denkt. Onze consultants zetten de belangrijkste stappen voor je op een…</p>
-		<div class="post-card__meta"><span class="posted-on"><time datetime="2026-10-01">3 oktober 2026</time></span><span class="byline"> · Redactie</span></div>
+							<span class="post-card__cat">Onderwijs</span>
+				<h3 class="post-card__title"><a href="#">Voorbeeld: Python leren in het mbo</a></h3>
+		<p class="post-card__excerpt">Hoe je programmeerlessen opbouwt rond kleine, echte projecten waar studenten direct resultaat zien. Dit is een voorbeeldbericht.</p>
+		<div class="post-card__meta"><span class="posted-on"><time datetime="2026-10-01">2 oktober 2026</time></span><span class="byline"> · Redactie</span></div>
 	</div>
 </article>
 <article id="post-3" class="post-card reveal">
@@ -607,10 +626,10 @@ img { max-width: 100%; height: auto; display: block; }
 					<span class="post-card__placeholder"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></span>
 			</a>
 	<div class="post-card__body">
-							<span class="post-card__cat">Training</span>
-				<h3 class="post-card__title"><a href="#">Nieuwe trainingen in DevOps en Kubernetes</a></h3>
-		<p class="post-card__excerpt">Ons opleidingsaanbod is uitgebreid met praktijkgerichte trainingen voor developers en beheerders die willen groeien in moderne platformen.</p>
-		<div class="post-card__meta"><span class="posted-on"><time datetime="2026-10-01">24 september 2026</time></span><span class="byline"> · Redactie</span></div>
+							<span class="post-card__cat">Advies</span>
+				<h3 class="post-card__title"><a href="#">Voorbeeld: vijf vragen voor je cloudkeuze</a></h3>
+		<p class="post-card__excerpt">Voordat je kiest voor een cloudplatform: deze vragen helpen je om kosten, beheer en kennis in balans te houden. Dit…</p>
+		<div class="post-card__meta"><span class="posted-on"><time datetime="2026-10-01">20 september 2026</time></span><span class="byline"> · Redactie</span></div>
 	</div>
 </article>
 		</div>
@@ -620,10 +639,10 @@ img { max-width: 100%; height: auto; display: block; }
 	<div class="container">
 		<div class="cta reveal">
 			<div class="cta__content">
-				<h2 class="cta__title">Klaar voor de volgende stap?</h2>
-				<p class="cta__text">Of je nu talent zoekt of een nieuwe uitdaging: we denken graag met je mee.</p>
+				<h2 class="cta__title">Samen aan de slag?</h2>
+				<p class="cta__text">Benieuwd wat een training, les of adviestraject voor jouw organisatie kan betekenen? Neem vrijblijvend contact op.</p>
 			</div>
-							<a class="btn btn--white" href="mailto:info@voorbeeld.nl">Plan een kennismaking <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg></a>
+							<a class="btn btn--white" href="mailto:info@koomen.it">Neem contact op <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg></a>
 					</div>
 	</div>
 </section>
@@ -634,45 +653,44 @@ img { max-width: 100%; height: auto; display: block; }
 	<div class="container site-footer__grid">
 		<div class="site-footer__brand">
 			<a class="site-title site-title--light" href="#">
-				<span class="site-title__mark" aria-hidden="true">B</span>
-				<span class="site-title__text">Blueline IT</span>
+				<img class="site-title__icon" src="../koomenit/assets/img/logo-icon-light.png" alt="" width="258" height="320">
+				<span class="site-title__words">
+					<span class="site-title__text">koomen.it</span>
+											<span class="site-title__tagline">Training, Onderwijs &amp; Advies</span>
+									</span>
 			</a>
-			<p>Wij leveren IT-professionals en oplossingen die écht passen bij jouw organisatie.</p>
+			<p>Koomen.IT verzorgt training, onderwijs en advies op het gebied van IT.</p>
 			<div class="social-links"><a href="#" class="social-link" target="_blank" rel="noopener" aria-label="Linkedin"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div>		</div>
 
 					<div class="site-footer__col">
-									<h4 class="footer-title">Diensten</h4>
+									<h4 class="footer-title">Aanbod</h4>
 					<ul>
-													<li><a href="#diensten">Detachering</a></li>
-													<li><a href="#diensten">Consultancy</a></li>
-													<li><a href="#diensten">Training</a></li>
-													<li><a href="#diensten">Outsourcing</a></li>
+													<li><a href="#aanbod">Training</a></li>
+													<li><a href="#aanbod">Onderwijs</a></li>
+													<li><a href="#aanbod">Advies</a></li>
 											</ul>
 							</div>
 					<div class="site-footer__col">
 									<h4 class="footer-title">Navigatie</h4>
-					<ul class="menu"><li class=""><a href="#">Over ons</a></li><li class=""><a href="#">Werken bij</a></li><li class=""><a href="#">Nieuws</a></li><li class=""><a href="#">Privacy</a></li><li class=""><a href="#">Contact</a></li></ul>							</div>
+					<ul class="menu"><li class=""><a href="#">Over Koomen.IT</a></li><li class=""><a href="#">Nieuws</a></li><li class=""><a href="#">Kennisbank</a></li><li class=""><a href="#">Privacyverklaring</a></li><li class=""><a href="#">Contact</a></li></ul>							</div>
 					<div class="site-footer__col">
 									<h4 class="footer-title">Contact</h4>
 					<ul class="footer-contact">
-													<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Voorbeeldstraat 1<br />
-1234 AB Amsterdam</span></li>
-																			<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><span>+31 (0)20 123 45 67</span></li>
-																			<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg><a href="mailto:info@voorbeeld.nl">info@voorbeeld.nl</a></li>
+																									<li><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg><a href="mailto:info@koomen.it">info@koomen.it</a></li>
 											</ul>
 							</div>
 			</div>
 
 	<div class="site-footer__bottom">
 		<div class="container">
-			<span>© 2026 Blueline IT. Alle rechten voorbehouden.</span>
+			<span>© 2026 koomen.it. Alle rechten voorbehouden.</span>
 		</div>
 	</div>
 </footer>
 
 <script>
 /**
- * Blueline: mobiel menu, sticky header, scroll-animaties en tellers.
+ * Koomen.IT: mobiel menu, sticky header, scroll-animaties en tellers.
  */
 ( function () {
 	'use strict';
