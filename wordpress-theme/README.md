@@ -12,9 +12,11 @@ netwerkmotief uit het logo. Gemaakt om embedded projecten, websites en software 
 2. Ga in WordPress naar **Weergave → Thema's → Nieuw thema toevoegen → Thema uploaden**.
 3. Upload `koomenit.zip` en klik op **Activeren**.
 
-Bij het activeren maakt het thema automatisch de platforms *ESP32*, *Arduino* en
-*Raspberry Pi* aan, en de projecttypes *Website / webinterface*, *Sensorproject* en
-*Programma / software*. Het projectoverzicht staat op `/projecten/`.
+Bij het activeren (en na elke update van het thema) maakt het thema automatisch de
+platforms *ESP32*, *Arduino* en *Raspberry Pi* aan, de projecttypes *Website / webinterface*,
+*Sensorproject* en *Programma / software*, en de websitetypes *Bedrijfswebsite*, *Webshop*,
+*Portfolio*, *Webapplicatie* en *Webinterface voor hardware*. Bestaande termen blijven staan.
+De overzichten staan op `/projecten/` en `/websites/`.
 
 Zet bij **Instellingen → Algemeen** de sitetitel op `koomen.it`: het deel na de punt (`.it`)
 krijgt dan automatisch de grijze kleur uit het logo.
@@ -33,6 +35,20 @@ Ga in het dashboard naar **Projecten → Nieuw project**.
 | Technieken                 | Labels op de kaart (C++, Python, MQTT, BME280, …) |
 | Projectgegevens (zijbalk)  | Status, jaar, GitHub-link, demo-link en de hardwarelijst |
 
+## Een website toevoegen
+
+Ga in het dashboard naar **Websites → Nieuwe website**. Dit werkt hetzelfde als een project.
+
+| Veld                       | Waar het verschijnt |
+|----------------------------|---------------------|
+| Titel, inhoud, samenvatting | Websitepagina en websitekaart |
+| Screenshot (uitgelichte afbeelding) | In een browservenster met adresbalk; zonder screenshot toont het thema een schets van een webpagina |
+| Websitetype                | Filterknoppen en label op de kaart |
+| Technieken                 | Labels (WordPress, WooCommerce, PHP, …); dezelfde lijst als bij projecten |
+| Websitegegevens (zijbalk)  | Webadres, opdrachtgever, rol, status (live, in ontwikkeling, in beheer, archief), jaar en optioneel GitHub |
+
+De knop *Bezoek website* verschijnt alleen als er een webadres is en de status niet *Archief* is.
+
 ## Homepage aanpassen
 
 Alles staat in **Weergave → Customizer → Koomen.IT thema-opties**. Elke sectie kan aan of uit.
@@ -45,8 +61,9 @@ Alles staat in **Weergave → Customizer → Koomen.IT thema-opties**. Elke sect
 | Hero                | Titel, tekst, knoppen, achtergrondafbeelding en de illustratie rechts: een **codevenster** (bestandsnaam, taal Python of C++, eigen code, regelnummers, statusbalk, link naar het project, typ-animatie aan/uit), een seriële monitor, het logo of niets |
 | Platforms           | Tot 4 kaarten. Heet een kaart hetzelfde als een platform, dan linkt hij automatisch naar dat platform en toont hij het aantal projecten |
 | Projecten           | Titel, intro, aantal projecten, filterknoppen aan/uit |
+| Websites            | Titel, intro, aantal websites, filterknoppen per websitetype aan/uit |
 | Over                | Tekst, expertise, foto, knop (standaard naar GitHub) |
-| Cijfers             | Tot 4 cijfers, automatisch geteld (projecten, platforms, technieken) of zelf ingevuld |
+| Cijfers             | Tot 4 cijfers, automatisch geteld (projecten, websites, platforms, technieken) of zelf ingevuld |
 | Blog                | Nieuwste berichten |
 | Call-to-action      | Titel, tekst en knop |
 | Footer & social     | Omschrijving, adres, GitHub, LinkedIn, YouTube, Instagram |
@@ -57,12 +74,12 @@ footer-widgetkolommen, het koomen.it-kleurenpalet in de blokeditor en een pagina
 
 ## Demo
 
-`demo/` bevat een statische weergave van de homepage, het projectoverzicht en een
-projectpagina, gemaakt uit de echte thema-templates:
+`demo/` bevat een statische weergave van de homepage, het project- en websiteoverzicht en
+een project- en websitepagina, gemaakt uit de echte thema-templates:
 
 ```bash
 php wordpress-theme/demo/render-demo.php
 ```
 
-Het project *Achteruitrij-parkeersensor* is echt; de andere projecten en blogberichten zijn
-voorbeelden.
+Het project *Achteruitrij-parkeersensor* en de website *koomen.it* zijn echt; alles wat met
+"Voorbeeld:" begint, en de blogberichten, zijn voorbeelden.

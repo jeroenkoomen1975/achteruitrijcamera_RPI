@@ -63,7 +63,7 @@ function koomenit_register_projects() {
 	foreach ( $taxonomies as $taxonomy => $t ) {
 		register_taxonomy(
 			$taxonomy,
-			'project',
+			'techniek' === $taxonomy ? array( 'project', 'website' ) : 'project',
 			array(
 				'labels'            => array(
 					'name'          => $t['name'],
@@ -106,29 +106,50 @@ function koomenit_register_projects() {
 add_action( 'init', 'koomenit_register_projects' );
 
 /**
- * Bij activeren: standaardplatforms en -types aanmaken en permalinks verversen.
+ * Standaardtermen voor projecten en websites aanmaken (bestaande blijven staan).
  */
-function koomenit_activate_projects() {
-	koomenit_register_projects();
-
+function koomenit_create_default_terms() {
 	$terms = array(
 		'platform'    => array( 'ESP32', 'Arduino', 'Raspberry Pi' ),
 		'projecttype' => array( __( 'Website / webinterface', 'koomenit' ), __( 'Sensorproject', 'koomenit' ), __( 'Programma / software', 'koomenit' ) ),
+		'websitetype' => array( __( 'Bedrijfswebsite', 'koomenit' ), __( 'Webshop', 'koomenit' ), __( 'Portfolio', 'koomenit' ), __( 'Webapplicatie', 'koomenit' ), __( 'Webinterface voor hardware', 'koomenit' ) ),
 	);
 	foreach ( $terms as $taxonomy => $names ) {
+		if ( ! taxonomy_exists( $taxonomy ) ) {
+			continue;
+		}
 		foreach ( $names as $name ) {
 			if ( ! term_exists( $name, $taxonomy ) ) {
 				wp_insert_term( $name, $taxonomy );
 			}
 		}
 	}
+}
 
+/**
+ * Bij activeren én na een update van het thema: standaardtermen aanmaken en
+ * permalinks verversen, zodat nieuwe overzichten (zoals /websites/) direct werken.
+ */
+function koomenit_maybe_upgrade() {
+	if ( get_option( 'koomenit_version' ) === KOOMENIT_VERSION ) {
+		return;
+	}
+	koomenit_create_default_terms();
 	flush_rewrite_rules();
+	update_option( 'koomenit_version', KOOMENIT_VERSION );
+}
+add_action( 'init', 'koomenit_maybe_upgrade', 99 );
+
+/**
+ * Bij (opnieuw) activeren altijd opnieuw controleren.
+ */
+function koomenit_activate_projects() {
+	delete_option( 'koomenit_version' );
 }
 add_action( 'after_switch_theme', 'koomenit_activate_projects' );
 
 /**
- * Projectoverzichten tonen alle projecten op één pagina, zodat het filteren werkt.
+ * Overzichten van projecten en websites tonen alles op één pagina, zodat het filteren werkt.
  *
  * @param WP_Query $query Query.
  */
@@ -136,7 +157,7 @@ function koomenit_project_archive_query( $query ) {
 	if ( is_admin() || ! $query->is_main_query() ) {
 		return;
 	}
-	if ( $query->is_post_type_archive( 'project' ) || $query->is_tax( array( 'platform', 'projecttype', 'techniek' ) ) ) {
+	if ( $query->is_post_type_archive( array( 'project', 'website' ) ) || $query->is_tax( array( 'platform', 'projecttype', 'techniek', 'websitetype' ) ) ) {
 		$query->set( 'posts_per_page', 60 );
 	}
 }
@@ -269,12 +290,82 @@ function koomenit_platform_icon( $name ) {
 }
 
 /**
+ * Bijpassend icoon voor een term (platform of websitetype).
+ *
+ * @param WP_Term $term Term.
+ * @return string
+ */
+function koomenit_term_icon( $term ) {
+	if ( 'websitetype' !== $term->taxonomy ) {
+		return koomenit_platform_icon( $term->name );
+	}
+	$name = strtolower( $term->name );
+	if ( false !== strpos( $name, 'shop' ) ) {
+		return 'cart';
+	}
+	if ( false !== strpos( $name, 'hardware' ) || false !== strpos( $name, 'interface' ) ) {
+		return 'chip';
+	}
+	if ( false !== strpos( $name, 'applicatie' ) || false !== strpos( $name, 'app' ) ) {
+		return 'code';
+	}
+	if ( false !== strpos( $name, 'portfolio' ) ) {
+		return 'layout';
+	}
+	return 'globe';
+}
+
+/**
+ * Term-slugs van het huidige bericht als spatiegescheiden lijst (voor de filter).
+ *
+ * @param string $taxonomy Indeling.
+ * @return string
+ */
+function koomenit_term_slugs( $taxonomy ) {
+	return implode( ' ', wp_list_pluck( koomenit_project_terms( $taxonomy ), 'slug' ) );
+}
+
+/**
  * Platform-slugs van een project als spatiegescheiden lijst (voor de filter).
  *
  * @return string
  */
 function koomenit_project_filter_slugs() {
-	return implode( ' ', wp_list_pluck( koomenit_project_terms( 'platform' ), 'slug' ) );
+	return koomenit_term_slugs( 'platform' );
+}
+
+/**
+ * Filterknoppen voor een indeling.
+ *
+ * @param string $taxonomy Indeling (platform of websitetype).
+ * @param string $all_url  Link van de knop "Alles".
+ * @param string $active   Actieve term-slug.
+ */
+function koomenit_term_filters( $taxonomy, $all_url, $active = '' ) {
+	$terms = get_terms(
+		array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => true,
+		)
+	);
+	if ( ! $terms || is_wp_error( $terms ) ) {
+		return;
+	}
+	$tax = get_taxonomy( $taxonomy );
+	/* translators: %s: naam van de indeling, bijvoorbeeld platform */
+	$label = sprintf( __( 'Filter op %s', 'koomenit' ), $tax ? strtolower( $tax->labels->singular_name ) : $taxonomy );
+	?>
+	<div class="filters" role="group" aria-label="<?php echo esc_attr( $label ); ?>">
+		<a class="filter<?php echo $active ? '' : ' is-active'; ?>" href="<?php echo esc_url( $all_url ); ?>" data-filter="*" aria-pressed="<?php echo $active ? 'false' : 'true'; ?>"><?php esc_html_e( 'Alles', 'koomenit' ); ?></a>
+		<?php foreach ( $terms as $term ) : ?>
+			<a class="filter<?php echo $active === $term->slug ? ' is-active' : ''; ?>" href="<?php echo esc_url( get_term_link( $term ) ); ?>" data-filter="<?php echo esc_attr( $term->slug ); ?>" aria-pressed="<?php echo $active === $term->slug ? 'true' : 'false'; ?>">
+				<?php echo koomenit_icon( koomenit_term_icon( $term ) ); // phpcs:ignore ?>
+				<?php echo esc_html( $term->name ); ?>
+				<span class="filter__count"><?php echo esc_html( $term->count ); ?></span>
+			</a>
+		<?php endforeach; ?>
+	</div>
+	<?php
 }
 
 /**
@@ -283,26 +374,5 @@ function koomenit_project_filter_slugs() {
  * @param string $active Actieve platform-slug.
  */
 function koomenit_project_filters( $active = '' ) {
-	$platforms = get_terms(
-		array(
-			'taxonomy'   => 'platform',
-			'hide_empty' => true,
-		)
-	);
-	if ( ! $platforms || is_wp_error( $platforms ) ) {
-		return;
-	}
-	$all = get_post_type_archive_link( 'project' );
-	?>
-	<div class="filters" role="group" aria-label="<?php esc_attr_e( 'Filter op platform', 'koomenit' ); ?>">
-		<a class="filter<?php echo $active ? '' : ' is-active'; ?>" href="<?php echo esc_url( $all ); ?>" data-filter="*" aria-pressed="<?php echo $active ? 'false' : 'true'; ?>"><?php esc_html_e( 'Alles', 'koomenit' ); ?></a>
-		<?php foreach ( $platforms as $platform ) : ?>
-			<a class="filter<?php echo $active === $platform->slug ? ' is-active' : ''; ?>" href="<?php echo esc_url( get_term_link( $platform ) ); ?>" data-filter="<?php echo esc_attr( $platform->slug ); ?>" aria-pressed="<?php echo $active === $platform->slug ? 'true' : 'false'; ?>">
-				<?php echo koomenit_icon( koomenit_platform_icon( $platform->name ) ); // phpcs:ignore ?>
-				<?php echo esc_html( $platform->name ); ?>
-				<span class="filter__count"><?php echo esc_html( $platform->count ); ?></span>
-			</a>
-		<?php endforeach; ?>
-	</div>
-	<?php
+	koomenit_term_filters( 'platform', get_post_type_archive_link( 'project' ), $active );
 }

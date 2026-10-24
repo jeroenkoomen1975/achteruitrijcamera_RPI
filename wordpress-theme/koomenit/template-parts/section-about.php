@@ -8,7 +8,7 @@
 $koomenit_points = array_filter( array_map( 'trim', explode( "\n", (string) koomenit_mod( 'koomenit_about_points' ) ) ) );
 $koomenit_image  = koomenit_mod( 'koomenit_about_image' );
 ?>
-<section id="over" class="section">
+<section id="over" class="section section--light">
 	<div class="container split">
 		<div class="split__media reveal">
 			<?php if ( $koomenit_image ) : ?>

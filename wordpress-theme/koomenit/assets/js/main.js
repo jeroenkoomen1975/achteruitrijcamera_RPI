@@ -32,8 +32,8 @@
 		onScroll();
 	}
 
-	// Projecten filteren per platform zonder de pagina te herladen.
-	// Zonder JavaScript zijn de filterknoppen gewone links naar het platformoverzicht.
+	// Projecten en websites filteren zonder de pagina te herladen.
+	// Zonder JavaScript zijn de filterknoppen gewone links naar het overzicht per platform of type.
 	document.querySelectorAll( '.filters' ).forEach( function ( bar ) {
 		var grid = bar.parentNode.querySelector( '[data-filter-grid]' );
 		var empty = bar.parentNode.querySelector( '.filter-empty' );
@@ -52,9 +52,9 @@
 				b.classList.toggle( 'is-active', b === btn );
 				b.setAttribute( 'aria-pressed', b === btn ? 'true' : 'false' );
 			} );
-			grid.querySelectorAll( '.project-card' ).forEach( function ( card ) {
-				var platforms = ( card.getAttribute( 'data-platforms' ) || '' ).split( ' ' );
-				var match = '*' === slug || platforms.indexOf( slug ) > -1;
+			grid.querySelectorAll( '[data-terms]' ).forEach( function ( card ) {
+				var terms = ( card.getAttribute( 'data-terms' ) || '' ).split( ' ' );
+				var match = '*' === slug || terms.indexOf( slug ) > -1;
 				card.classList.toggle( 'is-filtered-out', ! match );
 				if ( match ) {
 					card.classList.remove( 'is-pending' );

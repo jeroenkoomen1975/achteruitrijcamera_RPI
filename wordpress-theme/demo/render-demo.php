@@ -3,7 +3,8 @@
  * Rendert de Koomen.IT-thema-templates zonder WordPress naar een statische demo.
  *
  * Gebruik: php wordpress-theme/demo/render-demo.php
- * Schrijft index.html, projecten.html en project-parkeersensor.html in deze map.
+ * Schrijft index.html, projecten.html, project-parkeersensor.html, websites.html
+ * en website-koomen-it.html in deze map.
  *
  * Dit script definieert minimale stubs van de gebruikte WordPress-functies,
  * vult ze met demo-inhoud en laat daarna de echte thema-templates hun HTML uitvoeren.
@@ -13,6 +14,8 @@ $pages = array(
 	'home'      => 'index.html',
 	'projecten' => 'projecten.html',
 	'project'   => 'project-parkeersensor.html',
+	'websites'  => 'websites.html',
+	'website'   => 'website-koomen-it.html',
 );
 
 // Zonder argument: elke pagina in een eigen PHP-proces renderen.
@@ -43,6 +46,13 @@ $GLOBALS['terms'] = array(
 		'website'  => 'Website / webinterface',
 		'sensor'   => 'Sensorproject',
 		'software' => 'Programma / software',
+	),
+	'websitetype' => array(
+		'bedrijfswebsite' => 'Bedrijfswebsite',
+		'webshop'         => 'Webshop',
+		'portfolio'       => 'Portfolio',
+		'webapplicatie'   => 'Webapplicatie',
+		'webinterface'    => 'Webinterface voor hardware',
 	),
 );
 
@@ -116,6 +126,57 @@ $GLOBALS['projects'] = array(
 	),
 );
 
+$koomenit_content = <<<'HTML'
+<p>De website waar je nu naar kijkt. Een eigen WordPress-thema in de huisstijl van koomen.it, gemaakt om embedded projecten en websites overzichtelijk te laten zien.</p>
+<h2>Wat erin zit</h2>
+<ul>
+<li>Twee eigen berichttypes, <strong>Projecten</strong> en <strong>Websites</strong>, met filters per platform en per websitetype.</li>
+<li>Per project en website gegevens zoals status, jaar, technieken, hardware en links naar GitHub of de live site.</li>
+<li>Een hero met een codevenster dat echte code uit een project intypt, met syntax-kleuring voor Python en C++.</li>
+<li>Alle teksten, kleuren en secties van de homepage zijn aan te passen in de Customizer.</li>
+</ul>
+<p>Het thema werkt zonder page builder of extra plugins, laadt alleen een klein script en is volledig responsive.</p>
+HTML;
+
+$GLOBALS['websites'] = array(
+	array(
+		'id' => 301, 'title' => 'koomen.it', 'link' => 'website-koomen-it.html',
+		'excerpt' => 'Portfolio voor embedded projecten en websites, gebouwd als eigen WordPress-thema met filters, projectgegevens en een geanimeerd codevenster.',
+		'content' => $koomenit_content, 'websitetype' => array( 'portfolio' ),
+		'techniek' => array( 'WordPress', 'PHP', 'JavaScript', 'CSS' ),
+		'meta' => array( 'koomenit_url' => 'https://koomen.it', 'koomenit_client' => 'Eigen website', 'koomenit_role' => 'Ontwerp en ontwikkeling', 'koomenit_status' => 'ontwikkeling', 'koomenit_year' => '2026' ),
+		'thumb' => 'img/koomen-it.jpg', 'image' => 'img/koomen-it-groot.jpg',
+	),
+	array(
+		'id' => 302, 'title' => 'Voorbeeld: website voor een fysiotherapiepraktijk', 'link' => 'websites.html',
+		'excerpt' => 'Overzichtelijke website met behandelingen, team en online afspraken maken. Beheerd door de praktijk zelf.',
+		'content' => $voorbeeld, 'websitetype' => array( 'bedrijfswebsite' ),
+		'techniek' => array( 'WordPress', 'PHP', 'CSS' ),
+		'meta' => array( 'koomenit_url' => 'https://example.com', 'koomenit_client' => 'Voorbeeldpraktijk', 'koomenit_role' => 'Ontwerp, bouw en beheer', 'koomenit_status' => 'live', 'koomenit_year' => '2025' ),
+	),
+	array(
+		'id' => 303, 'title' => 'Voorbeeld: webshop voor 3D-geprinte onderdelen', 'link' => 'websites.html',
+		'excerpt' => 'Webshop met productvarianten, voorraadbeheer en betalen via iDEAL.',
+		'content' => $voorbeeld, 'websitetype' => array( 'webshop' ),
+		'techniek' => array( 'WooCommerce', 'WordPress', 'Mollie' ),
+		'meta' => array( 'koomenit_url' => 'https://example.com', 'koomenit_client' => 'Voorbeeldbedrijf', 'koomenit_role' => 'Bouw en koppelingen', 'koomenit_status' => 'onderhoud', 'koomenit_year' => '2025' ),
+	),
+	array(
+		'id' => 304, 'title' => 'Voorbeeld: webinterface voor het ESP32-weerstation', 'link' => 'websites.html',
+		'excerpt' => 'Een webpagina die rechtstreeks door de ESP32 wordt geserveerd, met actuele metingen en een grafiek van de afgelopen 24 uur.',
+		'content' => $voorbeeld, 'websitetype' => array( 'webinterface' ),
+		'techniek' => array( 'HTML/CSS/JS', 'ESPAsyncWebServer', 'Chart.js' ),
+		'meta' => array( 'koomenit_client' => 'Eigen project', 'koomenit_role' => 'Ontwerp en ontwikkeling', 'koomenit_status' => 'live', 'koomenit_year' => '2025' ),
+	),
+	array(
+		'id' => 305, 'title' => 'Voorbeeld: reserveringssysteem voor een sportclub', 'link' => 'websites.html',
+		'excerpt' => 'Leden reserveren een baan, beheerders zien de bezetting per dag. Vervangen door een nieuw systeem.',
+		'content' => $voorbeeld, 'websitetype' => array( 'webapplicatie' ),
+		'techniek' => array( 'Laravel', 'PHP', 'MySQL' ),
+		'meta' => array( 'koomenit_url' => 'https://example.com', 'koomenit_client' => 'Voorbeeldclub', 'koomenit_role' => 'Ontwikkeling', 'koomenit_status' => 'archief', 'koomenit_year' => '2023' ),
+	),
+);
+
 $GLOBALS['blog'] = array(
 	array( 'id' => 201, 'title' => 'Voorbeeld: 5V-sensoren veilig aansluiten op een Raspberry Pi', 'cat' => 'Raspberry Pi', 'excerpt' => 'Waarom een spanningsdeler nodig is voor de ECHO-pin van een HC-SR04, en hoe je de weerstanden kiest. Dit is een voorbeeldbericht.', 'date' => '14 oktober 2026' ),
 	array( 'id' => 202, 'title' => 'Voorbeeld: maanden op een batterij met ESP32 deep sleep', 'cat' => 'ESP32', 'excerpt' => 'Een sensor die elk kwartier meet en daarna slaapt: zo haal je het stroomverbruik omlaag. Dit is een voorbeeldbericht.', 'date' => '2 oktober 2026' ),
@@ -132,7 +193,10 @@ function demo_term( $taxonomy, $slug, $name = null ) {
 		$ids[ $key ] = count( $ids ) + 1;
 	}
 	$count = 0;
-	foreach ( $GLOBALS['projects'] as $p ) {
+	foreach ( array_merge( $GLOBALS['projects'], $GLOBALS['websites'] ) as $p ) {
+		if ( ! isset( $p[ $taxonomy ] ) ) {
+			continue;
+		}
 		$list = 'techniek' === $taxonomy ? array_map( 'demo_slug', $p['techniek'] ) : $p[ $taxonomy ];
 		$count += in_array( $slug, $list, true ) ? 1 : 0;
 	}
@@ -140,7 +204,7 @@ function demo_term( $taxonomy, $slug, $name = null ) {
 }
 function demo_slug( $name ) { return trim( preg_replace( '/[^a-z0-9]+/', '-', strtolower( $name ) ), '-' ); }
 function demo_find( $id ) {
-	foreach ( array_merge( $GLOBALS['projects'], $GLOBALS['blog'] ) as $p ) {
+	foreach ( array_merge( $GLOBALS['projects'], $GLOBALS['websites'], $GLOBALS['blog'] ) as $p ) {
 		if ( $p['id'] === $id ) {
 			return $p;
 		}
@@ -189,13 +253,21 @@ function wp_link_pages() {}
 function the_posts_pagination() {}
 function is_tax() { return false; }
 function get_queried_object() { return null; }
-function is_post_type_archive( $t = '' ) { return 'projecten' === $GLOBALS['page']; }
-function is_singular( $t = '' ) { return 'project' === $GLOBALS['page']; }
-function post_type_archive_title() { return 'Projecten'; }
-function get_post_type_archive_link() { return 'projecten.html'; }
-function get_term_link( $term ) { return 'projecten.html'; }
+function is_post_type_archive( $t = '' ) {
+	$map = array( 'projecten' => 'project', 'websites' => 'website' );
+	return isset( $map[ $GLOBALS['page'] ] ) && ( '' === $t || in_array( $map[ $GLOBALS['page'] ], (array) $t, true ) );
+}
+function is_singular( $t = '' ) { return in_array( $GLOBALS['page'], array( 'project', 'website' ), true ) && ( '' === $t || $t === $GLOBALS['page'] ); }
+function post_type_archive_title() { return 'websites' === $GLOBALS['page'] ? 'Websites' : 'Projecten'; }
+function get_post_type_archive_link( $type = 'project' ) { return 'website' === $type ? 'websites.html' : 'projecten.html'; }
+function get_term_link( $term ) { return 'websitetype' === $term->taxonomy ? 'websites.html' : 'projecten.html'; }
 function term_description() { return ''; }
-function get_taxonomy() { return null; }
+function get_taxonomy( $tax ) {
+	$names = array( 'platform' => 'Platform', 'projecttype' => 'Projecttype', 'techniek' => 'Techniek', 'websitetype' => 'Websitetype' );
+	return (object) array( 'labels' => (object) array( 'singular_name' => $names[ $tax ] ) );
+}
+function wp_parse_url( $url, $part = -1 ) { return parse_url( $url, $part ); }
+function get_post_type() { return isset( $GLOBALS['cur']['websitetype'] ) ? 'website' : ( isset( $GLOBALS['cur']['platform'] ) ? 'project' : 'post' ); }
 function get_posts( $args ) {
 	foreach ( $GLOBALS['projects'] as $p ) {
 		if ( isset( $args['title'] ) && $p['title'] === $args['title'] ) {
@@ -205,13 +277,14 @@ function get_posts( $args ) {
 	return array();
 }
 function get_permalink( $id ) { $p = demo_find( $id ); return $p ? $p['link'] : '#'; }
-function wp_count_posts() { return (object) array( 'publish' => count( $GLOBALS['projects'] ) ); }
+function wp_count_posts( $type = 'project' ) { return (object) array( 'publish' => count( 'website' === $type ? $GLOBALS['websites'] : $GLOBALS['projects'] ) ); }
 
 function get_terms( $args ) {
 	$tax = $args['taxonomy'];
 	if ( 'techniek' === $tax ) {
 		$names = array();
 		foreach ( $GLOBALS['projects'] as $p ) { foreach ( $p['techniek'] as $t ) { $names[ demo_slug( $t ) ] = $t; } }
+		foreach ( $GLOBALS['websites'] as $p ) { foreach ( $p['techniek'] as $t ) { $names[ demo_slug( $t ) ] = $t; } }
 		$terms = array_map( function ( $slug ) use ( $names ) { return demo_term( 'techniek', $slug, $names[ $slug ] ); }, array_keys( $names ) );
 	} else {
 		$terms = array_map( function ( $slug ) use ( $tax ) { return demo_term( $tax, $slug ); }, array_keys( $GLOBALS['terms'][ $tax ] ) );
@@ -249,7 +322,7 @@ function get_footer() { require $GLOBALS['theme'] . '/footer.php'; }
 function get_template_part( $slug, $name ) { require $GLOBALS['theme'] . "/{$slug}-{$name}.php"; }
 
 function wp_head() {
-	$titles = array( 'home' => 'koomen.it', 'projecten' => 'Projecten – koomen.it', 'project' => 'Achteruitrij-parkeersensor – koomen.it' );
+	$titles = array( 'home' => 'koomen.it', 'projecten' => 'Projecten – koomen.it', 'project' => 'Achteruitrij-parkeersensor – koomen.it', 'websites' => 'Websites – koomen.it', 'website' => 'koomen.it – Websites – koomen.it' );
 	echo '<title>' . esc_html( $titles[ $GLOBALS['page'] ] ) . "</title>\n";
 	echo '<link rel="stylesheet" href="' . esc_attr( koomenit_fonts_url() ) . '">' . "\n";
 	koomenit_fallback_favicon();
@@ -263,11 +336,11 @@ function wp_footer() {
 
 function wp_nav_menu( $args ) {
 	if ( 'footer' === $args['theme_location'] ) {
-		$items   = array( 'Projecten' => 'projecten.html', 'Over' => 'index.html#over', 'Blog' => 'index.html#blog', 'Contact' => 'index.html#contact' );
+		$items   = array( 'Projecten' => 'projecten.html', 'Websites' => 'websites.html', 'Over' => 'index.html#over', 'Blog' => 'index.html#blog', 'Contact' => 'index.html#contact' );
 		$current = '';
 	} else {
-		$items   = array( 'Home' => 'index.html', 'Projecten' => 'projecten.html', 'Over' => 'index.html#over', 'Blog' => 'index.html#blog' );
-		$current = 'home' === $GLOBALS['page'] ? 'Home' : 'Projecten';
+		$items   = array( 'Home' => 'index.html', 'Projecten' => 'projecten.html', 'Websites' => 'websites.html', 'Over' => 'index.html#over', 'Blog' => 'index.html#blog' );
+		$current = array( 'home' => 'Home', 'projecten' => 'Projecten', 'project' => 'Projecten', 'websites' => 'Websites', 'website' => 'Websites' )[ $GLOBALS['page'] ];
 	}
 	echo '<ul class="' . esc_attr( isset( $args['menu_class'] ) ? $args['menu_class'] : 'menu' ) . '">';
 	foreach ( $items as $label => $url ) {
@@ -286,7 +359,7 @@ class WP_Query {
 	public function __construct( $args ) {
 		$this->prev = $GLOBALS['cur'];
 		$type       = isset( $args['post_type'] ) ? $args['post_type'] : 'post';
-		$items      = 'project' === $type ? $GLOBALS['projects'] : $GLOBALS['blog'];
+		$items      = array( 'project' => $GLOBALS['projects'], 'website' => $GLOBALS['websites'] )[ $type ] ?? $GLOBALS['blog'];
 		if ( ! empty( $args['post__not_in'] ) ) {
 			$items = array_filter( $items, function ( $p ) use ( $args ) { return ! in_array( $p['id'], $args['post__not_in'], true ); } );
 		}
@@ -316,6 +389,8 @@ $GLOBALS['main'] = array(
 	'home'      => array(),
 	'projecten' => $GLOBALS['projects'],
 	'project'   => array( $GLOBALS['projects'][0] ),
+	'websites'  => $GLOBALS['websites'],
+	'website'   => array( $GLOBALS['websites'][0] ),
 )[ $GLOBALS['page'] ];
 $GLOBALS['main_i'] = -1;
 function have_posts() { return $GLOBALS['main_i'] + 1 < count( $GLOBALS['main'] ); }
@@ -327,16 +402,20 @@ function the_ID() { echo (int) get_the_ID(); }
 function post_class( $c = '' ) { echo 'class="' . esc_attr( $c ) . '"'; }
 function the_permalink() { echo esc_attr( demo_cur( 'link' ) ?: '#' ); }
 function the_title() { echo esc_html( demo_cur( 'title' ) ); }
+function get_the_title() { return demo_cur( 'title' ); }
 function get_the_excerpt() { return demo_cur( 'excerpt' ); }
 function has_excerpt() { return '' !== demo_cur( 'excerpt' ); }
 function the_content() { echo demo_cur( 'content' ); }
 function has_post_thumbnail() { return 'project' === $GLOBALS['page'] && $GLOBALS['cur'] === $GLOBALS['main'][0] ? false : (bool) demo_cur( 'thumb' ); }
-function the_post_thumbnail( $size = '' ) { echo '<img src="' . esc_attr( demo_cur( 'thumb' ) ) . '" alt="" loading="lazy">'; }
+function the_post_thumbnail( $size = '' ) {
+	$src = ( 'large' === $size && demo_cur( 'image' ) ) ? demo_cur( 'image' ) : demo_cur( 'thumb' );
+	echo '<img src="' . esc_attr( $src ) . '" alt="" loading="lazy">';
+}
 function get_the_category() { return demo_cur( 'cat' ) ? array( (object) array( 'name' => demo_cur( 'cat' ) ) ) : array(); }
 function get_the_date( $f = '' ) { return $f ? '2026-10-01' : demo_cur( 'date' ); }
 function get_the_author() { return 'Jeroen Koomen'; }
 
 // --- Renderen -------------------------------------------------------------------
 require $GLOBALS['theme'] . '/functions.php';
-$templates = array( 'home' => 'front-page.php', 'projecten' => 'archive-project.php', 'project' => 'single-project.php' );
+$templates = array( 'home' => 'front-page.php', 'projecten' => 'archive-project.php', 'project' => 'single-project.php', 'websites' => 'archive-website.php', 'website' => 'single-website.php' );
 require $GLOBALS['theme'] . '/' . $templates[ $GLOBALS['page'] ];

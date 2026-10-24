@@ -32,6 +32,10 @@ function koomenit_icon( $name ) {
 		'server'      => '<rect x="2" y="3" width="20" height="8" rx="2"/><rect x="2" y="13" width="20" height="8" rx="2"/><path d="M6 7h.01M6 17h.01"/>',
 		'chart'       => '<path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-6"/>',
 		'network'     => '<circle cx="5" cy="6" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="20" cy="15" r="2"/><path d="M7 6.2l10-1M6 7.8l5 9.4M18.6 7l-5.8 10.2M19.2 7l.6 6M18.2 16.1 13.8 18"/>',
+		'globe'       => '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+		'cart'        => '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>',
+		'layout'      => '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
+		'lock'        => '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
 		'check'       => '<path d="M20 6 9 17l-5-5"/>',
 		'arrow'       => '<path d="M5 12h14"/><path d="m13 5 7 7-7 7"/>',
 		'external'    => '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
@@ -173,6 +177,10 @@ function koomenit_get_stats() {
 			case 'techniques':
 				$number = koomenit_count_used_terms( 'techniek' );
 				break;
+			case 'websites':
+				$counts = wp_count_posts( 'website' );
+				$number = isset( $counts->publish ) ? (int) $counts->publish : 0;
+				break;
 			default:
 				$number = absint( get_theme_mod( "koomenit_stat{$i}_number", $default['number'] ) );
 		}
@@ -282,6 +290,10 @@ function koomenit_menu_fallback() {
 	if ( $archive ) {
 		echo '<li' . ( is_post_type_archive( 'project' ) || is_singular( 'project' ) ? ' class="current-menu-item"' : '' ) . '><a href="' . esc_url( $archive ) . '">' . esc_html__( 'Projecten', 'koomenit' ) . '</a></li>';
 	}
+	$sites = get_post_type_archive_link( 'website' );
+	if ( $sites ) {
+		echo '<li' . ( is_post_type_archive( 'website' ) || is_singular( 'website' ) ? ' class="current-menu-item"' : '' ) . '><a href="' . esc_url( $sites ) . '">' . esc_html__( 'Websites', 'koomenit' ) . '</a></li>';
+	}
 	wp_list_pages(
 		array(
 			'title_li' => '',
@@ -289,4 +301,35 @@ function koomenit_menu_fallback() {
 		)
 	);
 	echo '</ul>';
+}
+
+/**
+ * Adresbalk van een browservenster.
+ *
+ * @param string $domain Domeinnaam.
+ */
+function koomenit_browser_bar( $domain ) {
+	?>
+	<span class="browser-bar">
+		<span class="browser-bar__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+		<?php if ( $domain ) : ?>
+			<span class="browser-bar__url"><?php echo koomenit_icon( 'lock' ); // phpcs:ignore ?><?php echo esc_html( $domain ); ?></span>
+		<?php else : ?>
+			<span class="browser-bar__url browser-bar__url--none"><?php esc_html_e( 'geen openbaar adres', 'koomenit' ); ?></span>
+		<?php endif; ?>
+	</span>
+	<?php
+}
+
+/**
+ * Schets van een webpagina als er (nog) geen screenshot is.
+ */
+function koomenit_wireframe() {
+	?>
+	<span class="wireframe" aria-hidden="true">
+		<span class="wireframe__nav"><b></b><i></i><i></i><i></i></span>
+		<span class="wireframe__hero"><b></b><i></i><i></i><em></em></span>
+		<span class="wireframe__cols"><i></i><i></i><i></i></span>
+	</span>
+	<?php
 }

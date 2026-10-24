@@ -71,6 +71,14 @@ function koomenit_defaults() {
 		'koomenit_projects_count'  => 6,
 		'koomenit_projects_filter' => true,
 
+		// Websites.
+		'koomenit_websites_show'    => true,
+		'koomenit_websites_eyebrow' => __( 'Websites', 'koomenit' ),
+		'koomenit_websites_title'   => __( 'Gebouwde websites', 'koomenit' ),
+		'koomenit_websites_intro'   => __( 'Bedrijfswebsites, webshops, webapplicaties en webinterfaces voor hardware. Filter op type.', 'koomenit' ),
+		'koomenit_websites_count'   => 6,
+		'koomenit_websites_filter'  => true,
+
 		// Over.
 		'koomenit_about_show'      => true,
 		'koomenit_about_eyebrow'   => __( 'Over koomen.it', 'koomenit' ),
@@ -129,7 +137,7 @@ function koomenit_repeat_defaults() {
 			1 => array( 'source' => 'projects', 'number' => '', 'suffix' => '', 'label' => __( 'Projecten', 'koomenit' ) ),
 			2 => array( 'source' => 'platforms', 'number' => '', 'suffix' => '', 'label' => __( 'Platforms', 'koomenit' ) ),
 			3 => array( 'source' => 'techniques', 'number' => '', 'suffix' => '', 'label' => __( 'Technieken & sensoren', 'koomenit' ) ),
-			4 => array( 'source' => 'manual', 'number' => '', 'suffix' => '', 'label' => '' ),
+			4 => array( 'source' => 'websites', 'number' => '', 'suffix' => '', 'label' => __( 'Websites', 'koomenit' ) ),
 		),
 	);
 }
@@ -177,6 +185,7 @@ function koomenit_stat_sources() {
 		'projects'   => __( 'Automatisch: aantal projecten', 'koomenit' ),
 		'platforms'  => __( 'Automatisch: aantal platforms', 'koomenit' ),
 		'techniques' => __( 'Automatisch: aantal technieken', 'koomenit' ),
+		'websites'   => __( 'Automatisch: aantal websites', 'koomenit' ),
 		'manual'     => __( 'Zelf invullen', 'koomenit' ),
 	);
 }
@@ -253,6 +262,7 @@ function koomenit_customize_register( $wp_customize ) {
 		'koomenit_hero'     => __( 'Homepage: Hero', 'koomenit' ),
 		'koomenit_services' => __( 'Homepage: Platforms', 'koomenit' ),
 		'koomenit_projects' => __( 'Homepage: Projecten', 'koomenit' ),
+		'koomenit_websites' => __( 'Homepage: Websites', 'koomenit' ),
 		'koomenit_about'    => __( 'Homepage: Over', 'koomenit' ),
 		'koomenit_stats'    => __( 'Homepage: Cijfers', 'koomenit' ),
 		'koomenit_news'     => __( 'Homepage: Blog', 'koomenit' ),
@@ -389,6 +399,14 @@ function koomenit_customize_register( $wp_customize ) {
 	$add( 'koomenit_projects_intro', 'koomenit_projects', __( 'Introductie', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
 	$add( 'koomenit_projects_count', 'koomenit_projects', __( 'Aantal projecten', 'koomenit' ), 'number', 'absint', array( 'input_attrs' => array( 'min' => 1, 'max' => 12 ) ) );
 	$add( 'koomenit_projects_filter', 'koomenit_projects', __( 'Filterknoppen per platform tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
+
+	// Websites.
+	$add( 'koomenit_websites_show', 'koomenit_websites', __( 'Sectie tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
+	$add( 'koomenit_websites_eyebrow', 'koomenit_websites', __( 'Label boven titel', 'koomenit' ) );
+	$add( 'koomenit_websites_title', 'koomenit_websites', __( 'Titel', 'koomenit' ) );
+	$add( 'koomenit_websites_intro', 'koomenit_websites', __( 'Introductie', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
+	$add( 'koomenit_websites_count', 'koomenit_websites', __( 'Aantal websites', 'koomenit' ), 'number', 'absint', array( 'input_attrs' => array( 'min' => 1, 'max' => 12 ) ) );
+	$add( 'koomenit_websites_filter', 'koomenit_websites', __( 'Filterknoppen per websitetype tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
 
 	// Over.
 	$add( 'koomenit_about_show', 'koomenit_about', __( 'Sectie tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );

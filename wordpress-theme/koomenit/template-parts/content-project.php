@@ -12,7 +12,7 @@ $koomenit_status    = get_post_meta( get_the_ID(), 'koomenit_status', true );
 $koomenit_statuses  = koomenit_project_statuses();
 $koomenit_first     = $koomenit_platforms ? $koomenit_platforms[0]->name : '';
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class( 'project-card reveal' ); ?> data-platforms="<?php echo esc_attr( koomenit_project_filter_slugs() ); ?>">
+<article id="post-<?php the_ID(); ?>" <?php post_class( 'project-card reveal' ); ?> data-terms="<?php echo esc_attr( koomenit_term_slugs( 'platform' ) ); ?>">
 	<a class="project-card__media" href="<?php the_permalink(); ?>" tabindex="-1" aria-hidden="true">
 		<?php if ( has_post_thumbnail() ) : ?>
 			<?php the_post_thumbnail( 'koomenit-card' ); ?>

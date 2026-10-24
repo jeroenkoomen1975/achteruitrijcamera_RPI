@@ -3,7 +3,7 @@ Theme Name: Koomen.IT
 Theme URI: https://koomen.it
 Author: Jeroen Koomen
 Description: Portfolio-thema in de huisstijl van koomen.it: helder blauw, donker leisteen en het netwerkmotief uit het logo. Met een eigen berichttype voor projecten, filters per platform (ESP32, Arduino, Raspberry Pi), projectgegevens zoals GitHub-link, status en hardware, en een volledig aanpasbare homepage via de Customizer.
-Version: 2.1.0
+Version: 2.2.0
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
@@ -143,6 +143,9 @@ a.chip:hover { border-color: var(--bl-primary); color: var(--bl-primary); }
 .status--in-gebruik { color: var(--bl-primary); }
 .status--ontwikkeling { color: var(--bl-warn); }
 .status--prototype { color: var(--bl-muted); }
+.status--live { color: var(--bl-ok); }
+.status--onderhoud { color: var(--bl-primary); }
+.status--archief { color: var(--bl-muted); }
 
 /* ---------- Netwerkmotief ---------- */
 .network { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
@@ -361,6 +364,45 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 .project-card__title a:hover { color: var(--bl-primary); }
 .project-card__excerpt { flex: 1; margin-bottom: 1rem; color: var(--bl-muted); font-size: 0.95rem; }
 
+/* Websites: browservenster */
+.browser-bar { display: flex; align-items: center; gap: 0.75rem; padding: 0.55rem 0.8rem; background: var(--bl-light); border-bottom: 1px solid var(--bl-border); }
+.browser-bar__dots { display: flex; gap: 5px; }
+.browser-bar__dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--bl-border); }
+.browser-bar__dots i:first-child { background: var(--bl-node); }
+.browser-bar__url {
+	display: flex; align-items: center; gap: 0.4em; flex: 1; min-width: 0; padding: 0.25em 0.7em;
+	border-radius: 6px; background: var(--bl-white); color: var(--bl-muted); font-family: var(--bl-font-mono); font-size: 0.72rem;
+	overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.browser-bar__url .bl-icon { width: 0.95em; height: 0.95em; color: var(--bl-ok); }
+.browser-bar__url--none { color: var(--bl-node); font-style: italic; }
+.site-card__frame { display: block; }
+.site-card__shot { position: relative; display: block; aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden; background: var(--bl-white); }
+.site-card__shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 0.6s var(--bl-ease); }
+.site-card:hover .site-card__shot img { transform: scale(1.04); }
+.site-card__visit { display: inline-flex; align-items: center; gap: 0.4em; align-self: flex-start; margin-top: 1rem; color: var(--bl-primary); font-size: 0.9rem; font-weight: 700; }
+.site-card__visit .bl-icon { width: 0.95em; height: 0.95em; }
+.site-frame { margin-bottom: 2.5rem; overflow: hidden; border: 1px solid var(--bl-border); border-radius: var(--bl-radius); box-shadow: var(--bl-shadow-lg); }
+.site-frame__shot { aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden; background: var(--bl-white); }
+.site-frame__shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 0; }
+.project-info__link { display: inline-flex; align-items: center; gap: 0.35em; font-family: var(--bl-font-mono); font-size: 0.9rem; }
+.project-info__link .bl-icon { width: 0.9em; height: 0.9em; }
+
+/* Schets van een webpagina zonder screenshot */
+.wireframe { display: flex; flex-direction: column; gap: 7%; height: 100%; padding: 6% 7%; background: var(--bl-white); }
+.wireframe b, .wireframe i, .wireframe em { display: block; border-radius: 4px; }
+.wireframe__nav { display: flex; align-items: center; gap: 4%; }
+.wireframe__nav b { width: 18%; height: 10px; background: var(--bl-ink); }
+.wireframe__nav i { width: 9%; height: 6px; background: var(--bl-border); }
+.wireframe__nav i:first-of-type { margin-left: auto; }
+.wireframe__hero { display: flex; flex-direction: column; gap: 9px; padding: 7% 6%; border-radius: 8px; background: linear-gradient(160deg, var(--bl-dark), var(--bl-ink)); }
+.wireframe__hero b { width: 55%; height: 12px; background: var(--bl-white); }
+.wireframe__hero i { width: 75%; height: 6px; background: rgba(148, 163, 184, 0.5); }
+.wireframe__hero i + i { width: 60%; }
+.wireframe__hero em { width: 22%; height: 12px; margin-top: 4px; background: var(--bl-primary); }
+.wireframe__cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5%; flex: 1; }
+.wireframe__cols i { background: var(--bl-light); border: 1px solid var(--bl-border); }
+
 /* Over mij */
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 5rem); align-items: center; }
 .split__media img { border-radius: calc(var(--bl-radius) * 1.5); box-shadow: var(--bl-shadow-lg); }
@@ -536,7 +578,7 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 /* ---------- Animaties ---------- */
 .reveal { transition: opacity 0.8s var(--bl-ease), transform 0.8s var(--bl-ease); }
 .js .reveal.is-pending { opacity: 0; transform: translateY(24px); }
-.project-card.is-filtered-out { display: none; }
+.is-filtered-out { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
 	*, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 	.js .reveal.is-pending { opacity: 1; transform: none; }
