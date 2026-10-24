@@ -1,0 +1,14 @@
+/* Blueline: stijlen voor de blokeditor. */
+body {
+	font-family: "Inter", system-ui, sans-serif;
+	color: #334155;
+	line-height: 1.7;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+	color: #0b1b3f;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+a { color: #1d4ed8; }
+blockquote { border-left: 4px solid #1d4ed8; background: #f1f6ff; padding: 1rem 1.5rem; }
