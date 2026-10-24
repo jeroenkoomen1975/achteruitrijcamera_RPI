@@ -1,6 +1,6 @@
 <?php
 /**
- * Homepage: over ons.
+ * Homepage: over mij.
  *
  * @package KoomenIT
  */
@@ -8,20 +8,22 @@
 $koomenit_points = array_filter( array_map( 'trim', explode( "\n", (string) koomenit_mod( 'koomenit_about_points' ) ) ) );
 $koomenit_image  = koomenit_mod( 'koomenit_about_image' );
 ?>
-<section id="over-ons" class="section section--light">
+<section id="over" class="section">
 	<div class="container split">
 		<div class="split__media reveal">
 			<?php if ( $koomenit_image ) : ?>
 				<img src="<?php echo esc_url( $koomenit_image ); ?>" alt="<?php echo esc_attr( koomenit_mod( 'koomenit_about_title' ) ); ?>" loading="lazy">
 			<?php else : ?>
 				<div class="media-placeholder" aria-hidden="true">
+					<?php koomenit_network_svg( 'media-placeholder__network' ); ?>
+					<img class="media-placeholder__mark" src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-mark-dark.svg' ); ?>" alt="" width="258" height="328">
 					<div class="media-placeholder__card">
-						<?php echo koomenit_icon( 'shield' ); // phpcs:ignore ?>
-						<strong><?php esc_html_e( 'Betrouwbaar', 'koomenit' ); ?></strong>
+						<?php echo koomenit_icon( 'code' ); // phpcs:ignore ?>
+						<strong>C++</strong>
 					</div>
 					<div class="media-placeholder__card media-placeholder__card--alt">
-						<?php echo koomenit_icon( 'chart' ); // phpcs:ignore ?>
-						<strong><?php esc_html_e( 'Groei', 'koomenit' ); ?></strong>
+						<?php echo koomenit_icon( 'terminal' ); // phpcs:ignore ?>
+						<strong>Python</strong>
 					</div>
 				</div>
 			<?php endif; ?>

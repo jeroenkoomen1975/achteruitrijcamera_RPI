@@ -16,75 +16,85 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function koomenit_defaults() {
 	return array(
-		// Kleuren (afgeleid van het Koomen.IT-logo).
-		'koomenit_color_primary'   => '#0e2a47',
-		'koomenit_color_secondary' => '#1f8a8a',
-		'koomenit_color_steel'     => '#4c7a9e',
-		'koomenit_color_node'      => '#8b97a3',
-		'koomenit_color_dark'      => '#0b0e14',
-		'koomenit_color_light'     => '#f2f5f8',
-		'koomenit_color_text'      => '#3d4a58',
-		'koomenit_radius'          => 10,
+		// Kleuren (afgeleid van het koomen.it-logo).
+		'koomenit_color_primary'   => '#1d63ed',
+		'koomenit_color_secondary' => '#3b82f6',
+		'koomenit_color_node'      => '#94a3b8',
+		'koomenit_color_dark'      => '#1e2430',
+		'koomenit_color_ink'       => '#0f172a',
+		'koomenit_color_light'     => '#f1f5f9',
+		'koomenit_color_text'      => '#334155',
+		'koomenit_radius'          => 12,
 
 		// Header.
-		'koomenit_header_cta_text' => __( 'Neem contact op', 'koomenit' ),
+		'koomenit_header_cta_text' => __( 'Contact', 'koomenit' ),
 		'koomenit_header_cta_url'  => '#contact',
-		'koomenit_topbar_show'     => true,
+		'koomenit_topbar_show'     => false,
 		'koomenit_topbar_phone'    => '',
 		'koomenit_topbar_email'    => 'info@koomen.it',
-		'koomenit_topbar_text'     => __( 'Training, Onderwijs & Advies in IT', 'koomenit' ),
+		'koomenit_topbar_text'     => __( 'Projecten met ESP32, Arduino en Raspberry Pi', 'koomenit' ),
 
 		// Hero.
 		'koomenit_hero_show'       => true,
-		'koomenit_hero_eyebrow'    => __( 'Training · Onderwijs · Advies', 'koomenit' ),
-		'koomenit_hero_title'      => __( 'IT-kennis die blijft hangen', 'koomenit' ),
-		'koomenit_hero_text'       => __( 'Praktijkgerichte trainingen, lessen en advies over IT. Voor professionals, teams en onderwijsinstellingen die technologie écht willen begrijpen en toepassen.', 'koomenit' ),
-		'koomenit_hero_btn1_text'  => __( 'Bekijk het aanbod', 'koomenit' ),
-		'koomenit_hero_btn1_url'   => '#aanbod',
-		'koomenit_hero_btn2_text'  => __( 'Plan een kennismaking', 'koomenit' ),
-		'koomenit_hero_btn2_url'   => '#contact',
+		'koomenit_hero_eyebrow'    => __( 'Portfolio', 'koomenit' ),
+		'koomenit_hero_title'      => __( 'Ik bouw slimme dingen met ESP32, Arduino en Raspberry Pi', 'koomenit' ),
+		'koomenit_hero_text'       => __( 'Van sensoren die meten tot webinterfaces die het laten zien. Hier vind je de programma\'s, websites en hardwareprojecten die ik heb gemaakt.', 'koomenit' ),
+		'koomenit_hero_btn1_text'  => __( 'Bekijk projecten', 'koomenit' ),
+		'koomenit_hero_btn1_url'   => '#projecten',
+		'koomenit_hero_btn2_text'  => __( 'Over mij', 'koomenit' ),
+		'koomenit_hero_btn2_url'   => '#over',
 		'koomenit_hero_image'      => '',
 		'koomenit_hero_overlay'    => 85,
-		'koomenit_hero_logo'       => true,
+		'koomenit_hero_visual'     => 'terminal',
+		'koomenit_hero_terminal_title' => 'esp32-weerstation · 115200 baud',
+		'koomenit_hero_terminal'   => "> wifi verbonden: 192.168.1.42\n> BME280 gevonden op 0x76\n[12:04:01] temp 21.4 °C  vocht 58 %\n[12:04:11] temp 21.5 °C  vocht 57 %\n> MQTT publish: huis/woonkamer ✓",
 
-		// Aanbod.
+		// Platforms.
 		'koomenit_services_show'   => true,
-		'koomenit_services_title'  => __( 'Aanbod', 'koomenit' ),
-		'koomenit_services_intro'  => __( 'Drie manieren om IT-kennis over te dragen, steeds afgestemd op de groep en het doel.', 'koomenit' ),
+		'koomenit_services_title'  => __( 'Waar ik mee bouw', 'koomenit' ),
+		'koomenit_services_intro'  => __( 'Microcontrollers, single-board computers en de software eromheen.', 'koomenit' ),
+
+		// Projecten.
+		'koomenit_projects_show'   => true,
+		'koomenit_projects_eyebrow' => __( 'Projecten', 'koomenit' ),
+		'koomenit_projects_title'  => __( 'Recente projecten', 'koomenit' ),
+		'koomenit_projects_intro'  => __( 'Een selectie van wat ik heb gemaakt. Filter op platform om snel te vinden wat je zoekt.', 'koomenit' ),
+		'koomenit_projects_count'  => 6,
+		'koomenit_projects_filter' => true,
 
 		// Over.
 		'koomenit_about_show'      => true,
-		'koomenit_about_eyebrow'   => __( 'Over Koomen.IT', 'koomenit' ),
-		'koomenit_about_title'     => __( 'Techniek uitleggen zodat het klikt', 'koomenit' ),
-		'koomenit_about_text'      => __( 'Goede IT begint bij begrip. Koomen.IT vertaalt complexe onderwerpen naar heldere uitleg en concrete oefeningen, zodat deelnemers de kennis direct kunnen toepassen in hun eigen werk.', 'koomenit' ),
-		'koomenit_about_points'    => __( "Praktijkgericht en concreet\nAfgestemd op het niveau van de groep\nVoor onderwijs én bedrijfsleven\nPersoonlijk contact", 'koomenit' ),
+		'koomenit_about_eyebrow'   => __( 'Over mij', 'koomenit' ),
+		'koomenit_about_title'     => __( 'Van breadboard tot werkend product', 'koomenit' ),
+		'koomenit_about_text'      => __( 'Ik vind het leuk om hardware en software samen te laten werken: een sensor uitlezen, de data verwerken en het resultaat tonen op een display of in de browser. Elk project documenteer ik zo dat een ander het kan nabouwen.', 'koomenit' ),
+		'koomenit_about_points'    => __( "C++ voor ESP32 en Arduino\nPython op de Raspberry Pi\nWebinterfaces en dashboards\nSensoren, displays en actuatoren", 'koomenit' ),
 		'koomenit_about_image'     => '',
-		'koomenit_about_btn_text'  => __( 'Meer over Koomen.IT', 'koomenit' ),
-		'koomenit_about_btn_url'   => '#',
+		'koomenit_about_btn_text'  => __( 'Bekijk mijn GitHub', 'koomenit' ),
+		'koomenit_about_btn_url'   => 'https://github.com/jeroenkoomen1975',
 
 		// Cijfers.
 		'koomenit_stats_show'      => true,
 
 		// Nieuws.
 		'koomenit_news_show'       => true,
-		'koomenit_news_title'      => __( 'Nieuws & kennisbank', 'koomenit' ),
+		'koomenit_news_title'      => __( 'Blog', 'koomenit' ),
 		'koomenit_news_count'      => 3,
 
 		// CTA.
 		'koomenit_cta_show'        => true,
-		'koomenit_cta_title'       => __( 'Samen aan de slag?', 'koomenit' ),
-		'koomenit_cta_text'        => __( 'Benieuwd wat een training, les of adviestraject voor jouw organisatie kan betekenen? Neem vrijblijvend contact op.', 'koomenit' ),
-		'koomenit_cta_btn_text'    => __( 'Neem contact op', 'koomenit' ),
+		'koomenit_cta_title'       => __( 'Een idee voor een project?', 'koomenit' ),
+		'koomenit_cta_text'        => __( 'Vragen over een van mijn projecten of zin om samen iets te bouwen? Stuur me een bericht.', 'koomenit' ),
+		'koomenit_cta_btn_text'    => __( 'Stuur een bericht', 'koomenit' ),
 		'koomenit_cta_btn_url'     => 'mailto:info@koomen.it',
 
 		// Footer.
-		'koomenit_footer_about'    => __( 'Koomen.IT verzorgt training, onderwijs en advies op het gebied van IT.', 'koomenit' ),
+		'koomenit_footer_about'    => __( 'Portfolio met projecten op basis van ESP32, Arduino en Raspberry Pi.', 'koomenit' ),
 		'koomenit_footer_address'  => '',
 		'koomenit_footer_copy'     => '',
-		'koomenit_social_linkedin' => '#',
-		'koomenit_social_facebook' => '',
+		'koomenit_social_github'   => 'https://github.com/jeroenkoomen1975',
+		'koomenit_social_linkedin' => '',
+		'koomenit_social_youtube'  => '',
 		'koomenit_social_instagram' => '',
-		'koomenit_social_x'        => '',
 
 		// Typografie.
 		'koomenit_font_heading'    => 'Inter',
@@ -93,7 +103,7 @@ function koomenit_defaults() {
 }
 
 /**
- * Standaarden voor de herhaalbare items (aanbod en cijfers).
+ * Standaarden voor de herhaalbare items (platforms en cijfers).
  * Een item met een lege titel/omschrijving wordt niet getoond.
  *
  * @return array
@@ -101,16 +111,16 @@ function koomenit_defaults() {
 function koomenit_repeat_defaults() {
 	return array(
 		'services' => array(
-			1 => array( 'icon' => 'code', 'title' => __( 'Training', 'koomenit' ), 'text' => __( 'IT-trainingen en workshops op maat, van programmeren en cloud tot security. Veel oefenen, weinig sheets.', 'koomenit' ) ),
-			2 => array( 'icon' => 'graduation', 'title' => __( 'Onderwijs', 'koomenit' ), 'text' => __( 'Lessen, lesmateriaal en curriculumontwikkeling voor mbo, hbo en bedrijfsopleidingen.', 'koomenit' ) ),
-			3 => array( 'icon' => 'lightbulb', 'title' => __( 'Advies', 'koomenit' ), 'text' => __( 'Onafhankelijk advies over IT-architectuur, tooling en het opbouwen van digitale vaardigheden in je team.', 'koomenit' ) ),
-			4 => array( 'icon' => 'network', 'title' => '', 'text' => '' ),
+			1 => array( 'icon' => 'wifi', 'title' => 'ESP32', 'text' => __( 'Wifi en Bluetooth aan boord: ideaal voor sensoren die hun metingen naar een webinterface of MQTT sturen.', 'koomenit' ) ),
+			2 => array( 'icon' => 'chip', 'title' => 'Arduino', 'text' => __( 'Snel prototypen met sensoren, motoren en relais. Eenvoudig, betrouwbaar en zuinig.', 'koomenit' ) ),
+			3 => array( 'icon' => 'cpu', 'title' => 'Raspberry Pi', 'text' => __( 'Een complete Linux-computer voor Python, displays, camera\'s en lokale webservers.', 'koomenit' ) ),
+			4 => array( 'icon' => 'monitor', 'title' => __( 'Web & software', 'koomenit' ), 'text' => __( 'Webinterfaces, dashboards en programma\'s die de hardware aansturen en de data laten zien.', 'koomenit' ) ),
 		),
 		'stats'    => array(
-			1 => array( 'number' => '3', 'suffix' => '', 'label' => __( 'Kerngebieden', 'koomenit' ) ),
-			2 => array( 'number' => '100', 'suffix' => '%', 'label' => __( 'Maatwerk', 'koomenit' ) ),
-			3 => array( 'number' => '1', 'suffix' => '', 'label' => __( 'Vast aanspreekpunt', 'koomenit' ) ),
-			4 => array( 'number' => '0', 'suffix' => '', 'label' => '' ),
+			1 => array( 'source' => 'projects', 'number' => '', 'suffix' => '', 'label' => __( 'Projecten', 'koomenit' ) ),
+			2 => array( 'source' => 'platforms', 'number' => '', 'suffix' => '', 'label' => __( 'Platforms', 'koomenit' ) ),
+			3 => array( 'source' => 'techniques', 'number' => '', 'suffix' => '', 'label' => __( 'Technieken & sensoren', 'koomenit' ) ),
+			4 => array( 'source' => 'manual', 'number' => '', 'suffix' => '', 'label' => '' ),
 		),
 	);
 }
@@ -127,21 +137,38 @@ function koomenit_mod( $key ) {
 }
 
 /**
- * Beschikbare iconen voor de dienstenkaarten.
+ * Beschikbare iconen voor de platformkaarten.
  *
  * @return array
  */
 function koomenit_icon_choices() {
 	return array(
-		'users'      => __( 'Personen', 'koomenit' ),
-		'lightbulb'  => __( 'Lamp', 'koomenit' ),
-		'graduation' => __( 'Opleiding', 'koomenit' ),
-		'cloud'      => __( 'Cloud', 'koomenit' ),
-		'shield'     => __( 'Beveiliging', 'koomenit' ),
-		'code'       => __( 'Code', 'koomenit' ),
-		'server'     => __( 'Server', 'koomenit' ),
-		'chart'      => __( 'Grafiek', 'koomenit' ),
-		'network'    => __( 'Netwerk', 'koomenit' ),
+		'wifi'        => __( 'Wifi (ESP32)', 'koomenit' ),
+		'chip'        => __( 'Chip (Arduino)', 'koomenit' ),
+		'cpu'         => __( 'Processor (Raspberry Pi)', 'koomenit' ),
+		'monitor'     => __( 'Scherm (web)', 'koomenit' ),
+		'terminal'    => __( 'Terminal (software)', 'koomenit' ),
+		'thermometer' => __( 'Thermometer (sensor)', 'koomenit' ),
+		'code'        => __( 'Code', 'koomenit' ),
+		'network'     => __( 'Netwerk', 'koomenit' ),
+		'server'      => __( 'Server', 'koomenit' ),
+		'shield'      => __( 'Beveiliging', 'koomenit' ),
+		'lightbulb'   => __( 'Lamp', 'koomenit' ),
+		'graduation'  => __( 'Opleiding', 'koomenit' ),
+	);
+}
+
+/**
+ * Bronnen voor de cijfers.
+ *
+ * @return array
+ */
+function koomenit_stat_sources() {
+	return array(
+		'projects'   => __( 'Automatisch: aantal projecten', 'koomenit' ),
+		'platforms'  => __( 'Automatisch: aantal platforms', 'koomenit' ),
+		'techniques' => __( 'Automatisch: aantal technieken', 'koomenit' ),
+		'manual'     => __( 'Zelf invullen', 'koomenit' ),
 	);
 }
 
@@ -203,10 +230,11 @@ function koomenit_customize_register( $wp_customize ) {
 		'koomenit_type'     => __( 'Typografie', 'koomenit' ),
 		'koomenit_header'   => __( 'Header & topbalk', 'koomenit' ),
 		'koomenit_hero'     => __( 'Homepage: Hero', 'koomenit' ),
-		'koomenit_services' => __( 'Homepage: Aanbod', 'koomenit' ),
-		'koomenit_about'    => __( 'Homepage: Over ons', 'koomenit' ),
+		'koomenit_services' => __( 'Homepage: Platforms', 'koomenit' ),
+		'koomenit_projects' => __( 'Homepage: Projecten', 'koomenit' ),
+		'koomenit_about'    => __( 'Homepage: Over mij', 'koomenit' ),
 		'koomenit_stats'    => __( 'Homepage: Cijfers', 'koomenit' ),
-		'koomenit_news'     => __( 'Homepage: Nieuws', 'koomenit' ),
+		'koomenit_news'     => __( 'Homepage: Blog', 'koomenit' ),
 		'koomenit_cta'      => __( 'Homepage: Call-to-action', 'koomenit' ),
 		'koomenit_footer'   => __( 'Footer & social media', 'koomenit' ),
 	);
@@ -216,11 +244,11 @@ function koomenit_customize_register( $wp_customize ) {
 
 	// Kleuren.
 	$colors = array(
-		'koomenit_color_primary'   => __( 'Primaire kleur', 'koomenit' ),
-		'koomenit_color_secondary' => __( 'Accentkleur (teal)', 'koomenit' ),
-		'koomenit_color_steel'     => __( 'Staalblauw (verlopen, donkere ondergrond)', 'koomenit' ),
+		'koomenit_color_primary'   => __( 'Primair blauw', 'koomenit' ),
+		'koomenit_color_secondary' => __( 'Lichtblauw accent', 'koomenit' ),
 		'koomenit_color_node'      => __( 'Netwerk-knooppunten', 'koomenit' ),
-		'koomenit_color_dark'      => __( 'Donkere kleur (footer, koppen)', 'koomenit' ),
+		'koomenit_color_dark'      => __( 'Donkere achtergrond (hero, footer)', 'koomenit' ),
+		'koomenit_color_ink'       => __( 'Koppen', 'koomenit' ),
 		'koomenit_color_light'     => __( 'Lichte achtergrond', 'koomenit' ),
 		'koomenit_color_text'      => __( 'Tekstkleur', 'koomenit' ),
 	);
@@ -261,32 +289,65 @@ function koomenit_customize_register( $wp_customize ) {
 	$add( 'koomenit_hero_btn1_url', 'koomenit_hero', __( 'Knop 1 link', 'koomenit' ), 'url', 'esc_url_raw' );
 	$add( 'koomenit_hero_btn2_text', 'koomenit_hero', __( 'Knop 2 tekst', 'koomenit' ) );
 	$add( 'koomenit_hero_btn2_url', 'koomenit_hero', __( 'Knop 2 link', 'koomenit' ), 'url', 'esc_url_raw' );
+	$add(
+		'koomenit_hero_visual',
+		'koomenit_hero',
+		__( 'Illustratie rechts', 'koomenit' ),
+		'select',
+		'koomenit_sanitize_select',
+		array(
+			'choices' => array(
+				'terminal' => __( 'Seriële monitor', 'koomenit' ),
+				'logo'     => __( 'Logo', 'koomenit' ),
+				'none'     => __( 'Geen', 'koomenit' ),
+			),
+		)
+	);
+	$add( 'koomenit_hero_terminal_title', 'koomenit_hero', __( 'Seriële monitor: titel', 'koomenit' ) );
+	$add( 'koomenit_hero_terminal', 'koomenit_hero', __( 'Seriële monitor: regels (één per regel)', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
 	$wp_customize->add_setting( 'koomenit_hero_image', array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
 	$wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'koomenit_hero_image', array( 'label' => __( 'Achtergrondafbeelding', 'koomenit' ), 'section' => 'koomenit_hero' ) ) );
-	$add( 'koomenit_hero_logo', 'koomenit_hero', __( 'Logo-illustratie rechts tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
-	$add( 'koomenit_hero_overlay', 'koomenit_hero', __( 'Dekking blauwe overlay (%)', 'koomenit' ), 'range', 'absint', array( 'input_attrs' => array( 'min' => 0, 'max' => 100, 'step' => 5 ) ) );
+	$add( 'koomenit_hero_overlay', 'koomenit_hero', __( 'Dekking donkere overlay (%)', 'koomenit' ), 'range', 'absint', array( 'input_attrs' => array( 'min' => 0, 'max' => 100, 'step' => 5 ) ) );
 
-	// Aanbod.
+	// Platforms.
 	$add( 'koomenit_services_show', 'koomenit_services', __( 'Sectie tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
 	$add( 'koomenit_services_title', 'koomenit_services', __( 'Titel', 'koomenit' ) );
 	$add( 'koomenit_services_intro', 'koomenit_services', __( 'Introductie', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
 	foreach ( $rep['services'] as $i => $item ) {
-		/* translators: %d: nummer van de dienst */
-		$prefix = sprintf( __( 'Aanbod %d', 'koomenit' ), $i );
+		/* translators: %d: nummer van de kaart */
+		$prefix = sprintf( __( 'Kaart %d', 'koomenit' ), $i );
 		$add( "koomenit_service{$i}_icon", 'koomenit_services', $prefix . ' – ' . __( 'icoon', 'koomenit' ), 'select', 'koomenit_sanitize_select', array( 'choices' => koomenit_icon_choices(), 'default' => $item['icon'] ) );
 		$add( "koomenit_service{$i}_title", 'koomenit_services', $prefix . ' – ' . __( 'titel', 'koomenit' ), 'text', 'sanitize_text_field', array( 'default' => $item['title'] ) );
 		$add( "koomenit_service{$i}_text", 'koomenit_services', $prefix . ' – ' . __( 'tekst', 'koomenit' ), 'textarea', 'sanitize_textarea_field', array( 'default' => $item['text'] ) );
-		$add( "koomenit_service{$i}_url", 'koomenit_services', $prefix . ' – ' . __( 'link', 'koomenit' ), 'url', 'esc_url_raw', array( 'default' => '' ) );
+		$add(
+			"koomenit_service{$i}_url",
+			'koomenit_services',
+			$prefix . ' – ' . __( 'link', 'koomenit' ),
+			'url',
+			'esc_url_raw',
+			array(
+				'default'     => '',
+				'description' => __( 'Leeg = automatisch naar het platform met dezelfde naam (als dat bestaat).', 'koomenit' ),
+			)
+		);
 	}
 
-	// Over ons.
+	// Projecten.
+	$add( 'koomenit_projects_show', 'koomenit_projects', __( 'Sectie tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
+	$add( 'koomenit_projects_eyebrow', 'koomenit_projects', __( 'Label boven titel', 'koomenit' ) );
+	$add( 'koomenit_projects_title', 'koomenit_projects', __( 'Titel', 'koomenit' ) );
+	$add( 'koomenit_projects_intro', 'koomenit_projects', __( 'Introductie', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
+	$add( 'koomenit_projects_count', 'koomenit_projects', __( 'Aantal projecten', 'koomenit' ), 'number', 'absint', array( 'input_attrs' => array( 'min' => 1, 'max' => 12 ) ) );
+	$add( 'koomenit_projects_filter', 'koomenit_projects', __( 'Filterknoppen per platform tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
+
+	// Over.
 	$add( 'koomenit_about_show', 'koomenit_about', __( 'Sectie tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
 	$add( 'koomenit_about_eyebrow', 'koomenit_about', __( 'Label boven titel', 'koomenit' ) );
 	$add( 'koomenit_about_title', 'koomenit_about', __( 'Titel', 'koomenit' ) );
 	$add( 'koomenit_about_text', 'koomenit_about', __( 'Tekst', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
-	$add( 'koomenit_about_points', 'koomenit_about', __( 'Voordelen (één per regel)', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
+	$add( 'koomenit_about_points', 'koomenit_about', __( 'Vaardigheden (één per regel)', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
 	$wp_customize->add_setting( 'koomenit_about_image', array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
-	$wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'koomenit_about_image', array( 'label' => __( 'Afbeelding', 'koomenit' ), 'section' => 'koomenit_about' ) ) );
+	$wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'koomenit_about_image', array( 'label' => __( 'Foto', 'koomenit' ), 'section' => 'koomenit_about' ) ) );
 	$add( 'koomenit_about_btn_text', 'koomenit_about', __( 'Knoptekst', 'koomenit' ) );
 	$add( 'koomenit_about_btn_url', 'koomenit_about', __( 'Knoplink', 'koomenit' ), 'url', 'esc_url_raw' );
 
@@ -295,12 +356,13 @@ function koomenit_customize_register( $wp_customize ) {
 	foreach ( $rep['stats'] as $i => $item ) {
 		/* translators: %d: nummer van het cijfer */
 		$prefix = sprintf( __( 'Cijfer %d', 'koomenit' ), $i );
-		$add( "koomenit_stat{$i}_number", 'koomenit_stats', $prefix . ' – ' . __( 'getal', 'koomenit' ), 'number', 'absint', array( 'default' => $item['number'] ) );
+		$add( "koomenit_stat{$i}_source", 'koomenit_stats', $prefix . ' – ' . __( 'bron', 'koomenit' ), 'select', 'koomenit_sanitize_select', array( 'choices' => koomenit_stat_sources(), 'default' => $item['source'] ) );
+		$add( "koomenit_stat{$i}_number", 'koomenit_stats', $prefix . ' – ' . __( 'getal (bij "zelf invullen")', 'koomenit' ), 'number', 'absint', array( 'default' => $item['number'] ) );
 		$add( "koomenit_stat{$i}_suffix", 'koomenit_stats', $prefix . ' – ' . __( 'achtervoegsel (+, %)', 'koomenit' ), 'text', 'sanitize_text_field', array( 'default' => $item['suffix'] ) );
-		$add( "koomenit_stat{$i}_label", 'koomenit_stats', $prefix . ' – ' . __( 'omschrijving', 'koomenit' ), 'text', 'sanitize_text_field', array( 'default' => $item['label'] ) );
+		$add( "koomenit_stat{$i}_label", 'koomenit_stats', $prefix . ' – ' . __( 'omschrijving (leeg = verbergen)', 'koomenit' ), 'text', 'sanitize_text_field', array( 'default' => $item['label'] ) );
 	}
 
-	// Nieuws.
+	// Blog.
 	$add( 'koomenit_news_show', 'koomenit_news', __( 'Sectie tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
 	$add( 'koomenit_news_title', 'koomenit_news', __( 'Titel', 'koomenit' ) );
 	$add( 'koomenit_news_count', 'koomenit_news', __( 'Aantal berichten', 'koomenit' ), 'number', 'absint', array( 'input_attrs' => array( 'min' => 1, 'max' => 9 ) ) );
@@ -316,10 +378,10 @@ function koomenit_customize_register( $wp_customize ) {
 	$add( 'koomenit_footer_about', 'koomenit_footer', __( 'Korte omschrijving', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
 	$add( 'koomenit_footer_address', 'koomenit_footer', __( 'Adres', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
 	$add( 'koomenit_footer_copy', 'koomenit_footer', __( 'Copyrighttekst (leeg = automatisch)', 'koomenit' ) );
+	$add( 'koomenit_social_github', 'koomenit_footer', 'GitHub URL', 'url', 'esc_url_raw' );
 	$add( 'koomenit_social_linkedin', 'koomenit_footer', 'LinkedIn URL', 'url', 'esc_url_raw' );
-	$add( 'koomenit_social_facebook', 'koomenit_footer', 'Facebook URL', 'url', 'esc_url_raw' );
+	$add( 'koomenit_social_youtube', 'koomenit_footer', 'YouTube URL', 'url', 'esc_url_raw' );
 	$add( 'koomenit_social_instagram', 'koomenit_footer', 'Instagram URL', 'url', 'esc_url_raw' );
-	$add( 'koomenit_social_x', 'koomenit_footer', 'X (Twitter) URL', 'url', 'esc_url_raw' );
 }
 add_action( 'customize_register', 'koomenit_customize_register' );
 
@@ -332,9 +394,9 @@ function koomenit_customizer_css() {
 	$vars = array(
 		'--bl-primary'   => koomenit_mod( 'koomenit_color_primary' ),
 		'--bl-secondary' => koomenit_mod( 'koomenit_color_secondary' ),
-		'--bl-steel'     => koomenit_mod( 'koomenit_color_steel' ),
 		'--bl-node'      => koomenit_mod( 'koomenit_color_node' ),
 		'--bl-dark'      => koomenit_mod( 'koomenit_color_dark' ),
+		'--bl-ink'       => koomenit_mod( 'koomenit_color_ink' ),
 		'--bl-light'     => koomenit_mod( 'koomenit_color_light' ),
 		'--bl-text'      => koomenit_mod( 'koomenit_color_text' ),
 		'--bl-radius'    => absint( koomenit_mod( 'koomenit_radius' ) ) . 'px',

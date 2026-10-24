@@ -1,5 +1,5 @@
 /**
- * Koomen.IT: mobiel menu, sticky header, scroll-animaties en tellers.
+ * Koomen.IT: mobiel menu, sticky header, projectfilter, scroll-animaties en tellers.
  */
 ( function () {
 	'use strict';
@@ -31,6 +31,41 @@
 		window.addEventListener( 'scroll', onScroll, { passive: true } );
 		onScroll();
 	}
+
+	// Projecten filteren per platform zonder de pagina te herladen.
+	// Zonder JavaScript zijn de filterknoppen gewone links naar het platformoverzicht.
+	document.querySelectorAll( '.filters' ).forEach( function ( bar ) {
+		var grid = bar.parentNode.querySelector( '[data-filter-grid]' );
+		var empty = bar.parentNode.querySelector( '.filter-empty' );
+		if ( ! grid ) {
+			return;
+		}
+		bar.addEventListener( 'click', function ( e ) {
+			var btn = e.target.closest( '[data-filter]' );
+			if ( ! btn ) {
+				return;
+			}
+			e.preventDefault();
+			var slug = btn.getAttribute( 'data-filter' );
+			var shown = 0;
+			bar.querySelectorAll( '[data-filter]' ).forEach( function ( b ) {
+				b.classList.toggle( 'is-active', b === btn );
+				b.setAttribute( 'aria-pressed', b === btn ? 'true' : 'false' );
+			} );
+			grid.querySelectorAll( '.project-card' ).forEach( function ( card ) {
+				var platforms = ( card.getAttribute( 'data-platforms' ) || '' ).split( ' ' );
+				var match = '*' === slug || platforms.indexOf( slug ) > -1;
+				card.classList.toggle( 'is-filtered-out', ! match );
+				if ( match ) {
+					card.classList.remove( 'is-pending' );
+					shown++;
+				}
+			} );
+			if ( empty ) {
+				empty.hidden = shown > 0;
+			}
+		} );
+	} );
 
 	// Tellers laten oplopen.
 	function countUp( el ) {

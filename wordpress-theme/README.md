@@ -1,51 +1,68 @@
-# Koomen.IT – WordPress-thema
+# Koomen.IT – WordPress portfolio-thema
 
-Modern WordPress-thema in de huisstijl van **Koomen.IT – Training, Onderwijs & Advies**:
-navy en teal uit het logo, het lettertype Inter, de `</>`-code-tag als labelmotief en het
-netwerk van knooppunten uit het logo als achtergrond van de hero.
-Vrijwel alles is aan te passen via **Weergave → Customizer → Koomen.IT thema-opties**.
+Portfolio-thema in de huisstijl van **koomen.it**: helder blauw, donker leisteen en het
+netwerkmotief uit het logo. Gemaakt om programma's, websites en hardwareprojecten met
+**ESP32, Arduino en Raspberry Pi** te laten zien.
 
 ![Screenshot](koomenit/screenshot.png)
 
-Zet bij **Instellingen → Algemeen** de sitetitel op `koomen.it` en de ondertitel op
-`Training, Onderwijs & Advies`; zonder eigen logo toont de header dan het K-logo met die tekst,
-precies zoals het logo met naam.
-
 ## Installeren
 
-1. Pak de map `koomenit/` in als zip: `cd wordpress-theme && zip -r koomenit.zip koomenit`
-2. Ga in WordPress naar **Weergave → Thema's → Nieuwe toevoegen → Thema uploaden**.
-3. Upload `koomenit.zip` en activeer het thema.
-4. Maak onder **Weergave → Menu's** een menu aan en koppel het aan *Hoofdmenu* (en eventueel *Footermenu*).
+1. Maak een zip van de map: `cd wordpress-theme && zip -r koomenit.zip koomenit`
+2. Ga in WordPress naar **Weergave → Thema's → Nieuw thema toevoegen → Thema uploaden**.
+3. Upload `koomenit.zip` en klik op **Activeren**.
 
-## Wat kun je aanpassen?
+Bij het activeren maakt het thema automatisch de platforms *ESP32*, *Arduino* en
+*Raspberry Pi* aan, en de projecttypes *Website / webinterface*, *Sensorproject* en
+*Programma / software*. Het projectoverzicht staat op `/projecten/`.
 
-| Customizer-sectie   | Opties |
+Zet bij **Instellingen → Algemeen** de sitetitel op `koomen.it`: het deel na de punt (`.it`)
+krijgt dan automatisch de grijze kleur uit het logo.
+
+## Een project toevoegen
+
+Ga in het dashboard naar **Projecten → Nieuw project**.
+
+| Veld                       | Waar het verschijnt |
+|----------------------------|---------------------|
+| Titel en inhoud            | Projectpagina (gebruik gerust tabellen, codeblokken en afbeeldingen) |
+| Samenvatting               | Projectkaart en onder de titel op de projectpagina |
+| Projectafbeelding          | Projectkaart en bovenaan de projectpagina; zonder afbeelding toont de kaart een platformicoon |
+| Platform                   | Badges, filterknoppen en de platformkaarten op de homepage |
+| Projecttype                | Label op de kaart en bij de projectgegevens |
+| Technieken                 | Labels op de kaart (C++, Python, MQTT, BME280, …) |
+| Projectgegevens (zijbalk)  | Status, jaar, GitHub-link, demo-link en de hardwarelijst |
+
+## Homepage aanpassen
+
+Alles staat in **Weergave → Customizer → Koomen.IT thema-opties**. Elke sectie kan aan of uit.
+
+| Sectie              | Opties |
 |---------------------|--------|
-| Kleuren & stijl     | Navy, teal-accent, staalblauw, netwerkgrijs, donkere footerkleur, lichte achtergrond, tekstkleur, afronding van hoeken |
-| Typografie          | Lettertype voor koppen en tekst (Google Fonts) |
-| Header & topbalk    | Topbalk aan/uit, tekst, telefoon, e-mail, knop rechtsboven |
-| Hero                | Label, titel, tekst, twee knoppen, logo-illustratie aan/uit, achtergrondafbeelding, sterkte van de overlay |
-| Aanbod              | Titel, intro en tot 4 onderdelen (icoon, titel, tekst, link). Standaard: Training, Onderwijs en Advies. Een lege titel verbergt het onderdeel |
-| Over                | Titel, tekst, voordelen (één per regel), afbeelding, knop |
-| Cijfers             | Tot 4 kerncijfers met optelanimatie (vul je eigen cijfers in; een leeg label verbergt het cijfer) |
-| Nieuws              | Titel en aantal berichten |
+| Kleuren & stijl     | Blauw, lichtblauw, netwerkgrijs, donkere achtergrond, koppen, lichte achtergrond, tekst, afronding |
+| Typografie          | Lettertype voor koppen en tekst |
+| Header & topbalk    | Topbalk aan/uit, e-mail, telefoon, knop rechtsboven |
+| Hero                | Titel, tekst, knoppen, illustratie (seriële monitor met eigen regels, logo of niets), achtergrondafbeelding |
+| Platforms           | Tot 4 kaarten. Heet een kaart hetzelfde als een platform, dan linkt hij automatisch naar dat platform en toont hij het aantal projecten |
+| Projecten           | Titel, intro, aantal projecten, filterknoppen aan/uit |
+| Over mij            | Tekst, vaardigheden, foto, knop (standaard naar GitHub) |
+| Cijfers             | Tot 4 cijfers, automatisch geteld (projecten, platforms, technieken) of zelf ingevuld |
+| Blog                | Nieuwste berichten |
 | Call-to-action      | Titel, tekst en knop |
-| Footer & social     | Omschrijving, adres, copyright, LinkedIn/Facebook/Instagram/X |
+| Footer & social     | Omschrijving, adres, GitHub, LinkedIn, YouTube, Instagram |
 
-Elke homepage-sectie kan apart aan- of uitgezet worden. Daarnaast:
-
-- Eigen logo (**Site-identiteit**), twee menulocaties, zijbalk en drie footer-widgetkolommen.
-- Ondersteuning voor de blokeditor met het Koomen.IT-kleurenpalet en verlopen (`theme.json`).
-- Paginasjabloon **Volledige breedte** om met blokken eigen landingspagina's te bouwen.
-- Responsief met mobiel menu, sticky header en subtiele scroll-animaties
-  (uitgeschakeld bij `prefers-reduced-motion`).
+Verder: logo-favicon (als er geen site-icoon is ingesteld), twee menulocaties, zijbalk en drie
+footer-widgetkolommen, het koomen.it-kleurenpalet in de blokeditor en een paginasjabloon
+**Volledige breedte**.
 
 ## Demo
 
-`demo/index.html` is een statische weergave van de homepage. Hij wordt gemaakt uit de echte
-thema-templates met:
+`demo/` bevat een statische weergave van de homepage, het projectoverzicht en een
+projectpagina, gemaakt uit de echte thema-templates:
 
 ```bash
-php wordpress-theme/demo/render-demo.php > wordpress-theme/demo/index.html
+php wordpress-theme/demo/render-demo.php
 ```
+
+Het project *Achteruitrij-parkeersensor* is echt; de andere projecten en blogberichten zijn
+voorbeelden.

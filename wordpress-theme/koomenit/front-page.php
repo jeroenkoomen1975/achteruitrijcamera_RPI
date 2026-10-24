@@ -7,7 +7,7 @@
 
 get_header();
 
-$koomenit_sections = array( 'hero', 'services', 'about', 'stats', 'news', 'cta' );
+$koomenit_sections = array( 'hero', 'services', 'projects', 'about', 'stats', 'news', 'cta' );
 ?>
 
 <main id="primary" class="site-main site-main--front">

@@ -11,43 +11,38 @@
 			"palette": [
 				{
 					"slug": "primary",
-					"name": "Navy",
-					"color": "#0e2a47"
+					"name": "Blauw",
+					"color": "#1d63ed"
 				},
 				{
 					"slug": "secondary",
-					"name": "Teal",
-					"color": "#1f8a8a"
-				},
-				{
-					"slug": "teal-light",
-					"name": "Lichte teal",
-					"color": "#3cb8b0"
-				},
-				{
-					"slug": "steel",
-					"name": "Staalblauw",
-					"color": "#4c7a9e"
+					"name": "Lichtblauw",
+					"color": "#3b82f6"
 				},
 				{
 					"slug": "node",
-					"name": "Netwerkgrijs",
-					"color": "#8b97a3"
+					"name": "Leisteengrijs",
+					"color": "#94a3b8"
 				},
 				{
 					"slug": "dark",
-					"name": "Bijna zwart",
-					"color": "#0b0e14"
+					"name": "Donker",
+					"color": "#1e2430"
+				},
+				{
+					"slug": "ink",
+					"name": "Inkt",
+					"color": "#0f172a"
 				},
 				{
 					"slug": "light",
 					"name": "Licht",
-					"color": "#f2f5f8"
+					"color": "#f1f5f9"
 				},
 				{
 					"slug": "text",
 					"name": "Tekst",
-					"color": "#3d4a58"
+					"color": "#334155"
 				},
 				{
 					"slug": "white",
@@ -57,14 +52,14 @@
 			],
 			"gradients": [
 				{
-					"slug": "navy",
-					"name": "Navy naar staalblauw",
-					"gradient": "linear-gradient(120deg, #0e2a47 0%, #4c7a9e 100%)"
+					"slug": "dark",
+					"name": "Donker leisteen",
+					"gradient": "linear-gradient(160deg, #1e2430 0%, #0f172a 100%)"
 				},
 				{
-					"slug": "teal",
-					"name": "Teal",
-					"gradient": "linear-gradient(120deg, #1f8a8a 0%, #3cb8b0 100%)"
+					"slug": "blue",
+					"name": "Blauw",
+					"gradient": "linear-gradient(120deg, #1d63ed 0%, #3b82f6 100%)"
 				}
 			]
 		},
@@ -97,14 +92,14 @@
 		"elements": {
 			"button": {
 				"border": {
-					"radius": "10px"
+					"radius": "12px"
 				},
 				"color": {
 					"background": "var(--wp--preset--color--primary)",
 					"text": "#ffffff"
 				},
 				"typography": {
-					"fontWeight": "600"
+					"fontWeight": "700"
 				}
 			}
 		}

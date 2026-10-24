@@ -44,15 +44,7 @@
 			<?php if ( has_custom_logo() ) : ?>
 				<?php the_custom_logo(); ?>
 			<?php else : ?>
-				<a class="site-title" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-					<img class="site-title__icon" src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-icon.png' ); ?>" alt="" width="258" height="320">
-					<span class="site-title__words">
-						<span class="site-title__text"><?php bloginfo( 'name' ); ?></span>
-						<?php if ( get_bloginfo( 'description' ) ) : ?>
-							<span class="site-title__tagline"><?php bloginfo( 'description' ); ?></span>
-						<?php endif; ?>
-					</span>
-				</a>
+				<?php koomenit_site_title(); ?>
 			<?php endif; ?>
 		</div>
 

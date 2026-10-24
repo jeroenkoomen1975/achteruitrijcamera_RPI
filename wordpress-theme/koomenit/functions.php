@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'KOOMENIT_VERSION', '1.0.0' );
+define( 'KOOMENIT_VERSION', '2.0.0' );
 
 /**
  * Thema-ondersteuning registreren.
@@ -40,6 +40,7 @@ function koomenit_setup() {
 	);
 
 	add_image_size( 'koomenit-card', 720, 460, true );
+	add_post_type_support( 'page', 'excerpt' );
 
 	register_nav_menus(
 		array(
@@ -117,8 +118,11 @@ function koomenit_fonts_url() {
 		$fonts
 	);
 
+	$families[] = 'family=JetBrains+Mono:wght@400;600';
+
 	return 'https://fonts.googleapis.com/css2?' . implode( '&', $families ) . '&display=swap';
 }
 
 require get_template_directory() . '/inc/customizer.php';
+require get_template_directory() . '/inc/projects.php';
 require get_template_directory() . '/inc/template-tags.php';

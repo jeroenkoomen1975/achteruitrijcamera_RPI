@@ -1,14 +1,16 @@
 /* Koomen.IT: stijlen voor de blokeditor. */
 body {
 	font-family: "Inter", system-ui, sans-serif;
-	color: #3d4a58;
+	color: #334155;
 	line-height: 1.7;
 }
 h1, h2, h3, h4, h5, h6 {
 	font-family: "Inter", system-ui, sans-serif;
-	color: #0e2a47;
-	font-weight: 700;
-	letter-spacing: -0.025em;
+	color: #0f172a;
+	font-weight: 800;
+	letter-spacing: -0.03em;
 }
-a { color: #1f8a8a; }
-blockquote { border-left: 4px solid #1f8a8a; background: #f2f5f8; padding: 1rem 1.5rem; }
+a { color: #1d63ed; }
+code, pre { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; }
+pre { background: #0f172a; color: #e2e8f0; padding: 1rem 1.25rem; border-radius: 12px; }
+blockquote { border-left: 4px solid #1d63ed; background: #f1f5f9; padding: 1rem 1.5rem; }

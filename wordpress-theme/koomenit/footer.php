@@ -15,15 +15,7 @@ if ( ! $koomenit_copy ) {
 <footer id="colophon" class="site-footer">
 	<div class="container site-footer__grid">
 		<div class="site-footer__brand">
-			<a class="site-title site-title--light" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<img class="site-title__icon" src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/logo-icon-light.png' ); ?>" alt="" width="258" height="320">
-				<span class="site-title__words">
-					<span class="site-title__text"><?php bloginfo( 'name' ); ?></span>
-					<?php if ( get_bloginfo( 'description' ) ) : ?>
-						<span class="site-title__tagline"><?php bloginfo( 'description' ); ?></span>
-					<?php endif; ?>
-				</span>
-			</a>
+			<?php koomenit_site_title( true ); ?>
 			<p><?php echo esc_html( koomenit_mod( 'koomenit_footer_about' ) ); ?></p>
 			<?php koomenit_social_links(); ?>
 		</div>
@@ -33,10 +25,10 @@ if ( ! $koomenit_copy ) {
 				<?php if ( is_active_sidebar( 'footer-' . $koomenit_i ) ) : ?>
 					<?php dynamic_sidebar( 'footer-' . $koomenit_i ); ?>
 				<?php elseif ( 1 === $koomenit_i ) : ?>
-					<h4 class="footer-title"><?php esc_html_e( 'Aanbod', 'koomenit' ); ?></h4>
+					<h4 class="footer-title"><?php esc_html_e( 'Platforms', 'koomenit' ); ?></h4>
 					<ul>
 						<?php foreach ( koomenit_get_services() as $koomenit_service ) : ?>
-							<li><a href="<?php echo esc_url( $koomenit_service['url'] ? $koomenit_service['url'] : '#aanbod' ); ?>"><?php echo esc_html( $koomenit_service['title'] ); ?></a></li>
+							<li><a href="<?php echo esc_url( $koomenit_service['url'] ? $koomenit_service['url'] : '#platforms' ); ?>"><?php echo esc_html( $koomenit_service['title'] ); ?></a></li>
 						<?php endforeach; ?>
 					</ul>
 				<?php elseif ( 2 === $koomenit_i ) : ?>
