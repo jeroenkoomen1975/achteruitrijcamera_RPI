@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'KOOMENIT_VERSION', '2.0.0' );
+define( 'KOOMENIT_VERSION', '2.1.0' );
 
 /**
  * Thema-ondersteuning registreren.
@@ -94,6 +94,7 @@ function koomenit_scripts() {
 	wp_add_inline_style( 'koomenit-style', koomenit_customizer_css() );
 
 	wp_enqueue_script( 'koomenit-main', get_template_directory_uri() . '/assets/js/main.js', array(), KOOMENIT_VERSION, true );
+	wp_enqueue_script( 'koomenit-code', get_template_directory_uri() . '/assets/js/code.js', array(), KOOMENIT_VERSION, true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );

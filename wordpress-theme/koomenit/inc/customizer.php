@@ -32,44 +32,53 @@ function koomenit_defaults() {
 		'koomenit_topbar_show'     => false,
 		'koomenit_topbar_phone'    => '',
 		'koomenit_topbar_email'    => 'info@koomen.it',
-		'koomenit_topbar_text'     => __( 'Projecten met ESP32, Arduino en Raspberry Pi', 'koomenit' ),
+		'koomenit_topbar_text'     => __( 'Embedded projecten, websites en software', 'koomenit' ),
 
 		// Hero.
 		'koomenit_hero_show'       => true,
-		'koomenit_hero_eyebrow'    => __( 'Portfolio', 'koomenit' ),
-		'koomenit_hero_title'      => __( 'Ik bouw slimme dingen met ESP32, Arduino en Raspberry Pi', 'koomenit' ),
-		'koomenit_hero_text'       => __( 'Van sensoren die meten tot webinterfaces die het laten zien. Hier vind je de programma\'s, websites en hardwareprojecten die ik heb gemaakt.', 'koomenit' ),
+		'koomenit_hero_eyebrow'    => __( 'esp32 · arduino · raspberry pi · web', 'koomenit' ),
+		'koomenit_hero_title'      => __( 'Waar hardware en software samenkomen', 'koomenit' ),
+		'koomenit_hero_text'       => __( 'Een portfolio van embedded projecten, websites en software op ESP32, Arduino en Raspberry Pi. Met code, schema\'s en de keuzes achter elk ontwerp.', 'koomenit' ),
 		'koomenit_hero_btn1_text'  => __( 'Bekijk projecten', 'koomenit' ),
 		'koomenit_hero_btn1_url'   => '#projecten',
-		'koomenit_hero_btn2_text'  => __( 'Over mij', 'koomenit' ),
+		'koomenit_hero_btn2_text'  => __( 'Over koomen.it', 'koomenit' ),
 		'koomenit_hero_btn2_url'   => '#over',
 		'koomenit_hero_image'      => '',
 		'koomenit_hero_overlay'    => 85,
-		'koomenit_hero_visual'     => 'terminal',
+		'koomenit_hero_visual'     => 'code',
+		'koomenit_hero_code_file'  => 'parkeersensor/logica.py',
+		'koomenit_hero_code_lang'  => 'python',
+		'koomenit_hero_code_start' => 15,
+		'koomenit_hero_code'       => "def bepaal_zone(afstand_cm, oranje_grens_cm, rood_grens_cm):\n    \"\"\"Geef de zone terug voor een gemeten afstand.\"\"\"\n    if afstand_cm is None or afstand_cm > oranje_grens_cm:\n        return Zone.GROEN\n    if afstand_cm > rood_grens_cm:\n        return Zone.ORANJE\n    return Zone.ROOD",
+		'koomenit_hero_code_env'   => 'Raspberry Pi · Python 3',
+		'koomenit_hero_code_status' => __( '13 tests geslaagd', 'koomenit' ),
+		'koomenit_hero_code_link_text' => 'Achteruitrij-parkeersensor',
+		'koomenit_hero_code_link_url'  => '',
+		'koomenit_hero_code_animate'   => true,
 		'koomenit_hero_terminal_title' => 'esp32-weerstation · 115200 baud',
 		'koomenit_hero_terminal'   => "> wifi verbonden: 192.168.1.42\n> BME280 gevonden op 0x76\n[12:04:01] temp 21.4 °C  vocht 58 %\n[12:04:11] temp 21.5 °C  vocht 57 %\n> MQTT publish: huis/woonkamer ✓",
 
 		// Platforms.
 		'koomenit_services_show'   => true,
-		'koomenit_services_title'  => __( 'Waar ik mee bouw', 'koomenit' ),
+		'koomenit_services_title'  => __( 'Platforms', 'koomenit' ),
 		'koomenit_services_intro'  => __( 'Microcontrollers, single-board computers en de software eromheen.', 'koomenit' ),
 
 		// Projecten.
 		'koomenit_projects_show'   => true,
 		'koomenit_projects_eyebrow' => __( 'Projecten', 'koomenit' ),
 		'koomenit_projects_title'  => __( 'Recente projecten', 'koomenit' ),
-		'koomenit_projects_intro'  => __( 'Een selectie van wat ik heb gemaakt. Filter op platform om snel te vinden wat je zoekt.', 'koomenit' ),
+		'koomenit_projects_intro'  => __( 'Een selectie van recente projecten. Filter op platform om snel te vinden wat je zoekt.', 'koomenit' ),
 		'koomenit_projects_count'  => 6,
 		'koomenit_projects_filter' => true,
 
 		// Over.
 		'koomenit_about_show'      => true,
-		'koomenit_about_eyebrow'   => __( 'Over mij', 'koomenit' ),
+		'koomenit_about_eyebrow'   => __( 'Over koomen.it', 'koomenit' ),
 		'koomenit_about_title'     => __( 'Van breadboard tot werkend product', 'koomenit' ),
-		'koomenit_about_text'      => __( 'Ik vind het leuk om hardware en software samen te laten werken: een sensor uitlezen, de data verwerken en het resultaat tonen op een display of in de browser. Elk project documenteer ik zo dat een ander het kan nabouwen.', 'koomenit' ),
-		'koomenit_about_points'    => __( "C++ voor ESP32 en Arduino\nPython op de Raspberry Pi\nWebinterfaces en dashboards\nSensoren, displays en actuatoren", 'koomenit' ),
+		'koomenit_about_text'      => __( 'koomen.it combineert hardware en software: sensoren uitlezen, data verwerken en het resultaat tonen op een display of in de browser. Elk project is gedocumenteerd zodat het na te bouwen is.', 'koomenit' ),
+		'koomenit_about_points'    => __( "C++ voor ESP32 en Arduino\nPython op de Raspberry Pi\nWebsites, webinterfaces en dashboards\nSensoren, displays en actuatoren", 'koomenit' ),
 		'koomenit_about_image'     => '',
-		'koomenit_about_btn_text'  => __( 'Bekijk mijn GitHub', 'koomenit' ),
+		'koomenit_about_btn_text'  => __( 'Code op GitHub', 'koomenit' ),
 		'koomenit_about_btn_url'   => 'https://github.com/jeroenkoomen1975',
 
 		// Cijfers.
@@ -82,13 +91,13 @@ function koomenit_defaults() {
 
 		// CTA.
 		'koomenit_cta_show'        => true,
-		'koomenit_cta_title'       => __( 'Een idee voor een project?', 'koomenit' ),
-		'koomenit_cta_text'        => __( 'Vragen over een van mijn projecten of zin om samen iets te bouwen? Stuur me een bericht.', 'koomenit' ),
-		'koomenit_cta_btn_text'    => __( 'Stuur een bericht', 'koomenit' ),
+		'koomenit_cta_title'       => __( 'Vragen of samenwerken?', 'koomenit' ),
+		'koomenit_cta_text'        => __( 'Voor vragen over een project, samenwerking of maatwerk: neem gerust contact op.', 'koomenit' ),
+		'koomenit_cta_btn_text'    => __( 'Neem contact op', 'koomenit' ),
 		'koomenit_cta_btn_url'     => 'mailto:info@koomen.it',
 
 		// Footer.
-		'koomenit_footer_about'    => __( 'Portfolio met projecten op basis van ESP32, Arduino en Raspberry Pi.', 'koomenit' ),
+		'koomenit_footer_about'    => __( 'Portfolio met embedded projecten, websites en software op ESP32, Arduino en Raspberry Pi.', 'koomenit' ),
 		'koomenit_footer_address'  => '',
 		'koomenit_footer_copy'     => '',
 		'koomenit_social_github'   => 'https://github.com/jeroenkoomen1975',
@@ -183,6 +192,18 @@ function koomenit_sanitize_checkbox( $value ) {
 }
 
 /**
+ * Code uit het codevenster opschonen: regels en inspringing blijven staan,
+ * de tekst wordt bij het tonen geëscapet.
+ *
+ * @param string $value Waarde.
+ * @return string
+ */
+function koomenit_sanitize_code( $value ) {
+	$value = str_replace( array( "\r\n", "\r", "\0" ), array( "\n", "\n", '' ), (string) $value );
+	return current_user_can( 'unfiltered_html' ) ? $value : wp_kses( $value, array() );
+}
+
+/**
  * Select opschonen.
  *
  * @param string               $value   Waarde.
@@ -232,7 +253,7 @@ function koomenit_customize_register( $wp_customize ) {
 		'koomenit_hero'     => __( 'Homepage: Hero', 'koomenit' ),
 		'koomenit_services' => __( 'Homepage: Platforms', 'koomenit' ),
 		'koomenit_projects' => __( 'Homepage: Projecten', 'koomenit' ),
-		'koomenit_about'    => __( 'Homepage: Over mij', 'koomenit' ),
+		'koomenit_about'    => __( 'Homepage: Over', 'koomenit' ),
 		'koomenit_stats'    => __( 'Homepage: Cijfers', 'koomenit' ),
 		'koomenit_news'     => __( 'Homepage: Blog', 'koomenit' ),
 		'koomenit_cta'      => __( 'Homepage: Call-to-action', 'koomenit' ),
@@ -297,12 +318,41 @@ function koomenit_customize_register( $wp_customize ) {
 		'koomenit_sanitize_select',
 		array(
 			'choices' => array(
+				'code'     => __( 'Codevenster', 'koomenit' ),
 				'terminal' => __( 'Seriële monitor', 'koomenit' ),
 				'logo'     => __( 'Logo', 'koomenit' ),
 				'none'     => __( 'Geen', 'koomenit' ),
 			),
 		)
 	);
+	$add( 'koomenit_hero_code_file', 'koomenit_hero', __( 'Codevenster: bestandsnaam', 'koomenit' ) );
+	$add(
+		'koomenit_hero_code_lang',
+		'koomenit_hero',
+		__( 'Codevenster: taal', 'koomenit' ),
+		'select',
+		'koomenit_sanitize_select',
+		array(
+			'choices' => array(
+				'python' => 'Python',
+				'cpp'    => 'C++ / Arduino',
+			),
+		)
+	);
+	$add( 'koomenit_hero_code', 'koomenit_hero', __( 'Codevenster: code', 'koomenit' ), 'textarea', 'koomenit_sanitize_code', array( 'input_attrs' => array( 'style' => 'font-family:monospace;min-height:180px' ) ) );
+	$add( 'koomenit_hero_code_start', 'koomenit_hero', __( 'Codevenster: eerste regelnummer', 'koomenit' ), 'number', 'absint', array( 'input_attrs' => array( 'min' => 1 ) ) );
+	$add( 'koomenit_hero_code_env', 'koomenit_hero', __( 'Codevenster: statusbalk links', 'koomenit' ) );
+	$add( 'koomenit_hero_code_status', 'koomenit_hero', __( 'Codevenster: statusbalk rechts (groen)', 'koomenit' ) );
+	$add( 'koomenit_hero_code_link_text', 'koomenit_hero', __( 'Codevenster: project waar de code uit komt', 'koomenit' ) );
+	$add(
+		'koomenit_hero_code_link_url',
+		'koomenit_hero',
+		__( 'Codevenster: link naar dat project', 'koomenit' ),
+		'url',
+		'esc_url_raw',
+		array( 'description' => __( 'Leeg = automatisch naar het project met deze titel (als dat bestaat).', 'koomenit' ) )
+	);
+	$add( 'koomenit_hero_code_animate', 'koomenit_hero', __( 'Codevenster: code laten intypen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
 	$add( 'koomenit_hero_terminal_title', 'koomenit_hero', __( 'Seriële monitor: titel', 'koomenit' ) );
 	$add( 'koomenit_hero_terminal', 'koomenit_hero', __( 'Seriële monitor: regels (één per regel)', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
 	$wp_customize->add_setting( 'koomenit_hero_image', array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
@@ -345,7 +395,7 @@ function koomenit_customize_register( $wp_customize ) {
 	$add( 'koomenit_about_eyebrow', 'koomenit_about', __( 'Label boven titel', 'koomenit' ) );
 	$add( 'koomenit_about_title', 'koomenit_about', __( 'Titel', 'koomenit' ) );
 	$add( 'koomenit_about_text', 'koomenit_about', __( 'Tekst', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
-	$add( 'koomenit_about_points', 'koomenit_about', __( 'Vaardigheden (één per regel)', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
+	$add( 'koomenit_about_points', 'koomenit_about', __( 'Expertise (één per regel)', 'koomenit' ), 'textarea', 'sanitize_textarea_field' );
 	$wp_customize->add_setting( 'koomenit_about_image', array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
 	$wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'koomenit_about_image', array( 'label' => __( 'Foto', 'koomenit' ), 'section' => 'koomenit_about' ) ) );
 	$add( 'koomenit_about_btn_text', 'koomenit_about', __( 'Knoptekst', 'koomenit' ) );

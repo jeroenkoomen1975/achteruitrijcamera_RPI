@@ -17,7 +17,7 @@ Theme Name: Koomen.IT
 Theme URI: https://koomen.it
 Author: Jeroen Koomen
 Description: Portfolio-thema in de huisstijl van koomen.it: helder blauw, donker leisteen en het netwerkmotief uit het logo. Met een eigen berichttype voor projecten, filters per platform (ESP32, Arduino, Raspberry Pi), projectgegevens zoals GitHub-link, status en hardware, en een volledig aanpasbare homepage via de Customizer.
-Version: 2.0.0
+Version: 2.1.0
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
@@ -257,6 +257,43 @@ a.chip:hover { border-color: var(--bl-primary); color: var(--bl-primary); }
 .terminal__cursor span { display: inline-block; width: 0.55em; height: 1.1em; vertical-align: -0.2em; background: var(--bl-secondary); animation: bl-blink 1s steps(1) infinite; }
 @keyframes bl-type { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
 @keyframes bl-blink { 50% { opacity: 0; } }
+
+/* Codevenster */
+.hero__visual { position: relative; }
+.editor {
+	margin: 0; overflow: hidden; border: 1px solid rgba(148, 163, 184, 0.22); border-radius: var(--bl-radius);
+	background: rgba(15, 23, 42, 0.88); box-shadow: var(--bl-shadow-lg); backdrop-filter: blur(8px);
+	font-family: var(--bl-font-mono); font-size: 0.84rem;
+}
+.editor__bar { display: flex; align-items: stretch; gap: 0.9rem; padding: 0 1rem; border-bottom: 1px solid rgba(148, 163, 184, 0.18); background: rgba(15, 23, 42, 0.6); }
+.editor__dots { display: flex; align-items: center; gap: 6px; }
+.editor__dots i { width: 10px; height: 10px; border-radius: 50%; background: rgba(148, 163, 184, 0.3); }
+.editor__tab { display: flex; align-items: center; padding: 0.65rem 0.9rem; color: var(--bl-node-light); font-size: 0.76rem; white-space: nowrap; box-shadow: inset 0 -2px 0 var(--bl-secondary); }
+.editor__tab small { color: var(--bl-node); font-size: 1em; }
+.editor__lang { margin-left: auto; align-self: center; padding: 0.15em 0.55em; border-radius: 4px; background: rgba(59, 130, 246, 0.15); color: #93c5fd; font-size: 0.68rem; }
+.editor__body { display: grid; grid-template-columns: auto minmax(0, 1fr); padding: 1rem 0; line-height: 1.75; }
+.editor__gutter { padding: 0 0.9rem 0 1rem; color: #475569; text-align: right; user-select: none; }
+.editor__code { margin: 0; padding: 0 1.2rem 0 0; overflow-x: auto; background: none; color: #cbd5e1; white-space: pre; }
+.editor__code, .editor__code code { font: inherit; font-size: 1em; }
+.editor--animate .editor__code { min-height: calc(var(--lines, 7) * 1.75em); }
+.editor__caret { display: inline-block; width: 0.55em; height: 1.15em; margin-left: 1px; vertical-align: -0.2em; background: var(--bl-secondary); animation: bl-blink 1s steps(1) infinite; }
+.editor.is-typing .editor__caret { animation: none; }
+.editor__status { display: flex; justify-content: space-between; gap: 1rem; padding: 0.45rem 1rem; border-top: 1px solid rgba(148, 163, 184, 0.18); color: var(--bl-node); font-size: 0.7rem; }
+.editor__ok { display: inline-flex; align-items: center; gap: 0.45em; color: #86efac; transition: color 0.3s; }
+.editor__ok::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.editor__ok.is-running { color: var(--bl-node); }
+.editor__ok.is-running::before { animation: bl-blink 0.8s steps(1) infinite; }
+.editor__source { margin: 0.8rem 0 0; color: var(--bl-node); font-family: var(--bl-font-mono); font-size: 0.75rem; }
+.editor__source a { color: var(--bl-node-light); text-decoration: underline; text-underline-offset: 3px; }
+.editor__source a:hover { color: var(--bl-secondary); }
+.tok-kw { color: #60a5fa; }
+.tok-type { color: #93c5fd; }
+.tok-const { color: #c4b5fd; }
+.tok-fn { color: #f1f5f9; }
+.tok-str { color: #fcd34d; }
+.tok-num { color: #fdba74; }
+.tok-com { color: #64748b; font-style: italic; }
+.tok-pre { color: #f472b6; }
 
 /* ---------- Secties ---------- */
 .section { padding: clamp(4rem, 8vw, 6rem) 0; }
@@ -556,7 +593,7 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 	.post-navigation .nav-links { grid-template-columns: 1fr; }
 	.hero__actions .btn, .page-hero__actions .btn { width: 100%; justify-content: center; }
 	.search-form { flex-direction: column; }
-	.terminal { font-size: 0.76rem; }
+	.terminal, .editor { font-size: 0.74rem; }
 	.site-title__tagline { display: none; }
 }
 @media (max-width: 782px) { .admin-bar .site-header { top: 46px; } }
@@ -576,7 +613,7 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 		<img class="site-title__icon" src="../koomenit/assets/img/logo-mark.svg" alt="" width="258" height="328">
 		<span class="site-title__words">
 			<span class="site-title__text">koomen<span class="site-title__tld">.it</span></span>
-							<span class="site-title__tagline">Projecten met ESP32, Arduino &amp; Raspberry Pi</span>
+							<span class="site-title__tagline">Embedded projecten, websites &amp; software</span>
 					</span>
 	</a>
 						</div>
@@ -589,7 +626,7 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 		</button>
 
 		<nav id="site-navigation" class="main-navigation" aria-label="Hoofdmenu">
-			<ul class="menu"><li class=""><a href="index.html">Home</a></li><li class="current-menu-item"><a href="projecten.html">Projecten</a></li><li class=""><a href="index.html#over">Over mij</a></li><li class=""><a href="index.html#blog">Blog</a></li></ul>										<a class="btn btn--primary btn--sm header-cta" href="#contact">Contact</a>
+			<ul class="menu"><li class=""><a href="index.html">Home</a></li><li class="current-menu-item"><a href="projecten.html">Projecten</a></li><li class=""><a href="index.html#over">Over</a></li><li class=""><a href="index.html#blog">Blog</a></li></ul>										<a class="btn btn--primary btn--sm header-cta" href="#contact">Contact</a>
 					</nav>
 	</div>
 </header>
@@ -601,11 +638,11 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 		<g class="network__nodes">
 			<circle cx="80" cy="120" r="7"/><circle cx="340" cy="60" r="6"/><circle cx="300" cy="330" r="6"/>
 			<circle cx="760" cy="90" r="6"/><circle cx="860" cy="360" r="7"/><circle cx="140" cy="520" r="6"/>
-			<circle cx="470" cy="600" r="7"/><circle cx="1240" cy="80" r="6"/><circle cx="1380" cy="300" r="8"/>
+			<circle cx="470" cy="600" r="7"/><circle cx="520" cy="210" r="7"/><circle cx="1380" cy="300" r="8"/>
 			<circle cx="1300" cy="600" r="6"/><circle cx="760" cy="520" r="5"/>
 		</g>
 		<circle class="network__light" cx="980" cy="170" r="16"/>
-		<circle class="network__blue" cx="520" cy="210" r="14"/>
+		<circle class="network__blue" cx="1240" cy="80" r="12"/>
 		<circle class="network__blue" cx="1160" cy="470" r="11"/>
 	</svg>
 			<div class="container">
@@ -722,10 +759,10 @@ python3 -m venv --system-site-packages .venv
 		<img class="site-title__icon" src="../koomenit/assets/img/logo-mark-dark.svg" alt="" width="258" height="328">
 		<span class="site-title__words">
 			<span class="site-title__text">koomen<span class="site-title__tld">.it</span></span>
-							<span class="site-title__tagline">Projecten met ESP32, Arduino &amp; Raspberry Pi</span>
+							<span class="site-title__tagline">Embedded projecten, websites &amp; software</span>
 					</span>
 	</a>
-				<p>Portfolio met projecten op basis van ESP32, Arduino en Raspberry Pi.</p>
+				<p>Portfolio met embedded projecten, websites en software op ESP32, Arduino en Raspberry Pi.</p>
 			<div class="social-links"><a href="https://github.com/jeroenkoomen1975" class="social-link" target="_blank" rel="noopener" aria-label="GitHub"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a></div>		</div>
 
 					<div class="site-footer__col">
@@ -739,7 +776,7 @@ python3 -m venv --system-site-packages .venv
 							</div>
 					<div class="site-footer__col">
 									<h4 class="footer-title">Navigatie</h4>
-					<ul class="menu"><li class=""><a href="projecten.html">Projecten</a></li><li class=""><a href="index.html#over">Over mij</a></li><li class=""><a href="index.html#blog">Blog</a></li><li class=""><a href="index.html#contact">Contact</a></li></ul>							</div>
+					<ul class="menu"><li class=""><a href="projecten.html">Projecten</a></li><li class=""><a href="index.html#over">Over</a></li><li class=""><a href="index.html#blog">Blog</a></li><li class=""><a href="index.html#contact">Contact</a></li></ul>							</div>
 					<div class="site-footer__col">
 									<h4 class="footer-title">Contact</h4>
 					<ul class="footer-contact">
@@ -872,6 +909,161 @@ python3 -m venv --system-site-packages .venv
 		el.classList.add( 'is-pending' );
 		el.style.transitionDelay = ( i % 4 ) * 80 + 'ms';
 		observer.observe( el );
+	} );
+} )();
+
+</script>
+<script>
+/**
+ * Koomen.IT: syntax-kleuring voor C++ (Arduino/ESP32) en Python, en de
+ * typ-animatie van het codevenster in de hero.
+ */
+( function () {
+	'use strict';
+
+	var KEYWORDS = {
+		cpp: 'if else for while do return break continue switch case default const static void bool int float double char long unsigned auto class struct new delete true false nullptr include define uint8_t uint16_t uint32_t',
+		python: 'def return if elif else for while in not and or is None True False class import from as with try except finally raise lambda yield pass break continue global async await self'
+	};
+
+	function esc( s ) {
+		return s.replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
+	}
+
+	function highlight( code, lang ) {
+		var kw = ( KEYWORDS[ lang ] || KEYWORDS.cpp ).split( ' ' );
+		var comment = 'python' === lang ? '#[^\\n]*' : '\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/';
+		var pre = 'cpp' === lang ? '|^[ \\t]*#\\w+' : '';
+		var re = new RegExp(
+			'(' + comment + ')' +                                            // 1 commentaar
+			'|("""[\\s\\S]*?"""|[fbr]?"(?:\\\\.|[^"\\\\\\n])*"|[fbr]?\'(?:\\\\.|[^\'\\\\\\n])*\'|<[\\w./]+\\.h>)' + // 2 tekst
+			'|(\\b\\d+(?:\\.\\d+)?(?:e-?\\d+)?\\b|\\b0x[0-9a-fA-F]+\\b)' +    // 3 getal
+			'|(@\\w+' + pre + ')' +                                          // 4 decorator / preprocessor
+			'|([A-Za-z_]\\w*)(?=\\s*\\()' +                                  // 5 functie
+			'|([A-Za-z_]\\w*)',                                              // 6 woord
+			'gm'
+		);
+		var out = '';
+		var last = 0;
+		code.replace( re, function ( m, com, str, num, dec, fn, word, offset ) {
+			out += esc( code.slice( last, offset ) );
+			last = offset + m.length;
+			var cls = '';
+			if ( com ) {
+				cls = 'com';
+			} else if ( str ) {
+				cls = 'str';
+			} else if ( num ) {
+				cls = 'num';
+			} else if ( dec ) {
+				cls = 'pre';
+			} else if ( fn ) {
+				cls = kw.indexOf( fn ) > -1 ? 'kw' : 'fn';
+			} else if ( kw.indexOf( word ) > -1 ) {
+				cls = 'kw';
+			} else if ( /^[A-Z][A-Z0-9_]+$/.test( word ) ) {
+				cls = 'const';
+			} else if ( /^[A-Z]/.test( word ) ) {
+				cls = 'type';
+			}
+			out += cls ? '<span class="tok-' + cls + '">' + esc( m ) + '</span>' : esc( m );
+			return m;
+		} );
+		return out + esc( code.slice( last ) );
+	}
+
+	window.koomenitHighlight = highlight;
+
+	document.querySelectorAll( 'code[data-lang]' ).forEach( function ( el ) {
+		el.innerHTML = highlight( el.textContent, el.getAttribute( 'data-lang' ) );
+	} );
+
+	// Code laten intypen; de gekleurde opmaak blijft tijdens het typen staan.
+	var reduced = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+	if ( reduced ) {
+		return;
+	}
+
+	document.querySelectorAll( '.editor--animate' ).forEach( function ( editor ) {
+		var code = editor.querySelector( 'code' );
+		var gutter = editor.querySelector( '.editor__gutter' );
+		var status = editor.querySelector( '.editor__ok' );
+		if ( ! code ) {
+			return;
+		}
+
+		var walker = document.createTreeWalker( code, NodeFilter.SHOW_TEXT );
+		var nodes = [];
+		var texts = [];
+		var total = 0;
+		while ( walker.nextNode() ) {
+			nodes.push( walker.currentNode );
+			texts.push( walker.currentNode.data );
+			total += walker.currentNode.data.length;
+		}
+		var gutterLines = gutter ? gutter.innerHTML.split( '<br>' ) : [];
+
+		var caret = document.createElement( 'span' );
+		caret.className = 'editor__caret';
+		caret.setAttribute( 'aria-hidden', 'true' );
+
+		function render( shown ) {
+			var left = shown;
+			var lines = 1;
+			var last = null;
+			nodes.forEach( function ( node, i ) {
+				var take = Math.max( 0, Math.min( texts[ i ].length, left ) );
+				node.data = texts[ i ].slice( 0, take );
+				left -= take;
+				lines += ( node.data.match( /\n/g ) || [] ).length;
+				if ( take > 0 ) {
+					last = node;
+				}
+			} );
+			if ( last ) {
+				last.parentNode.insertBefore( caret, last.nextSibling );
+			} else {
+				code.insertBefore( caret, code.firstChild );
+			}
+			if ( gutter ) {
+				gutter.innerHTML = gutterLines.slice( 0, lines ).join( '<br>' );
+			}
+		}
+
+		render( 0 );
+		if ( status ) {
+			status.textContent = status.getAttribute( 'data-pending' ) || 'bezig…';
+			status.classList.add( 'is-running' );
+		}
+		editor.classList.add( 'is-typing' );
+
+		// Ongeveer 2,5 seconden, ongeacht de lengte; korte code iets rustiger.
+		var duration = Math.min( 2600, Math.max( 1200, total * 12 ) );
+		var start = null;
+		function step( ts ) {
+			if ( null === start ) {
+				start = ts;
+			}
+			var p = Math.min( 1, ( ts - start ) / duration );
+			render( Math.round( total * p ) );
+			if ( p < 1 ) {
+				requestAnimationFrame( step );
+				return;
+			}
+			editor.classList.remove( 'is-typing' );
+			if ( gutter ) {
+				gutter.innerHTML = gutterLines.join( '<br>' );
+			}
+			if ( status ) {
+				setTimeout( function () {
+					status.textContent = status.getAttribute( 'data-final' );
+					status.classList.remove( 'is-running' );
+				}, 500 );
+			}
+		}
+		setTimeout( function () {
+			requestAnimationFrame( step );
+		}, 400 );
 	} );
 } )();
 

@@ -1,7 +1,7 @@
 # Koomen.IT – WordPress portfolio-thema
 
 Portfolio-thema in de huisstijl van **koomen.it**: helder blauw, donker leisteen en het
-netwerkmotief uit het logo. Gemaakt om programma's, websites en hardwareprojecten met
+netwerkmotief uit het logo. Gemaakt om embedded projecten, websites en software met
 **ESP32, Arduino en Raspberry Pi** te laten zien.
 
 ![Screenshot](koomenit/screenshot.png)
@@ -42,10 +42,10 @@ Alles staat in **Weergave → Customizer → Koomen.IT thema-opties**. Elke sect
 | Kleuren & stijl     | Blauw, lichtblauw, netwerkgrijs, donkere achtergrond, koppen, lichte achtergrond, tekst, afronding |
 | Typografie          | Lettertype voor koppen en tekst |
 | Header & topbalk    | Topbalk aan/uit, e-mail, telefoon, knop rechtsboven |
-| Hero                | Titel, tekst, knoppen, illustratie (seriële monitor met eigen regels, logo of niets), achtergrondafbeelding |
+| Hero                | Titel, tekst, knoppen, achtergrondafbeelding en de illustratie rechts: een **codevenster** (bestandsnaam, taal Python of C++, eigen code, regelnummers, statusbalk, link naar het project, typ-animatie aan/uit), een seriële monitor, het logo of niets |
 | Platforms           | Tot 4 kaarten. Heet een kaart hetzelfde als een platform, dan linkt hij automatisch naar dat platform en toont hij het aantal projecten |
 | Projecten           | Titel, intro, aantal projecten, filterknoppen aan/uit |
-| Over mij            | Tekst, vaardigheden, foto, knop (standaard naar GitHub) |
+| Over                | Tekst, expertise, foto, knop (standaard naar GitHub) |
 | Cijfers             | Tot 4 cijfers, automatisch geteld (projecten, platforms, technieken) of zelf ingevuld |
 | Blog                | Nieuwste berichten |
 | Call-to-action      | Titel, tekst en knop |

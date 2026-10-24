@@ -262,11 +262,11 @@ function koomenit_network_svg( $class ) {
 		<g class="network__nodes">
 			<circle cx="80" cy="120" r="7"/><circle cx="340" cy="60" r="6"/><circle cx="300" cy="330" r="6"/>
 			<circle cx="760" cy="90" r="6"/><circle cx="860" cy="360" r="7"/><circle cx="140" cy="520" r="6"/>
-			<circle cx="470" cy="600" r="7"/><circle cx="1240" cy="80" r="6"/><circle cx="1380" cy="300" r="8"/>
+			<circle cx="470" cy="600" r="7"/><circle cx="520" cy="210" r="7"/><circle cx="1380" cy="300" r="8"/>
 			<circle cx="1300" cy="600" r="6"/><circle cx="760" cy="520" r="5"/>
 		</g>
 		<circle class="network__light" cx="980" cy="170" r="16"/>
-		<circle class="network__blue" cx="520" cy="210" r="14"/>
+		<circle class="network__blue" cx="1240" cy="80" r="12"/>
 		<circle class="network__blue" cx="1160" cy="470" r="11"/>
 	</svg>
 	<?php

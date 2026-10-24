@@ -30,7 +30,67 @@ $koomenit_lines  = array_filter( array_map( 'trim', explode( "\n", (string) koom
 			</div>
 		</div>
 
-		<?php if ( 'terminal' === $koomenit_visual && $koomenit_lines ) : ?>
+		<?php if ( 'code' === $koomenit_visual && '' !== trim( (string) koomenit_mod( 'koomenit_hero_code' ) ) ) : ?>
+			<?php
+			$koomenit_code   = rtrim( (string) koomenit_mod( 'koomenit_hero_code' ) );
+			$koomenit_start  = max( 1, absint( koomenit_mod( 'koomenit_hero_code_start' ) ) );
+			$koomenit_count  = substr_count( $koomenit_code, "\n" ) + 1;
+			$koomenit_file   = (string) koomenit_mod( 'koomenit_hero_code_file' );
+			$koomenit_slash  = strrpos( $koomenit_file, '/' );
+			$koomenit_lang   = koomenit_mod( 'koomenit_hero_code_lang' );
+			$koomenit_status = koomenit_mod( 'koomenit_hero_code_status' );
+			$koomenit_ltext  = koomenit_mod( 'koomenit_hero_code_link_text' );
+			$koomenit_lurl   = koomenit_mod( 'koomenit_hero_code_link_url' );
+			if ( $koomenit_ltext && ! $koomenit_lurl ) {
+				$koomenit_match = get_posts(
+					array(
+						'post_type'   => 'project',
+						'title'       => $koomenit_ltext,
+						'numberposts' => 1,
+						'fields'      => 'ids',
+					)
+				);
+				$koomenit_lurl  = $koomenit_match ? get_permalink( $koomenit_match[0] ) : '';
+			}
+			?>
+			<div class="hero__visual reveal">
+				<figure class="editor<?php echo koomenit_mod( 'koomenit_hero_code_animate' ) ? ' editor--animate' : ''; ?>" style="--lines:<?php echo (int) $koomenit_count; ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: bestandsnaam */ __( 'Codevoorbeeld: %s', 'koomenit' ), $koomenit_file ) ); ?>">
+					<div class="editor__bar">
+						<span class="editor__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+						<span class="editor__tab">
+							<?php if ( false !== $koomenit_slash ) : ?>
+								<small><?php echo esc_html( substr( $koomenit_file, 0, $koomenit_slash + 1 ) ); ?></small><?php echo esc_html( substr( $koomenit_file, $koomenit_slash + 1 ) ); ?>
+							<?php else : ?>
+								<?php echo esc_html( $koomenit_file ); ?>
+							<?php endif; ?>
+						</span>
+						<span class="editor__lang"><?php echo 'cpp' === $koomenit_lang ? 'C++' : 'Python'; ?></span>
+					</div>
+					<div class="editor__body">
+						<div class="editor__gutter" aria-hidden="true"><?php echo implode( '<br>', range( $koomenit_start, $koomenit_start + $koomenit_count - 1 ) ); // phpcs:ignore ?></div>
+						<pre class="editor__code"><code data-lang="<?php echo esc_attr( $koomenit_lang ); ?>"><?php echo esc_html( $koomenit_code ); ?></code></pre>
+					</div>
+					<?php if ( koomenit_mod( 'koomenit_hero_code_env' ) || $koomenit_status ) : ?>
+						<div class="editor__status">
+							<span><?php echo esc_html( koomenit_mod( 'koomenit_hero_code_env' ) ); ?></span>
+							<?php if ( $koomenit_status ) : ?>
+								<span class="editor__ok" data-final="<?php echo esc_attr( $koomenit_status ); ?>"><?php echo esc_html( $koomenit_status ); ?></span>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+				</figure>
+				<?php if ( $koomenit_ltext ) : ?>
+					<p class="editor__source">
+						<?php esc_html_e( 'uit het project', 'koomenit' ); ?>
+						<?php if ( $koomenit_lurl ) : ?>
+							<a href="<?php echo esc_url( $koomenit_lurl ); ?>"><?php echo esc_html( $koomenit_ltext ); ?></a>
+						<?php else : ?>
+							<span><?php echo esc_html( $koomenit_ltext ); ?></span>
+						<?php endif; ?>
+					</p>
+				<?php endif; ?>
+			</div>
+		<?php elseif ( 'terminal' === $koomenit_visual && $koomenit_lines ) : ?>
 			<div class="hero__visual reveal" aria-hidden="true">
 				<div class="terminal">
 					<div class="terminal__bar">

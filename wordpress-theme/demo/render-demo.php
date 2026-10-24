@@ -173,7 +173,7 @@ function get_template_directory() { return $GLOBALS['theme']; }
 function get_template_directory_uri() { return '../koomenit'; }
 function home_url( $p = '' ) { return 'index.html'; }
 function get_option( $k ) { return 'show_on_front' === $k ? 'posts' : 0; }
-function get_bloginfo( $k = 'name' ) { return 'name' === $k ? 'koomen.it' : 'Projecten met ESP32, Arduino & Raspberry Pi'; }
+function get_bloginfo( $k = 'name' ) { return 'name' === $k ? 'koomen.it' : 'Embedded projecten, websites & software'; }
 function bloginfo( $k ) { echo 'charset' === $k ? 'UTF-8' : esc_html( get_bloginfo( $k ) ); }
 function language_attributes() { echo 'lang="nl-NL"'; }
 function body_class() { echo 'class="' . esc_attr( $GLOBALS['page'] ) . '"'; }
@@ -196,6 +196,15 @@ function get_post_type_archive_link() { return 'projecten.html'; }
 function get_term_link( $term ) { return 'projecten.html'; }
 function term_description() { return ''; }
 function get_taxonomy() { return null; }
+function get_posts( $args ) {
+	foreach ( $GLOBALS['projects'] as $p ) {
+		if ( isset( $args['title'] ) && $p['title'] === $args['title'] ) {
+			return array( $p['id'] );
+		}
+	}
+	return array();
+}
+function get_permalink( $id ) { $p = demo_find( $id ); return $p ? $p['link'] : '#'; }
 function wp_count_posts() { return (object) array( 'publish' => count( $GLOBALS['projects'] ) ); }
 
 function get_terms( $args ) {
@@ -247,15 +256,17 @@ function wp_head() {
 	echo "<style>\n" . file_get_contents( $GLOBALS['theme'] . '/style.css' ) . "\n" . koomenit_customizer_css() . "\n</style>\n";
 }
 function wp_footer() {
-	echo "<script>\n" . file_get_contents( $GLOBALS['theme'] . '/assets/js/main.js' ) . "\n</script>\n";
+	foreach ( array( 'main.js', 'code.js' ) as $js ) {
+		echo "<script>\n" . file_get_contents( $GLOBALS['theme'] . '/assets/js/' . $js ) . "\n</script>\n";
+	}
 }
 
 function wp_nav_menu( $args ) {
 	if ( 'footer' === $args['theme_location'] ) {
-		$items   = array( 'Projecten' => 'projecten.html', 'Over mij' => 'index.html#over', 'Blog' => 'index.html#blog', 'Contact' => 'index.html#contact' );
+		$items   = array( 'Projecten' => 'projecten.html', 'Over' => 'index.html#over', 'Blog' => 'index.html#blog', 'Contact' => 'index.html#contact' );
 		$current = '';
 	} else {
-		$items   = array( 'Home' => 'index.html', 'Projecten' => 'projecten.html', 'Over mij' => 'index.html#over', 'Blog' => 'index.html#blog' );
+		$items   = array( 'Home' => 'index.html', 'Projecten' => 'projecten.html', 'Over' => 'index.html#over', 'Blog' => 'index.html#blog' );
 		$current = 'home' === $GLOBALS['page'] ? 'Home' : 'Projecten';
 	}
 	echo '<ul class="' . esc_attr( isset( $args['menu_class'] ) ? $args['menu_class'] : 'menu' ) . '">';
