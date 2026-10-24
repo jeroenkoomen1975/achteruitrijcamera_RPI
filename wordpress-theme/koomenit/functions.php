@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'KOOMENIT_VERSION', '2.2.0' );
+define( 'KOOMENIT_VERSION', '2.3.0' );
 
 /**
  * Thema-ondersteuning registreren.
@@ -127,4 +127,5 @@ function koomenit_fonts_url() {
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/projects.php';
 require get_template_directory() . '/inc/websites.php';
+require get_template_directory() . '/inc/blog.php';
 require get_template_directory() . '/inc/template-tags.php';

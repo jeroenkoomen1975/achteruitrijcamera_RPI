@@ -97,6 +97,17 @@ function koomenit_defaults() {
 		'koomenit_news_title'      => __( 'Blog', 'koomenit' ),
 		'koomenit_news_count'      => 3,
 
+		// Blogpagina.
+		'koomenit_blog_intro'        => __( 'Artikelen over ESP32, Arduino, Raspberry Pi en webontwikkeling.', 'koomenit' ),
+		'koomenit_blog_layout'       => 'grid',
+		'koomenit_blog_featured'     => true,
+		'koomenit_blog_filters'      => true,
+		'koomenit_blog_reading_time' => true,
+		'koomenit_blog_tags'         => true,
+		'koomenit_blog_sidebar'      => true,
+		'koomenit_blog_toc'          => true,
+		'koomenit_blog_related'      => true,
+
 		// CTA.
 		'koomenit_cta_show'        => true,
 		'koomenit_cta_title'       => __( 'Vragen of samenwerken?', 'koomenit' ),
@@ -267,6 +278,7 @@ function koomenit_customize_register( $wp_customize ) {
 		'koomenit_stats'    => __( 'Homepage: Cijfers', 'koomenit' ),
 		'koomenit_news'     => __( 'Homepage: Blog', 'koomenit' ),
 		'koomenit_cta'      => __( 'Homepage: Call-to-action', 'koomenit' ),
+		'koomenit_blog'     => __( 'Blogpagina en berichten', 'koomenit' ),
 		'koomenit_footer'   => __( 'Footer & social media', 'koomenit' ),
 	);
 	foreach ( $sections as $id => $title ) {
@@ -434,6 +446,29 @@ function koomenit_customize_register( $wp_customize ) {
 	$add( 'koomenit_news_show', 'koomenit_news', __( 'Sectie tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
 	$add( 'koomenit_news_title', 'koomenit_news', __( 'Titel', 'koomenit' ) );
 	$add( 'koomenit_news_count', 'koomenit_news', __( 'Aantal berichten', 'koomenit' ), 'number', 'absint', array( 'input_attrs' => array( 'min' => 1, 'max' => 9 ) ) );
+
+	// Blogpagina.
+	$add( 'koomenit_blog_intro', 'koomenit_blog', __( 'Introductie onder de titel', 'koomenit' ), 'textarea', 'sanitize_textarea_field', array( 'description' => __( 'Wordt gebruikt als de pagina Blog zelf geen samenvatting heeft.', 'koomenit' ) ) );
+	$add(
+		'koomenit_blog_layout',
+		'koomenit_blog',
+		__( 'Weergave van het overzicht', 'koomenit' ),
+		'select',
+		'koomenit_sanitize_select',
+		array(
+			'choices' => array(
+				'grid' => __( 'Raster met kaarten', 'koomenit' ),
+				'list' => __( 'Lijst met afbeelding links', 'koomenit' ),
+			),
+		)
+	);
+	$add( 'koomenit_blog_featured', 'koomenit_blog', __( 'Nieuwste bericht groot bovenaan', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
+	$add( 'koomenit_blog_filters', 'koomenit_blog', __( 'Filterknoppen per categorie', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
+	$add( 'koomenit_blog_reading_time', 'koomenit_blog', __( 'Leestijd tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
+	$add( 'koomenit_blog_tags', 'koomenit_blog', __( 'Tags op de kaarten tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
+	$add( 'koomenit_blog_sidebar', 'koomenit_blog', __( 'Zijbalk tonen (zoeken, categorieën, GitHub of eigen widgets)', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
+	$add( 'koomenit_blog_toc', 'koomenit_blog', __( 'Inhoudsopgave bij berichten met 3 of meer tussenkoppen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
+	$add( 'koomenit_blog_related', 'koomenit_blog', __( '"Meer berichten" onder een bericht', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );
 
 	// CTA.
 	$add( 'koomenit_cta_show', 'koomenit_cta', __( 'Sectie tonen', 'koomenit' ), 'checkbox', 'koomenit_sanitize_checkbox' );

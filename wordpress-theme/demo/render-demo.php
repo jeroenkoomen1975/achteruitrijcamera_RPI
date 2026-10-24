@@ -4,7 +4,7 @@
  *
  * Gebruik: php wordpress-theme/demo/render-demo.php
  * Schrijft index.html, projecten.html, project-parkeersensor.html, websites.html
- * en website-koomen-it.html in deze map.
+ * website-koomen-it.html, blog.html, blog-lijst.html en bericht-5v-sensoren.html in deze map.
  *
  * Dit script definieert minimale stubs van de gebruikte WordPress-functies,
  * vult ze met demo-inhoud en laat daarna de echte thema-templates hun HTML uitvoeren.
@@ -16,6 +16,9 @@ $pages = array(
 	'project'   => 'project-parkeersensor.html',
 	'websites'  => 'websites.html',
 	'website'   => 'website-koomen-it.html',
+	'blog'      => 'blog.html',
+	'bloglijst' => 'blog-lijst.html',
+	'bericht'   => 'bericht-5v-sensoren.html',
 );
 
 // Zonder argument: elke pagina in een eigen PHP-proces renderen.
@@ -177,10 +180,45 @@ $GLOBALS['websites'] = array(
 	),
 );
 
+$bericht_content = <<<'HTML'
+<p>Veel sensoren voor Arduino werken op 5V. Op een Raspberry Pi kun je ze ook gebruiken, maar niet zomaar: de GPIO-pinnen van de Pi verdragen maximaal 3,3V. In dit bericht zie je hoe je een HC-SR04 afstandssensor veilig aansluit, zoals in de achteruitrij-parkeersensor.</p>
+<h2>Waarom 5V een probleem is</h2>
+<p>De HC-SR04 krijgt 5V voeding en geeft op de ECHO-pin dus ook een signaal van 5V terug. De Raspberry Pi heeft geen bescherming tegen te hoge spanning op de GPIO-pinnen. Een paar keer 5V op een ingang kan al genoeg zijn om de pin, of de hele Pi, te beschadigen. De TRIG-pin is geen probleem: de Pi stuurt daar 3,3V naartoe, en dat herkent de sensor prima als hoog signaal.</p>
+<h2>De spanningsdeler</h2>
+<p>Met twee weerstanden verlaag je het ECHO-signaal naar een veilige spanning. Zet 1 kΩ tussen ECHO en de GPIO-pin, en 2 kΩ van de GPIO-pin naar GND.</p>
+<pre><code>HC-SR04 ECHO ──[ 1 kΩ ]──┬──── GPIO 24 (pin 18)
+                         │
+                      [ 2 kΩ ]
+                         │
+                        GND</code></pre>
+<p>De spanning op de GPIO-pin wordt dan 5V × 2k / (1k + 2k) ≈ 3,3V. Precies genoeg om als hoog gelezen te worden, en niet te veel.</p>
+<h3>Geen weerstand van 2 kΩ?</h3>
+<p>Twee weerstanden van 1 kΩ in serie werken ook. Een combinatie van 10 kΩ en 20 kΩ geeft dezelfde verhouding, maar maakt het signaal iets gevoeliger voor storing door lange draden.</p>
+<h2>Aansluiten en testen</h2>
+<p>Met <code>gpiozero</code> lees je de afstand in een paar regels uit:</p>
+<pre><code>from gpiozero import DistanceSensor
+
+sensor = DistanceSensor(echo=24, trigger=23, max_distance=2)
+print(f"{sensor.distance * 100:.1f} cm")</code></pre>
+<p>Meet je steeds dezelfde waarde, of altijd de maximale afstand? Controleer dan of ECHO en TRIG niet zijn verwisseld en of de sensor echt 5V krijgt.</p>
+<h2>Samengevat</h2>
+<ul>
+<li>Sluit nooit een 5V-signaal rechtstreeks aan op een GPIO-pin van de Pi.</li>
+<li>Een spanningsdeler van 1 kΩ en 2 kΩ maakt van 5V ongeveer 3,3V.</li>
+<li>De TRIG-pin kan direct op de Pi, omdat die alleen een signaal ontvangt.</li>
+</ul>
+HTML;
+
+$kort = '<p>Dit is een voorbeeldbericht om te laten zien hoe de blog eruitziet. Vervang het door een echt artikel over je eigen project, met uitleg, codevoorbeelden en foto\'s van de opbouw.</p>';
+
 $GLOBALS['blog'] = array(
-	array( 'id' => 201, 'title' => 'Voorbeeld: 5V-sensoren veilig aansluiten op een Raspberry Pi', 'cat' => 'Raspberry Pi', 'excerpt' => 'Waarom een spanningsdeler nodig is voor de ECHO-pin van een HC-SR04, en hoe je de weerstanden kiest. Dit is een voorbeeldbericht.', 'date' => '14 oktober 2026' ),
-	array( 'id' => 202, 'title' => 'Voorbeeld: maanden op een batterij met ESP32 deep sleep', 'cat' => 'ESP32', 'excerpt' => 'Een sensor die elk kwartier meet en daarna slaapt: zo haal je het stroomverbruik omlaag. Dit is een voorbeeldbericht.', 'date' => '2 oktober 2026' ),
-	array( 'id' => 203, 'title' => 'Voorbeeld: een ST7789-display aansturen zonder CS-pin', 'cat' => 'Displays', 'excerpt' => 'Sommige goedkope displays missen een CS-pin. Met SPI mode 3 werken ze toch. Dit is een voorbeeldbericht.', 'date' => '20 september 2026' ),
+	array( 'id' => 201, 'title' => 'Voorbeeld: 5V-sensoren veilig aansluiten op een Raspberry Pi', 'link' => 'bericht-5v-sensoren.html', 'cat' => 'Raspberry Pi', 'tags' => array( 'HC-SR04', 'GPIO', 'elektronica' ), 'excerpt' => 'Waarom een spanningsdeler nodig is voor de ECHO-pin van een HC-SR04, en hoe je de weerstanden kiest.', 'content' => $bericht_content, 'date' => '14 oktober 2026', 'thumb' => 'img/parkeersensor-kaart.jpg' ),
+	array( 'id' => 202, 'title' => 'Voorbeeld: maanden op een batterij met ESP32 deep sleep', 'link' => 'bericht-5v-sensoren.html', 'cat' => 'ESP32', 'tags' => array( 'deep sleep', 'energie' ), 'excerpt' => 'Een sensor die elk kwartier meet en daarna slaapt: zo haal je het stroomverbruik omlaag.', 'content' => $kort, 'date' => '2 oktober 2026' ),
+	array( 'id' => 203, 'title' => 'Voorbeeld: een ST7789-display aansturen zonder CS-pin', 'link' => 'bericht-5v-sensoren.html', 'cat' => 'Displays', 'tags' => array( 'SPI', 'ST7789' ), 'excerpt' => 'Sommige goedkope displays missen een CS-pin. Met SPI mode 3 werken ze toch.', 'content' => $kort, 'date' => '20 september 2026' ),
+	array( 'id' => 204, 'title' => 'Voorbeeld: sensorwaarden middelen met een mediaanfilter', 'link' => 'bericht-5v-sensoren.html', 'cat' => 'Software', 'tags' => array( 'Python', 'sensoren' ), 'excerpt' => 'Een enkele uitschieter maakt een gemiddelde onbruikbaar. De mediaan van een paar metingen is veel stabieler.', 'content' => $kort, 'date' => '5 september 2026' ),
+	array( 'id' => 205, 'title' => 'Voorbeeld: een WordPress-thema bouwen zonder page builder', 'link' => 'bericht-5v-sensoren.html', 'cat' => 'Webontwikkeling', 'tags' => array( 'WordPress', 'PHP' ), 'excerpt' => 'Eigen berichttypes, de Customizer en een paar templates: meer heb je niet nodig voor een snel portfolio.', 'content' => $kort, 'date' => '22 augustus 2026' ),
+	array( 'id' => 206, 'title' => 'Voorbeeld: MQTT-berichten bekijken met een paar regels Python', 'link' => 'bericht-5v-sensoren.html', 'cat' => 'Software', 'tags' => array( 'MQTT', 'Python' ), 'excerpt' => 'Handig bij het debuggen van sensoren: een klein script dat alle berichten op een topic laat zien.', 'content' => $kort, 'date' => '8 augustus 2026' ),
+	array( 'id' => 207, 'title' => 'Voorbeeld: Arduino of ESP32, wat kies je?', 'link' => 'bericht-5v-sensoren.html', 'cat' => 'ESP32', 'tags' => array( 'Arduino', 'microcontrollers' ), 'excerpt' => 'Een overzicht van de verschillen in snelheid, verbinding en stroomverbruik, met voorbeelden uit eigen projecten.', 'content' => $kort, 'date' => '25 juli 2026' ),
 );
 
 /**
@@ -232,11 +270,11 @@ function absint( $n ) { return abs( (int) $n ); }
 function antispambot( $e ) { return $e; }
 function selected() {}
 function is_wp_error( $x ) { return false; }
-function get_theme_mod( $key, $default = false ) { return $default; }
+function get_theme_mod( $key, $default = false ) { return ( 'bloglijst' === $GLOBALS['page'] && 'koomenit_blog_layout' === $key ) ? 'list' : $default; }
 function get_template_directory() { return $GLOBALS['theme']; }
 function get_template_directory_uri() { return '../koomenit'; }
 function home_url( $p = '' ) { return 'index.html'; }
-function get_option( $k ) { return 'show_on_front' === $k ? 'posts' : 0; }
+function get_option( $k ) { return array( 'show_on_front' => 'page', 'page_for_posts' => 900 )[ $k ] ?? 0; }
 function get_bloginfo( $k = 'name' ) { return 'name' === $k ? 'koomen.it' : 'Embedded projecten, websites & software'; }
 function bloginfo( $k ) { echo 'charset' === $k ? 'UTF-8' : esc_html( get_bloginfo( $k ) ); }
 function language_attributes() { echo 'lang="nl-NL"'; }
@@ -260,7 +298,31 @@ function is_post_type_archive( $t = '' ) {
 function is_singular( $t = '' ) { return in_array( $GLOBALS['page'], array( 'project', 'website' ), true ) && ( '' === $t || $t === $GLOBALS['page'] ); }
 function post_type_archive_title() { return 'websites' === $GLOBALS['page'] ? 'Websites' : 'Projecten'; }
 function get_post_type_archive_link( $type = 'project' ) { return 'website' === $type ? 'websites.html' : 'projecten.html'; }
-function get_term_link( $term ) { return 'websitetype' === $term->taxonomy ? 'websites.html' : 'projecten.html'; }
+function get_term_link( $term ) { return array( 'websitetype' => 'websites.html', 'category' => 'blog.html', 'post_tag' => 'blog.html' )[ $term->taxonomy ] ?? 'projecten.html'; }
+function get_category_link( $term ) { return 'blog.html'; }
+function is_home() { return in_array( $GLOBALS['page'], array( 'blog', 'bloglijst' ), true ); }
+function is_category() { return false; }
+function is_tag() { return false; }
+function get_query_var( $v ) { return 0; }
+function apply_filters( $tag, $value ) { return $value; }
+function sanitize_title( $t ) { return demo_slug( $t ); }
+function get_post_field( $field, $id ) { $p = demo_find( $id ); return $p['content'] ?? ''; }
+function get_the_content() { return demo_cur( 'content' ); }
+function get_search_query() { return ''; }
+function get_search_form() { require $GLOBALS['theme'] . '/searchform.php'; }
+function the_tags( $before, $sep, $after ) {
+	$tags = demo_cur( 'tags' );
+	if ( $tags ) {
+		echo $before . implode( $sep, array_map( function ( $t ) { return '<a href="blog.html">' . esc_html( $t ) . '</a>'; }, $tags ) ) . $after;
+	}
+}
+function the_post_navigation() {}
+function comments_open() { return false; }
+function get_comments_number() { return 0; }
+function demo_cat( $name ) {
+	$count = count( array_filter( $GLOBALS['blog'], function ( $p ) use ( $name ) { return $p['cat'] === $name; } ) );
+	return (object) array( 'term_id' => 500 + crc32( $name ) % 400, 'name' => $name, 'slug' => demo_slug( $name ), 'taxonomy' => 'category', 'count' => $count );
+}
 function term_description() { return ''; }
 function get_taxonomy( $tax ) {
 	$names = array( 'platform' => 'Platform', 'projecttype' => 'Projecttype', 'techniek' => 'Techniek', 'websitetype' => 'Websitetype' );
@@ -276,11 +338,15 @@ function get_posts( $args ) {
 	}
 	return array();
 }
-function get_permalink( $id ) { $p = demo_find( $id ); return $p ? $p['link'] : '#'; }
+function get_permalink( $id ) { if ( 900 === $id ) { return 'blog.html'; } $p = demo_find( $id ); return $p ? $p['link'] : '#'; }
 function wp_count_posts( $type = 'project' ) { return (object) array( 'publish' => count( 'website' === $type ? $GLOBALS['websites'] : $GLOBALS['projects'] ) ); }
 
 function get_terms( $args ) {
 	$tax = $args['taxonomy'];
+	if ( 'category' === $tax ) {
+		$names = array_values( array_unique( wp_list_pluck( $GLOBALS['blog'], 'cat' ) ) );
+		return array_map( 'demo_cat', $names );
+	}
 	if ( 'techniek' === $tax ) {
 		$names = array();
 		foreach ( $GLOBALS['projects'] as $p ) { foreach ( $p['techniek'] as $t ) { $names[ demo_slug( $t ) ] = $t; } }
@@ -319,10 +385,10 @@ function get_post_meta( $id, $key, $single = false ) {
 
 function get_header() { require $GLOBALS['theme'] . '/header.php'; }
 function get_footer() { require $GLOBALS['theme'] . '/footer.php'; }
-function get_template_part( $slug, $name ) { require $GLOBALS['theme'] . "/{$slug}-{$name}.php"; }
+function get_template_part( $slug, $name, $args = array() ) { require $GLOBALS['theme'] . "/{$slug}-{$name}.php"; }
 
 function wp_head() {
-	$titles = array( 'home' => 'koomen.it', 'projecten' => 'Projecten – koomen.it', 'project' => 'Achteruitrij-parkeersensor – koomen.it', 'websites' => 'Websites – koomen.it', 'website' => 'koomen.it – Websites – koomen.it' );
+	$titles = array( 'home' => 'koomen.it', 'projecten' => 'Projecten – koomen.it', 'project' => 'Achteruitrij-parkeersensor – koomen.it', 'websites' => 'Websites – koomen.it', 'website' => 'koomen.it – Websites – koomen.it', 'blog' => 'Blog – koomen.it', 'bloglijst' => 'Blog – koomen.it', 'bericht' => '5V-sensoren veilig aansluiten – koomen.it' );
 	echo '<title>' . esc_html( $titles[ $GLOBALS['page'] ] ) . "</title>\n";
 	echo '<link rel="stylesheet" href="' . esc_attr( koomenit_fonts_url() ) . '">' . "\n";
 	koomenit_fallback_favicon();
@@ -336,11 +402,11 @@ function wp_footer() {
 
 function wp_nav_menu( $args ) {
 	if ( 'footer' === $args['theme_location'] ) {
-		$items   = array( 'Projecten' => 'projecten.html', 'Websites' => 'websites.html', 'Over' => 'index.html#over', 'Blog' => 'index.html#blog', 'Contact' => 'index.html#contact' );
+		$items   = array( 'Projecten' => 'projecten.html', 'Websites' => 'websites.html', 'Over' => 'index.html#over', 'Blog' => 'blog.html', 'Contact' => 'index.html#contact' );
 		$current = '';
 	} else {
-		$items   = array( 'Home' => 'index.html', 'Projecten' => 'projecten.html', 'Websites' => 'websites.html', 'Over' => 'index.html#over', 'Blog' => 'index.html#blog' );
-		$current = array( 'home' => 'Home', 'projecten' => 'Projecten', 'project' => 'Projecten', 'websites' => 'Websites', 'website' => 'Websites' )[ $GLOBALS['page'] ];
+		$items   = array( 'Home' => 'index.html', 'Projecten' => 'projecten.html', 'Websites' => 'websites.html', 'Over' => 'index.html#over', 'Blog' => 'blog.html' );
+		$current = array( 'home' => 'Home', 'projecten' => 'Projecten', 'project' => 'Projecten', 'websites' => 'Websites', 'website' => 'Websites', 'blog' => 'Blog', 'bloglijst' => 'Blog', 'bericht' => 'Blog' )[ $GLOBALS['page'] ];
 	}
 	echo '<ul class="' . esc_attr( isset( $args['menu_class'] ) ? $args['menu_class'] : 'menu' ) . '">';
 	foreach ( $items as $label => $url ) {
@@ -387,6 +453,9 @@ function wp_reset_postdata() { $GLOBALS['cur'] = $GLOBALS['main'][0] ?? null; }
 
 $GLOBALS['main'] = array(
 	'home'      => array(),
+	'blog'      => $GLOBALS['blog'],
+	'bloglijst' => $GLOBALS['blog'],
+	'bericht'   => array( $GLOBALS['blog'][0] ),
 	'projecten' => $GLOBALS['projects'],
 	'project'   => array( $GLOBALS['projects'][0] ),
 	'websites'  => $GLOBALS['websites'],
@@ -402,20 +471,21 @@ function the_ID() { echo (int) get_the_ID(); }
 function post_class( $c = '' ) { echo 'class="' . esc_attr( $c ) . '"'; }
 function the_permalink() { echo esc_attr( demo_cur( 'link' ) ?: '#' ); }
 function the_title() { echo esc_html( demo_cur( 'title' ) ); }
-function get_the_title() { return demo_cur( 'title' ); }
+function get_the_title( $id = null ) { return 900 === $id ? 'Blog' : demo_cur( 'title' ); }
 function get_the_excerpt() { return demo_cur( 'excerpt' ); }
-function has_excerpt() { return '' !== demo_cur( 'excerpt' ); }
+function has_excerpt( $id = null ) { return 900 === $id ? false : '' !== demo_cur( 'excerpt' ); }
 function the_content() { echo demo_cur( 'content' ); }
 function has_post_thumbnail() { return 'project' === $GLOBALS['page'] && $GLOBALS['cur'] === $GLOBALS['main'][0] ? false : (bool) demo_cur( 'thumb' ); }
 function the_post_thumbnail( $size = '' ) {
 	$src = ( 'large' === $size && demo_cur( 'image' ) ) ? demo_cur( 'image' ) : demo_cur( 'thumb' );
 	echo '<img src="' . esc_attr( $src ) . '" alt="" loading="lazy">';
 }
-function get_the_category() { return demo_cur( 'cat' ) ? array( (object) array( 'name' => demo_cur( 'cat' ) ) ) : array(); }
+function get_the_category() { return demo_cur( 'cat' ) ? array( demo_cat( demo_cur( 'cat' ) ) ) : array(); }
+function get_the_tags() { return array_map( function ( $t ) { return (object) array( 'name' => $t, 'slug' => demo_slug( $t ), 'taxonomy' => 'post_tag' ); }, demo_cur( 'tags' ) ?: array() ); }
 function get_the_date( $f = '' ) { return $f ? '2026-10-01' : demo_cur( 'date' ); }
 function get_the_author() { return 'Jeroen Koomen'; }
 
 // --- Renderen -------------------------------------------------------------------
 require $GLOBALS['theme'] . '/functions.php';
-$templates = array( 'home' => 'front-page.php', 'projecten' => 'archive-project.php', 'project' => 'single-project.php', 'websites' => 'archive-website.php', 'website' => 'single-website.php' );
+$templates = array( 'home' => 'front-page.php', 'projecten' => 'archive-project.php', 'project' => 'single-project.php', 'websites' => 'archive-website.php', 'website' => 'single-website.php', 'blog' => 'home.php', 'bloglijst' => 'home.php', 'bericht' => 'single.php' );
 require $GLOBALS['theme'] . '/' . $templates[ $GLOBALS['page'] ];

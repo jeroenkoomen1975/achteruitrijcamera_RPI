@@ -49,6 +49,17 @@ Ga in het dashboard naar **Websites → Nieuwe website**. Dit werkt hetzelfde al
 
 De knop *Bezoek website* verschijnt alleen als er een webadres is en de status niet *Archief* is.
 
+## Blog
+
+Maak twee lege pagina's, *Home* en *Blog*, en kies ze bij **Instellingen → Lezen** als homepage en
+berichtenpagina. De homepage blijft de secties van het thema tonen; `/blog/` toont alle berichten.
+
+In **Weergave → Customizer → Koomen.IT thema-opties → Blogpagina en berichten** stel je in:
+raster- of lijstweergave, het nieuwste bericht groot bovenaan, filterknoppen per categorie,
+leestijd, tags op de kaarten, de zijbalk (zoeken, categorieën en GitHub, of je eigen widgets),
+een automatische inhoudsopgave bij berichten met 3 of meer tussenkoppen en "Meer berichten"
+onder een bericht.
+
 ## Homepage aanpassen
 
 Alles staat in **Weergave → Customizer → Koomen.IT thema-opties**. Elke sectie kan aan of uit.
@@ -74,8 +85,9 @@ footer-widgetkolommen, het koomen.it-kleurenpalet in de blokeditor en een pagina
 
 ## Demo
 
-`demo/` bevat een statische weergave van de homepage, het project- en websiteoverzicht en
-een project- en websitepagina, gemaakt uit de echte thema-templates:
+`demo/` bevat een statische weergave van de homepage, het project- en websiteoverzicht, een
+project- en websitepagina, de blog (raster en lijst) en een bericht, gemaakt uit de echte
+thema-templates:
 
 ```bash
 php wordpress-theme/demo/render-demo.php

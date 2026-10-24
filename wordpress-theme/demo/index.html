@@ -17,7 +17,7 @@ Theme Name: Koomen.IT
 Theme URI: https://koomen.it
 Author: Jeroen Koomen
 Description: Portfolio-thema in de huisstijl van koomen.it: helder blauw, donker leisteen en het netwerkmotief uit het logo. Met een eigen berichttype voor projecten, filters per platform (ESP32, Arduino, Raspberry Pi), projectgegevens zoals GitHub-link, status en hardware, en een volledig aanpasbare homepage via de Customizer.
-Version: 2.2.0
+Version: 2.3.0
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
@@ -461,11 +461,75 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 .post-card__placeholder .bl-icon { width: 40px; height: 40px; }
 .post-card__body { display: flex; flex-direction: column; flex: 1; padding: 1.4rem; }
 .post-card__cat { align-self: flex-start; margin-bottom: 0.6rem; color: var(--bl-primary); font-family: var(--bl-font-mono); font-size: 0.75rem; }
+a.post-card__cat:hover { color: var(--bl-secondary); text-decoration: underline; }
+.post-card__tags { margin-bottom: 1rem; }
 .post-card__title { font-size: 1.15rem; }
 .post-card__title a { color: var(--bl-ink); }
 .post-card__title a:hover { color: var(--bl-primary); }
 .post-card__excerpt { color: var(--bl-muted); font-size: 0.95rem; }
 .post-card__meta { margin-top: auto; color: var(--bl-muted); font-size: 0.82rem; }
+
+/* Blogoverzicht */
+.blog-main { min-width: 0; }
+.post-grid--narrow { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.post-featured {
+	display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); margin-bottom: 2rem; overflow: hidden;
+	border: 1px solid var(--bl-border); border-radius: var(--bl-radius); background: var(--bl-white);
+	transition: box-shadow 0.35s;
+}
+.post-featured:hover { box-shadow: var(--bl-shadow-lg); }
+.post-featured__media { position: relative; display: block; min-height: 280px; overflow: hidden; background: var(--bl-dark); }
+.post-featured__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.post-featured__placeholder { position: absolute; inset: 0; isolation: isolate; display: grid; place-items: center; color: var(--bl-secondary); background: linear-gradient(160deg, var(--bl-dark), var(--bl-ink)); }
+.post-featured__placeholder > .bl-icon { width: 64px; height: 64px; stroke-width: 1.5; }
+.post-featured__body { display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; padding: clamp(1.5rem, 3vw, 2.25rem); }
+.post-featured__label { color: var(--bl-muted); font-family: var(--bl-font-mono); font-size: 0.75rem; }
+.post-featured__label a { color: var(--bl-primary); }
+.post-featured__title { margin: 0; font-size: clamp(1.4rem, 2.4vw, 1.9rem); }
+.post-featured__title a { color: var(--bl-ink); }
+.post-featured__title a:hover { color: var(--bl-primary); }
+.post-featured__excerpt { margin: 0; color: var(--bl-muted); }
+.post-featured .post-card__meta { margin: 0 0 0.6rem; }
+
+.post-list { display: flex; flex-direction: column; gap: 1.25rem; }
+.post-card--row { display: grid; grid-template-columns: 260px minmax(0, 1fr); }
+.post-card--row .post-card__media { aspect-ratio: auto; height: 100%; min-height: 180px; }
+.post-card--row .post-card__body { padding: 1.4rem 1.6rem; }
+.post-card--row .post-card__title { font-size: 1.3rem; }
+
+/* Zijbalk */
+.layout--sidebar { align-items: start; }
+.blog-sidebar { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 1.25rem; }
+.blog-sidebar .widget { margin: 0; }
+.widget-cats { padding: 0 !important; list-style: none; }
+.widget-cats li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.45rem 0; border-bottom: 1px solid var(--bl-border); }
+.widget-cats li:last-child { border-bottom: 0; }
+.widget-cats a { color: var(--bl-ink); font-weight: 600; }
+.widget-cats a:hover { color: var(--bl-primary); }
+.widget-cats span { color: var(--bl-muted); font-family: var(--bl-font-mono); font-size: 0.8rem; }
+.widget--search .search-form { flex-direction: column; }
+.widget--github { background: linear-gradient(160deg, var(--bl-dark), var(--bl-ink)) !important; color: var(--bl-node-light); }
+.widget--github > .bl-icon { width: 28px; height: 28px; margin-bottom: 0.6rem; color: var(--bl-secondary); }
+.widget--github .widget-title { color: var(--bl-white); }
+.widget--github p { font-size: 0.93rem; opacity: 0.85; }
+
+/* Bericht */
+.post-meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; font-size: 0.95rem; }
+.post-meta span { display: inline-flex; align-items: center; gap: 0.45em; }
+.post-meta .bl-icon { width: 1em; height: 1em; color: var(--bl-secondary); }
+.toc { margin: 0 0 2.5rem; padding: 1.25rem 1.5rem; border: 1px solid var(--bl-border); border-left: 4px solid var(--bl-primary); border-radius: var(--bl-radius); background: var(--bl-light); }
+.toc__title { margin: 0 0 0.5rem; color: var(--bl-muted); font-family: var(--bl-font-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.toc__list { margin: 0; padding: 0; list-style: none; counter-reset: toc; }
+.toc__item { display: flex; gap: 0.5em; padding: 0.15rem 0; }
+.toc__item::before { flex: 0 0 1.4em; color: var(--bl-muted); font-family: var(--bl-font-mono); font-size: 0.85em; line-height: 1.9; }
+.toc__item--h2 { counter-increment: toc; }
+.toc__item--h2::before { content: counter(toc) "."; }
+.toc__item--h3 { padding-left: 1.4em; font-size: 0.95rem; }
+.toc__item--h3::before { content: "–"; }
+.toc__item a { color: var(--bl-ink); font-weight: 600; }
+.toc__item a:hover { color: var(--bl-primary); }
+.toc__item--h3 a { font-weight: 500; }
+.entry-content h2[id], .entry-content h3[id] { scroll-margin-top: 100px; }
 
 /* CTA */
 .section--cta { padding-top: 0; }
@@ -602,6 +666,7 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 @media (max-width: 1024px) {
 	.site-footer__grid { grid-template-columns: 1fr 1fr; }
 	.layout--sidebar, .project-layout { grid-template-columns: minmax(0, 1fr); }
+	.blog-sidebar { position: static; }
 	.project-info { position: static; }
 }
 
@@ -632,6 +697,9 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 	.checklist { grid-template-columns: 1fr; }
 	.site-footer__grid { grid-template-columns: 1fr; padding: 3rem 16px 2.5rem; gap: 2rem; }
 	.project-grid, .post-grid { grid-template-columns: minmax(0, 1fr); }
+	.post-featured, .post-card--row { grid-template-columns: minmax(0, 1fr); }
+	.post-featured__media { min-height: 200px; }
+	.post-card--row .post-card__media { aspect-ratio: 16 / 9; height: auto; min-height: 0; }
 	.post-navigation .nav-links { grid-template-columns: 1fr; }
 	.hero__actions .btn, .page-hero__actions .btn { width: 100%; justify-content: center; }
 	.search-form { flex-direction: column; }
@@ -668,7 +736,7 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 		</button>
 
 		<nav id="site-navigation" class="main-navigation" aria-label="Hoofdmenu">
-			<ul class="menu"><li class="current-menu-item"><a href="index.html">Home</a></li><li class=""><a href="projecten.html">Projecten</a></li><li class=""><a href="websites.html">Websites</a></li><li class=""><a href="index.html#over">Over</a></li><li class=""><a href="index.html#blog">Blog</a></li></ul>										<a class="btn btn--primary btn--sm header-cta" href="#contact">Contact</a>
+			<ul class="menu"><li class="current-menu-item"><a href="index.html">Home</a></li><li class=""><a href="projecten.html">Projecten</a></li><li class=""><a href="websites.html">Websites</a></li><li class=""><a href="index.html#over">Over</a></li><li class=""><a href="blog.html">Blog</a></li></ul>										<a class="btn btn--primary btn--sm header-cta" href="#contact">Contact</a>
 					</nav>
 	</div>
 </header>
@@ -1180,39 +1248,58 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 	<div class="container">
 		<div class="section-head section-head--row reveal">
 			<h2 class="section-title">Blog</h2>
+							<a class="btn btn--outline" href="blog.html">Alle berichten</a>
 					</div>
 		<div class="post-grid">
 			<article id="post-201" class="post-card reveal">
-	<a class="post-card__media" href="#" tabindex="-1" aria-hidden="true">
-					<span class="post-card__placeholder"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></span>
-			</a>
+	<a class="post-card__media" href="bericht-5v-sensoren.html" tabindex="-1" aria-hidden="true">
+					<img src="img/parkeersensor-kaart.jpg" alt="" loading="lazy">			</a>
 	<div class="post-card__body">
-							<span class="post-card__cat">Raspberry Pi</span>
-				<h3 class="post-card__title"><a href="#">Voorbeeld: 5V-sensoren veilig aansluiten op een Raspberry Pi</a></h3>
-		<p class="post-card__excerpt">Waarom een spanningsdeler nodig is voor de ECHO-pin van een HC-SR04, en hoe je de weerstanden kiest. Dit is een…</p>
-		<div class="post-card__meta"><span class="posted-on"><time datetime="2026-10-01">14 oktober 2026</time></span><span class="byline"> · Jeroen Koomen</span></div>
+					<a class="post-card__cat" href="blog.html">Raspberry Pi</a>
+				<h3 class="post-card__title"><a href="bericht-5v-sensoren.html">Voorbeeld: 5V-sensoren veilig aansluiten op een Raspberry Pi</a></h3>
+		<p class="post-card__excerpt">Waarom een spanningsdeler nodig is voor de ECHO-pin van een HC-SR04, en hoe je de weerstanden kiest.</p>
+					<ul class="chips post-card__tags">
+									<li class="chip">#HC-SR04</li>
+									<li class="chip">#GPIO</li>
+									<li class="chip">#elektronica</li>
+							</ul>
+				<div class="post-card__meta">
+			<span class="posted-on"><time datetime="2026-10-01">14 oktober 2026</time></span><span class="byline"> · Jeroen Koomen</span>							<span class="post-card__read"> · 2 min lezen</span>
+					</div>
 	</div>
 </article>
 <article id="post-202" class="post-card reveal">
-	<a class="post-card__media" href="#" tabindex="-1" aria-hidden="true">
+	<a class="post-card__media" href="bericht-5v-sensoren.html" tabindex="-1" aria-hidden="true">
 					<span class="post-card__placeholder"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></span>
 			</a>
 	<div class="post-card__body">
-							<span class="post-card__cat">ESP32</span>
-				<h3 class="post-card__title"><a href="#">Voorbeeld: maanden op een batterij met ESP32 deep sleep</a></h3>
-		<p class="post-card__excerpt">Een sensor die elk kwartier meet en daarna slaapt: zo haal je het stroomverbruik omlaag. Dit is een voorbeeldbericht.</p>
-		<div class="post-card__meta"><span class="posted-on"><time datetime="2026-10-01">2 oktober 2026</time></span><span class="byline"> · Jeroen Koomen</span></div>
+					<a class="post-card__cat" href="blog.html">ESP32</a>
+				<h3 class="post-card__title"><a href="bericht-5v-sensoren.html">Voorbeeld: maanden op een batterij met ESP32 deep sleep</a></h3>
+		<p class="post-card__excerpt">Een sensor die elk kwartier meet en daarna slaapt: zo haal je het stroomverbruik omlaag.</p>
+					<ul class="chips post-card__tags">
+									<li class="chip">#deep sleep</li>
+									<li class="chip">#energie</li>
+							</ul>
+				<div class="post-card__meta">
+			<span class="posted-on"><time datetime="2026-10-01">2 oktober 2026</time></span><span class="byline"> · Jeroen Koomen</span>							<span class="post-card__read"> · 1 min lezen</span>
+					</div>
 	</div>
 </article>
 <article id="post-203" class="post-card reveal">
-	<a class="post-card__media" href="#" tabindex="-1" aria-hidden="true">
+	<a class="post-card__media" href="bericht-5v-sensoren.html" tabindex="-1" aria-hidden="true">
 					<span class="post-card__placeholder"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></span>
 			</a>
 	<div class="post-card__body">
-							<span class="post-card__cat">Displays</span>
-				<h3 class="post-card__title"><a href="#">Voorbeeld: een ST7789-display aansturen zonder CS-pin</a></h3>
-		<p class="post-card__excerpt">Sommige goedkope displays missen een CS-pin. Met SPI mode 3 werken ze toch. Dit is een voorbeeldbericht.</p>
-		<div class="post-card__meta"><span class="posted-on"><time datetime="2026-10-01">20 september 2026</time></span><span class="byline"> · Jeroen Koomen</span></div>
+					<a class="post-card__cat" href="blog.html">Displays</a>
+				<h3 class="post-card__title"><a href="bericht-5v-sensoren.html">Voorbeeld: een ST7789-display aansturen zonder CS-pin</a></h3>
+		<p class="post-card__excerpt">Sommige goedkope displays missen een CS-pin. Met SPI mode 3 werken ze toch.</p>
+					<ul class="chips post-card__tags">
+									<li class="chip">#SPI</li>
+									<li class="chip">#ST7789</li>
+							</ul>
+				<div class="post-card__meta">
+			<span class="posted-on"><time datetime="2026-10-01">20 september 2026</time></span><span class="byline"> · Jeroen Koomen</span>							<span class="post-card__read"> · 1 min lezen</span>
+					</div>
 	</div>
 </article>
 		</div>
@@ -1256,7 +1343,7 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 							</div>
 					<div class="site-footer__col">
 									<h4 class="footer-title">Navigatie</h4>
-					<ul class="menu"><li class=""><a href="projecten.html">Projecten</a></li><li class=""><a href="websites.html">Websites</a></li><li class=""><a href="index.html#over">Over</a></li><li class=""><a href="index.html#blog">Blog</a></li><li class=""><a href="index.html#contact">Contact</a></li></ul>							</div>
+					<ul class="menu"><li class=""><a href="projecten.html">Projecten</a></li><li class=""><a href="websites.html">Websites</a></li><li class=""><a href="index.html#over">Over</a></li><li class=""><a href="blog.html">Blog</a></li><li class=""><a href="index.html#contact">Contact</a></li></ul>							</div>
 					<div class="site-footer__col">
 									<h4 class="footer-title">Contact</h4>
 					<ul class="footer-contact">
