@@ -72,6 +72,7 @@
 		var code = editor.querySelector( 'code' );
 		var gutter = editor.querySelector( '.editor__gutter' );
 		var status = editor.querySelector( '.editor__ok' );
+		var badge = editor.querySelector( '.editor__badge' );
 		if ( ! code ) {
 			return;
 		}
@@ -119,6 +120,10 @@
 			status.textContent = status.getAttribute( 'data-pending' ) || 'bezig…';
 			status.classList.add( 'is-running' );
 		}
+		if ( badge ) {
+			badge.textContent = 'RUN';
+			badge.classList.add( 'is-running' );
+		}
 		editor.classList.add( 'is-typing' );
 
 		// Ongeveer 2,5 seconden, ongeacht de lengte; korte code iets rustiger.
@@ -142,6 +147,10 @@
 				setTimeout( function () {
 					status.textContent = status.getAttribute( 'data-final' );
 					status.classList.remove( 'is-running' );
+					if ( badge ) {
+						badge.textContent = badge.getAttribute( 'data-final' );
+						badge.classList.remove( 'is-running' );
+					}
 				}, 500 );
 			}
 		}

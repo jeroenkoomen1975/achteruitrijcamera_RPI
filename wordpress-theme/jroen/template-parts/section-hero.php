@@ -12,22 +12,34 @@ $jroen_lines  = array_filter( array_map( 'trim', explode( "\n", (string) jroen_m
 ?>
 <section class="hero<?php echo $jroen_image ? ' hero--image' : ''; ?>"<?php echo $jroen_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="hero__overlay" aria-hidden="true"></div>
-	<?php jroen_network_svg( 'hero__network' ); ?>
 	<div class="container hero__inner<?php echo 'none' === $jroen_visual ? ' hero__inner--single' : ''; ?>">
 		<div class="hero__content reveal">
 			<?php if ( jroen_mod( 'jroen_hero_eyebrow' ) ) : ?>
-				<span class="eyebrow eyebrow--light"><?php echo esc_html( jroen_mod( 'jroen_hero_eyebrow' ) ); ?></span>
+				<span class="pill"><span class="pill__dot" aria-hidden="true"></span><?php echo esc_html( jroen_mod( 'jroen_hero_eyebrow' ) ); ?></span>
 			<?php endif; ?>
-			<h1 class="hero__title"><?php echo esc_html( jroen_mod( 'jroen_hero_title' ) ); ?></h1>
-			<p class="hero__text"><?php echo esc_html( jroen_mod( 'jroen_hero_text' ) ); ?></p>
+			<h1 class="hero__title"><?php echo jroen_inline_format( jroen_mod( 'jroen_hero_title' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- geëscapet in jroen_inline_format(). ?></h1>
+			<p class="hero__text"><?php echo jroen_inline_format( jroen_mod( 'jroen_hero_text' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
 			<div class="hero__actions">
 				<?php if ( jroen_mod( 'jroen_hero_btn1_text' ) ) : ?>
-					<a class="btn btn--primary" href="<?php echo esc_url( jroen_mod( 'jroen_hero_btn1_url' ) ); ?>"><?php echo esc_html( jroen_mod( 'jroen_hero_btn1_text' ) ); ?> <?php echo jroen_icon( 'arrow' ); // phpcs:ignore ?></a>
+					<a class="btn btn--primary" href="<?php echo esc_url( jroen_mod( 'jroen_hero_btn1_url' ) ); ?>"><?php echo jroen_icon( 'chip' ); // phpcs:ignore ?> <?php echo esc_html( jroen_mod( 'jroen_hero_btn1_text' ) ); ?></a>
 				<?php endif; ?>
 				<?php if ( jroen_mod( 'jroen_hero_btn2_text' ) ) : ?>
-					<a class="btn btn--ghost" href="<?php echo esc_url( jroen_mod( 'jroen_hero_btn2_url' ) ); ?>"><?php echo esc_html( jroen_mod( 'jroen_hero_btn2_text' ) ); ?></a>
+					<a class="btn btn--outline" href="<?php echo esc_url( jroen_mod( 'jroen_hero_btn2_url' ) ); ?>"><span class="btn__icon-accent"><?php echo jroen_icon( 'globe' ); // phpcs:ignore ?></span> <?php echo esc_html( jroen_mod( 'jroen_hero_btn2_text' ) ); ?></a>
 				<?php endif; ?>
 			</div>
+			<?php $jroen_tech = array_filter( array_map( 'trim', explode( ',', (string) jroen_mod( 'jroen_hero_tech' ) ) ) ); ?>
+			<?php if ( $jroen_tech ) : ?>
+				<div class="hero__tech">
+					<?php if ( jroen_mod( 'jroen_hero_tech_label' ) ) : ?>
+						<span class="hero__tech-label"><?php echo esc_html( jroen_mod( 'jroen_hero_tech_label' ) ); ?></span>
+					<?php endif; ?>
+					<ul class="chips">
+						<?php foreach ( $jroen_tech as $jroen_t ) : ?>
+							<li class="chip"><?php echo esc_html( $jroen_t ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<?php if ( 'code' === $jroen_visual && '' !== trim( (string) jroen_mod( 'jroen_hero_code' ) ) ) : ?>
@@ -54,7 +66,7 @@ $jroen_lines  = array_filter( array_map( 'trim', explode( "\n", (string) jroen_m
 			}
 			?>
 			<div class="hero__visual reveal">
-				<figure class="editor<?php echo jroen_mod( 'jroen_hero_code_animate' ) ? ' editor--animate' : ''; ?>" style="--lines:<?php echo (int) $jroen_count; ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: bestandsnaam */ __( 'Codevoorbeeld: %s', 'jroen' ), $jroen_file ) ); ?>">
+				<figure class="editor editor--card<?php echo jroen_mod( 'jroen_hero_code_animate' ) ? ' editor--animate' : ''; ?>" style="--lines:<?php echo (int) $jroen_count; ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: bestandsnaam */ __( 'Codevoorbeeld: %s', 'jroen' ), $jroen_file ) ); ?>">
 					<div class="editor__bar">
 						<span class="editor__dots" aria-hidden="true"><i></i><i></i><i></i></span>
 						<span class="editor__tab">
@@ -71,11 +83,13 @@ $jroen_lines  = array_filter( array_map( 'trim', explode( "\n", (string) jroen_m
 						<pre class="editor__code"><code data-lang="<?php echo esc_attr( $jroen_lang ); ?>"><?php echo esc_html( $jroen_code ); ?></code></pre>
 					</div>
 					<?php if ( jroen_mod( 'jroen_hero_code_env' ) || $jroen_status ) : ?>
-						<div class="editor__status">
-							<span><?php echo esc_html( jroen_mod( 'jroen_hero_code_env' ) ); ?></span>
-							<?php if ( $jroen_status ) : ?>
-								<span class="editor__ok" data-final="<?php echo esc_attr( $jroen_status ); ?>"><?php echo esc_html( $jroen_status ); ?></span>
-							<?php endif; ?>
+						<div class="editor__daemon">
+							<span class="pulse" aria-hidden="true"></span>
+							<span class="editor__daemon-text">
+								<strong class="editor__ok" data-final="<?php echo esc_attr( $jroen_status ); ?>"><?php echo esc_html( $jroen_status ); ?></strong>
+								<small><?php echo esc_html( jroen_mod( 'jroen_hero_code_env' ) ); ?></small>
+							</span>
+							<span class="editor__badge" data-final="OK">OK</span>
 						</div>
 					<?php endif; ?>
 				</figure>

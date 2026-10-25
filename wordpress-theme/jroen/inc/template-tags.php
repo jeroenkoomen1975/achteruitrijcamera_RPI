@@ -416,3 +416,15 @@ function jroen_logo_tile( $post_id, $icon ) {
 	}
 	echo '</span>';
 }
+
+/**
+ * Tekst met eenvoudige opmaak: **vet** en *markering*. De rest wordt geëscapet.
+ *
+ * @param string $text Tekst uit de Customizer.
+ * @return string
+ */
+function jroen_inline_format( $text ) {
+	$html = esc_html( $text );
+	$html = preg_replace( '/\*\*(.+?)\*\*/s', '<strong>$1</strong>', $html );
+	return preg_replace( '/\*(.+?)\*/s', '<span class="hl">$1</span>', $html );
+}

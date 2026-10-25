@@ -7,7 +7,7 @@
 
 get_header();
 
-$jroen_sections = array( 'hero', 'services', 'projects', 'websites', 'about', 'stats', 'news', 'cta' );
+$jroen_sections = array( 'hero', 'telemetry', 'overview', 'services', 'projects', 'websites', 'about', 'stats', 'news', 'cta' );
 ?>
 
 <main id="primary" class="site-main site-main--front">

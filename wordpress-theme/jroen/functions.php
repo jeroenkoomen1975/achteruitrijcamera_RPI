@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'JROEN_VERSION', '1.0.0' );
+define( 'JROEN_VERSION', '1.1.0' );
 
 /**
  * Thema-ondersteuning registreren.
@@ -95,6 +95,7 @@ function jroen_scripts() {
 
 	wp_enqueue_script( 'jroen-main', get_template_directory_uri() . '/assets/js/main.js', array(), JROEN_VERSION, true );
 	wp_enqueue_script( 'jroen-code', get_template_directory_uri() . '/assets/js/code.js', array(), JROEN_VERSION, true );
+	wp_enqueue_script( 'jroen-telemetry', get_template_directory_uri() . '/assets/js/telemetry.js', array(), JROEN_VERSION, true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -119,7 +120,7 @@ function jroen_fonts_url() {
 		$fonts
 	);
 
-	$families[] = 'family=JetBrains+Mono:wght@400;600';
+	$families[] = 'family=Fira+Code:wght@400;500;600';
 
 	return 'https://fonts.googleapis.com/css2?' . implode( '&', $families ) . '&display=swap';
 }
@@ -128,4 +129,5 @@ require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/projects.php';
 require get_template_directory() . '/inc/websites.php';
 require get_template_directory() . '/inc/blog.php';
+require get_template_directory() . '/inc/contact.php';
 require get_template_directory() . '/inc/template-tags.php';

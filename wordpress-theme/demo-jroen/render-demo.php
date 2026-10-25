@@ -333,13 +333,22 @@ function get_taxonomy( $tax ) {
 function wp_parse_url( $url, $part = -1 ) { return parse_url( $url, $part ); }
 function get_post_type() { return isset( $GLOBALS['cur']['websitetype'] ) ? 'website' : ( isset( $GLOBALS['cur']['platform'] ) ? 'project' : 'post' ); }
 function get_posts( $args ) {
-	foreach ( $GLOBALS['projects'] as $p ) {
-		if ( isset( $args['title'] ) && $p['title'] === $args['title'] ) {
-			return array( $p['id'] );
+	if ( isset( $args['title'] ) ) {
+		foreach ( $GLOBALS['projects'] as $p ) {
+			if ( $p['title'] === $args['title'] ) {
+				return array( $p['id'] );
+			}
 		}
+		return array();
 	}
-	return array();
+	$list = 'website' === ( $args['post_type'] ?? '' ) ? $GLOBALS['websites'] : $GLOBALS['projects'];
+	return array_map( function ( $p ) { return (object) array( 'ID' => $p['id'], 'post_title' => $p['title'] ); }, array_slice( $list, 0, $args['numberposts'] ?? 5 ) );
 }
+function admin_url( $p = '' ) { return '#contact'; }
+function wp_nonce_field() { echo '<input type="hidden" name="jroen_contact_nonce" value="demo">'; }
+function wp_json_encode( $v ) { return json_encode( $v, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ); }
+function sanitize_key( $k ) { return strtolower( preg_replace( '/[^a-z0-9_\-]/i', '', $k ) ); }
+function wp_unslash( $v ) { return $v; }
 function get_permalink( $id ) { if ( 900 === $id ) { return 'blog.html'; } $p = demo_find( $id ); return $p ? $p['link'] : '#'; }
 function wp_count_posts( $type = 'project' ) { return (object) array( 'publish' => count( 'website' === $type ? $GLOBALS['websites'] : $GLOBALS['projects'] ) ); }
 
@@ -411,7 +420,7 @@ function get_post_meta( $id, $key, $single = false ) {
 
 function get_header() { require $GLOBALS['theme'] . '/header.php'; }
 function get_footer() { require $GLOBALS['theme'] . '/footer.php'; }
-function get_template_part( $slug, $name, $args = array() ) { require $GLOBALS['theme'] . "/{$slug}-{$name}.php"; }
+function get_template_part( $slug, $name = '', $args = array() ) { require $GLOBALS['theme'] . '/' . $slug . ( '' !== $name ? "-{$name}" : '' ) . '.php'; }
 
 function wp_head() {
 	$titles = array( 'home' => 'jroen.nl', 'projecten' => 'Projecten – jroen.nl', 'project' => 'Achteruitrij-parkeersensor – jroen.nl', 'websites' => 'Websites – jroen.nl', 'website' => 'koomen.it – Websites – jroen.nl', 'blog' => 'Blog – jroen.nl', 'bloglijst' => 'Blog – jroen.nl', 'bericht' => '5V-sensoren veilig aansluiten – jroen.nl' );
@@ -421,7 +430,7 @@ function wp_head() {
 	echo "<style>\n" . file_get_contents( $GLOBALS['theme'] . '/style.css' ) . "\n" . jroen_customizer_css() . "\n</style>\n";
 }
 function wp_footer() {
-	foreach ( array( 'main.js', 'code.js' ) as $js ) {
+	foreach ( array( 'main.js', 'code.js', 'telemetry.js' ) as $js ) {
 		echo "<script>\n" . file_get_contents( $GLOBALS['theme'] . '/assets/js/' . $js ) . "\n</script>\n";
 	}
 }

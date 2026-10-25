@@ -22,6 +22,26 @@ blijft je inhoud staan. De Customizer-instellingen zijn per thema apart.
 Hieronder staat koomen.it als voorbeeld; voor jroen.nl werkt alles hetzelfde, met `jroen` in plaats
 van `koomenit` en *jroen.nl thema-opties* in de Customizer.
 
+### Extra in jroen.nl
+
+jroen.nl heeft een lichte showcase-homepage: hero met gemarkeerde tekst (`*zo*` wordt oranje,
+`**zo**` vet), technologiechips, een licht codevenster met statusblok, en daaronder:
+
+- **Hardware stream**: drie meetwaarden, een relais en een grafiek. Vul bij *Telemetrie* een
+  JSON-adres in (bijvoorbeeld van je ESP32 of Raspberry Pi), dat het thema elke paar seconden
+  ophaalt, zoals `{"temp": 21.4, "hum": 48, "cpu": 12, "relay": true}`. De sleutels zijn
+  instelbaar. Zonder adres toont de sectie duidelijk gemarkeerde *Demo-data*.
+  Staat het adres op een ander domein, dan moet dat apparaat CORS toestaan.
+- **Overzicht**: twee kaarten naar `/projecten/` en `/websites/` met de nieuwste titels.
+- **Contact**: formulier dat via `wp_mail` naar het ingestelde adres (of het beheerdersadres) mailt, met honeypot en een
+  limiet van één bericht per minuut per bezoeker. Installeer een SMTP-plug-in als je host geen mail
+  verstuurt.
+- **Donkere modus**: knop in de header; de standaard (automatisch, licht of donker) kies je in de
+  Customizer. De keuze van de bezoeker wordt in de browser onthouden.
+
+Platforms, projecten, websites, cijfers en call-to-action staan op de homepage standaard uit en kun
+je in de Customizer weer aanzetten.
+
 ## Installeren
 
 1. Maak een zip van de map: `cd wordpress-theme && zip -r koomenit.zip koomenit`
