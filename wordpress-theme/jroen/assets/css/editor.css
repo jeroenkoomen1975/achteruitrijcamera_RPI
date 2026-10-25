@@ -1,0 +1,16 @@
+/* jroen.nl: stijlen voor de blokeditor. */
+body {
+	font-family: "Inter", system-ui, sans-serif;
+	color: #3b434b;
+	line-height: 1.7;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: "Poppins", system-ui, sans-serif;
+	color: #2b333a;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+a { color: #d4570f; }
+code, pre { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; }
+pre { background: #0d1d34; color: #e6e8eb; padding: 1rem 1.25rem; border-radius: 12px; }
+blockquote { border-left: 4px solid #f56b1f; background: #f4f3ee; padding: 1rem 1.5rem; }

@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'KOOMENIT_VERSION', '2.4.4' );
+define( 'KOOMENIT_VERSION', '2.4.5' );
 
 /**
  * Thema-ondersteuning registreren.
@@ -108,8 +108,8 @@ add_action( 'wp_enqueue_scripts', 'koomenit_scripts' );
  * @return string
  */
 function koomenit_fonts_url() {
-	$heading = get_theme_mod( 'koomenit_font_heading', 'Plus Jakarta Sans' );
-	$body    = get_theme_mod( 'koomenit_font_body', 'Inter' );
+	$heading = koomenit_mod( 'koomenit_font_heading' );
+	$body    = koomenit_mod( 'koomenit_font_body' );
 	$fonts   = array_unique( array( $heading, $body ) );
 
 	$families = array_map(

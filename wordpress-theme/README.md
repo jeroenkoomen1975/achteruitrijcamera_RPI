@@ -6,6 +6,22 @@ netwerkmotief uit het logo. Gemaakt om embedded projecten, websites en software 
 
 ![Screenshot](koomenit/screenshot.png)
 
+## Twee thema's: koomen.it en jroen.nl
+
+Deze map bevat twee thema's met dezelfde functies (projecten, websites, blog, codevenster,
+Customizer) maar elk een eigen huisstijl:
+
+| Map         | Thema        | Huisstijl |
+|-------------|--------------|-----------|
+| `koomenit/` | Koomen.IT    | Blauw en donker leisteen, K-logo met netwerkmotief, Inter |
+| `jroen/`    | jroen.nl     | Oranje, leisteen en diepblauw, J-logo met `</>`, Poppins en Inter |
+
+Projecten en websites gebruiken in beide thema's dezelfde berichttypes, dus bij wisselen van thema
+blijft je inhoud staan. De Customizer-instellingen zijn per thema apart.
+
+Hieronder staat koomen.it als voorbeeld; voor jroen.nl werkt alles hetzelfde, met `jroen` in plaats
+van `koomenit` en *jroen.nl thema-opties* in de Customizer.
+
 ## Installeren
 
 1. Maak een zip van de map: `cd wordpress-theme && zip -r koomenit.zip koomenit`
@@ -99,7 +115,8 @@ project- en websitepagina, de blog (raster en lijst) en een bericht, gemaakt uit
 thema-templates:
 
 ```bash
-php wordpress-theme/demo/render-demo.php
+php wordpress-theme/demo/render-demo.php        # koomen.it
+php wordpress-theme/demo-jroen/render-demo.php  # jroen.nl
 ```
 
 Het project *Achteruitrij-parkeersensor* en de website *koomen.it* zijn echt; alles wat met
