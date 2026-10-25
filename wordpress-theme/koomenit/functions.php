@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'KOOMENIT_VERSION', '2.4.3' );
+define( 'KOOMENIT_VERSION', '2.4.4' );
 
 /**
  * Thema-ondersteuning registreren.

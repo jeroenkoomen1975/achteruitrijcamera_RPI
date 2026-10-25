@@ -280,7 +280,7 @@ function get_option( $k ) { return array( 'show_on_front' => 'page', 'page_for_p
 function get_bloginfo( $k = 'name' ) { return 'name' === $k ? 'koomen.it' : 'Embedded projecten, websites & software'; }
 function bloginfo( $k ) { echo 'charset' === $k ? 'UTF-8' : esc_html( get_bloginfo( $k ) ); }
 function language_attributes() { echo 'lang="nl-NL"'; }
-function body_class() { echo 'class="' . esc_attr( $GLOBALS['page'] ) . '"'; }
+function body_class() { $extra = array( 'project' => ' single single-project', 'website' => ' single single-website' ); echo 'class="' . esc_attr( $GLOBALS['page'] . ( $extra[ $GLOBALS['page'] ] ?? '' ) ) . '"'; }
 function wp_body_open() {}
 function has_custom_logo() { return false; }
 function has_site_icon() { return false; }
