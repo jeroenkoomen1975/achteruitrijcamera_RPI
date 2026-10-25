@@ -147,7 +147,7 @@ $GLOBALS['websites'] = array(
 		'excerpt' => 'Portfolio voor embedded projecten en websites, gebouwd als eigen WordPress-thema met filters, projectgegevens en een geanimeerd codevenster.',
 		'content' => $koomenit_content, 'websitetype' => array( 'portfolio' ),
 		'techniek' => array( 'WordPress', 'PHP', 'JavaScript', 'CSS' ),
-		'meta' => array( 'koomenit_url' => 'https://koomen.it', 'koomenit_client' => 'Eigen website', 'koomenit_role' => 'Ontwerp en ontwikkeling', 'koomenit_status' => 'ontwikkeling', 'koomenit_year' => '2026' ),
+		'meta' => array( 'koomenit_url' => 'https://koomen.it', 'koomenit_client' => 'Eigen website', 'koomenit_role' => 'Ontwerp en ontwikkeling', 'koomenit_status' => 'ontwikkeling', 'koomenit_year' => '2026', 'koomenit_image_mode' => 'screenshot' ),
 		'thumb' => 'img/koomen-it.jpg', 'image' => 'img/koomen-it-groot.jpg', 'logo' => array( '../koomenit/assets/img/logo-mark.svg', 258, 328 ),
 	),
 	array(

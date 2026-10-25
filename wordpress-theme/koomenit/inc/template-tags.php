@@ -376,8 +376,9 @@ function koomenit_item_logo_id( $post_id ) {
 }
 
 /**
- * Groot afbeeldingsvlak van een kaart of detailpagina: een schermafbeelding vult het vlak,
- * een logo staat er passend in, en zonder afbeelding komt de meegegeven reserve.
+ * Groot afbeeldingsvlak van een kaart of detailpagina. De uitgelichte afbeelding staat er
+ * passend in (niet bijgesneden), tenzij bij het item "Schermafbeelding: vlak vullen" is gekozen.
+ * Zonder uitgelichte afbeelding komt het logo, en anders de meegegeven reserve.
  *
  * @param int    $post_id  Bericht-ID.
  * @param string $size     Afbeeldingsgrootte voor een schermafbeelding.
@@ -385,11 +386,16 @@ function koomenit_item_logo_id( $post_id ) {
  */
 function koomenit_item_media( $post_id, $size, $fallback ) {
 	$thumb = (int) get_post_thumbnail_id( $post_id );
-	if ( $thumb && ! koomenit_is_logo_image( $thumb, $post_id ) ) {
-		echo '<span class="shot">' . wp_get_attachment_image( $thumb, $size, false, array( 'loading' => 'lazy' ) ) . '</span>';
+	if ( $thumb ) {
+		// Alleen bij een expliciete keuze voor "schermafbeelding" vullen en bijsnijden; anders altijd passend.
+		if ( 'screenshot' === get_post_meta( $post_id, 'koomenit_image_mode', true ) ) {
+			echo '<span class="shot">' . wp_get_attachment_image( $thumb, $size, false, array( 'loading' => 'lazy' ) ) . '</span>';
+		} else {
+			echo '<span class="shot shot--logo">' . wp_get_attachment_image( $thumb, 'medium_large', false, array( 'loading' => 'lazy' ) ) . '</span>';
+		}
 		return;
 	}
-	$logo = koomenit_item_logo_id( $post_id );
+	$logo = (int) get_post_meta( $post_id, 'koomenit_logo', true );
 	if ( $logo ) {
 		echo '<span class="shot shot--logo">' . wp_get_attachment_image( $logo, 'medium_large', false, array( 'loading' => 'lazy' ) ) . '</span>';
 		return;

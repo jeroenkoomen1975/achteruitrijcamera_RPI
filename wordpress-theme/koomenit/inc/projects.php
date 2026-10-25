@@ -412,10 +412,10 @@ function koomenit_logo_field( $post ) {
 		<?php $mode = get_post_meta( $post->ID, 'koomenit_image_mode', true ); ?>
 		<p style="margin:1em 0 .3em"><label for="koomenit_image_mode"><strong><?php esc_html_e( 'Weergave uitgelichte afbeelding', 'koomenit' ); ?></strong></label></p>
 		<select id="koomenit_image_mode" name="koomenit_image_mode" style="width:100%">
-			<option value="" <?php selected( $mode, '' ); ?>><?php esc_html_e( 'Automatisch', 'koomenit' ); ?></option>
-			<option value="logo" <?php selected( $mode, 'logo' ); ?>><?php esc_html_e( 'Logo: passend, niet bijsnijden', 'koomenit' ); ?></option>
-			<option value="screenshot" <?php selected( $mode, 'screenshot' ); ?>><?php esc_html_e( 'Schermafbeelding: vlak vullen', 'koomenit' ); ?></option>
+			<option value="" <?php selected( in_array( $mode, array( '', 'logo' ), true ) ); ?>><?php esc_html_e( 'Passend: hele afbeelding tonen (standaard)', 'koomenit' ); ?></option>
+			<option value="screenshot" <?php selected( $mode, 'screenshot' ); ?>><?php esc_html_e( 'Vullend: vlak vullen, randen worden bijgesneden', 'koomenit' ); ?></option>
 		</select>
+		<p class="description"><?php esc_html_e( 'Tip: een logo met transparante achtergrond (PNG of SVG) staat het mooist.', 'koomenit' ); ?></p>
 	</div>
 	<?php
 }
