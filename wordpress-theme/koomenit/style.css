@@ -3,7 +3,7 @@ Theme Name: Koomen.IT
 Theme URI: https://koomen.it
 Author: Jeroen Koomen
 Description: Portfolio-thema in de huisstijl van koomen.it: helder blauw, donker leisteen en het netwerkmotief uit het logo. Met een eigen berichttype voor projecten, filters per platform (ESP32, Arduino, Raspberry Pi), projectgegevens zoals GitHub-link, status en hardware, en een volledig aanpasbare homepage via de Customizer.
-Version: 2.4.0
+Version: 2.4.1
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
@@ -389,15 +389,15 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 .project-info__link .bl-icon { width: 0.9em; height: 0.9em; }
 
 /* Liggende kaart voor projecten en websites */
-.item-list { display: flex; flex-direction: column; gap: 1.5rem; }
+.item-list { display: flex; flex-direction: column; gap: 2.5rem; }
 .item-card {
-	position: relative; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); overflow: hidden;
+	position: relative; display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); overflow: hidden;
 	border: 1px solid var(--bl-border); border-radius: var(--bl-radius); background: var(--bl-white);
 	transition: box-shadow 0.35s, border-color 0.35s, transform 0.35s var(--bl-ease);
 }
 .item-card:hover { transform: translateY(-3px); box-shadow: var(--bl-shadow-lg); border-color: color-mix(in srgb, var(--bl-primary) 35%, var(--bl-border)); }
 .item-card__media { position: relative; display: flex; flex-direction: column; min-width: 0; border-right: 1px solid var(--bl-border); background: var(--bl-light); }
-.item-card__media .shot { flex: 1; min-height: 240px; }
+.item-card__media .shot { flex: 1; min-height: 200px; }
 .item-card--project .item-card__media { background: var(--bl-dark); }
 .item-card__body { display: flex; flex-direction: column; align-items: flex-start; gap: 0.65rem; min-width: 0; padding: clamp(1.3rem, 3vw, 1.9rem); }
 .item-card__meta { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; width: 100%; min-height: 1.2em; }
@@ -421,7 +421,7 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 .shot img { width: 100%; height: 100%; object-fit: cover; object-position: left top; transition: transform 0.6s var(--bl-ease); }
 .item-card:hover .shot:not(.shot--logo) img { transform: scale(1.03); }
 .shot--logo { background: radial-gradient(rgba(148, 163, 184, 0.35) 1px, transparent 1.2px) 0 0 / 16px 16px, var(--bl-light); }
-.shot--logo img { position: absolute; inset: 12% 14%; width: 72%; height: 76%; object-fit: contain; object-position: center; }
+.shot--logo img { position: absolute; inset: 20% 18%; width: 64%; height: 60%; object-fit: contain; object-position: center; }
 .shot--empty { background: var(--bl-white); }
 .item-card--project .shot--empty { background: var(--bl-dark); }
 .shot--empty > .wireframe, .shot--empty > .item-card__placeholder { position: absolute; inset: 0; }
@@ -737,7 +737,7 @@ a.post-card__cat:hover { color: var(--bl-secondary); text-decoration: underline;
 	.post-card--row .post-card__media { aspect-ratio: 16 / 9; height: auto; min-height: 0; }
 	.item-card { grid-template-columns: minmax(0, 1fr); }
 	.item-card__media { border-right: 0; border-bottom: 1px solid var(--bl-border); }
-	.item-card__media .shot { flex: none; min-height: 0; }
+	.item-card__media .shot { flex: none; min-height: 0; aspect-ratio: 16 / 8; }
 	.page-hero__heading .logo-tile { width: 52px; height: 52px; }
 	.post-navigation .nav-links { grid-template-columns: 1fr; }
 	.hero__actions .btn, .page-hero__actions .btn { width: 100%; justify-content: center; }
