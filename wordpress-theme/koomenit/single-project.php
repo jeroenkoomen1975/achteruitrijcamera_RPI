@@ -52,7 +52,7 @@ while ( have_posts() ) :
 	<main id="primary" class="site-main section">
 		<div class="container project-layout">
 			<article id="post-<?php the_ID(); ?>" <?php post_class( 'entry' ); ?>>
-				<?php if ( has_post_thumbnail() && ! koomenit_is_logo_image( get_post_thumbnail_id() ) ) : ?>
+				<?php if ( has_post_thumbnail() && ! koomenit_is_logo_image( get_post_thumbnail_id(), get_the_ID() ) ) : ?>
 					<figure class="entry-thumbnail"><?php the_post_thumbnail( 'large' ); ?></figure>
 				<?php endif; ?>
 				<div class="entry-content">

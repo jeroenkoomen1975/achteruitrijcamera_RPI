@@ -336,18 +336,28 @@ function koomenit_wireframe() {
 }
 
 /**
- * Of een afbeelding eerder een logo is dan een schermafbeelding: staand, vierkant of
- * nauwelijks breder dan hoog. Zulke afbeeldingen worden passend getoond, niet bijgesneden.
+ * Of de uitgelichte afbeelding als logo (passend) of als schermafbeelding (vullend) getoond wordt.
+ * Per project of website in te stellen; op "Automatisch" gelden (bijna) vierkante en zeer brede
+ * afbeeldingen als logo. Liggende schermafbeeldingen en lange, staande pagina's vullen het vlak.
  *
  * @param int $attachment_id Bijlage-ID.
+ * @param int $post_id       Bericht-ID (voor de handmatige keuze).
  * @return bool
  */
-function koomenit_is_logo_image( $attachment_id ) {
+function koomenit_is_logo_image( $attachment_id, $post_id = 0 ) {
+	$mode = $post_id ? get_post_meta( $post_id, 'koomenit_image_mode', true ) : '';
+	if ( 'logo' === $mode ) {
+		return true;
+	}
+	if ( 'screenshot' === $mode ) {
+		return false;
+	}
 	$src = $attachment_id ? wp_get_attachment_image_src( $attachment_id, 'full' ) : false;
 	if ( ! $src || empty( $src[1] ) || empty( $src[2] ) ) {
 		return false;
 	}
-	return ( $src[1] / $src[2] ) < 1.25;
+	$ratio = $src[1] / $src[2];
+	return ( $ratio >= 0.8 && $ratio < 1.25 ) || $ratio > 2.2;
 }
 
 /**
@@ -362,7 +372,7 @@ function koomenit_item_logo_id( $post_id ) {
 		return $logo;
 	}
 	$thumb = (int) get_post_thumbnail_id( $post_id );
-	return ( $thumb && koomenit_is_logo_image( $thumb ) ) ? $thumb : 0;
+	return ( $thumb && koomenit_is_logo_image( $thumb, $post_id ) ) ? $thumb : 0;
 }
 
 /**
@@ -375,7 +385,7 @@ function koomenit_item_logo_id( $post_id ) {
  */
 function koomenit_item_media( $post_id, $size, $fallback ) {
 	$thumb = (int) get_post_thumbnail_id( $post_id );
-	if ( $thumb && ! koomenit_is_logo_image( $thumb ) ) {
+	if ( $thumb && ! koomenit_is_logo_image( $thumb, $post_id ) ) {
 		echo '<span class="shot">' . wp_get_attachment_image( $thumb, $size, false, array( 'loading' => 'lazy' ) ) . '</span>';
 		return;
 	}

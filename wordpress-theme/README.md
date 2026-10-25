@@ -53,8 +53,10 @@ De knop *Bezoek website* verschijnt alleen als er een webadres is en de status n
 
 Projecten en websites staan als liggende kaarten onder elkaar: afbeelding links, logo, tekst en
 de knoppen *Lees meer* en *Bezoek website* (of *Code op GitHub*) rechts. De hele kaart is klikbaar.
-Een staande of vierkante uitgelichte afbeelding wordt als logo behandeld en dus passend getoond in
-plaats van bijgesneden.
+Of de uitgelichte afbeelding passend (logo) of vullend (schermafbeelding) wordt getoond, kies je
+per project of website bij *Weergave uitgelichte afbeelding*. Op *Automatisch* gelden (bijna)
+vierkante en zeer brede afbeeldingen als logo; liggende schermafbeeldingen en lange pagina's
+vullen het vlak.
 
 ## Blog
 

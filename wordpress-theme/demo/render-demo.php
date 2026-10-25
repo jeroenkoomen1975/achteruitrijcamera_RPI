@@ -164,6 +164,7 @@ $GLOBALS['websites'] = array(
 		'content' => $voorbeeld, 'websitetype' => array( 'webshop' ),
 		'techniek' => array( 'WooCommerce', 'WordPress', 'Mollie' ),
 		'meta' => array( 'koomenit_url' => 'https://example.com', 'koomenit_client' => 'Voorbeeldbedrijf', 'koomenit_role' => 'Bouw en koppelingen', 'koomenit_status' => 'onderhoud', 'koomenit_year' => '2025' ),
+		'thumb' => 'img/voorbeeld-logo-breed.png',
 	),
 	array(
 		'id' => 304, 'title' => 'Voorbeeld: webinterface voor het ESP32-weerstation', 'link' => 'websites.html',

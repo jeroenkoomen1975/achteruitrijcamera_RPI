@@ -409,6 +409,13 @@ function koomenit_logo_field( $post ) {
 		<button type="button" class="button koomenit-logo-select"><?php echo $logo ? esc_html__( 'Logo wijzigen', 'koomenit' ) : esc_html__( 'Logo kiezen', 'koomenit' ); ?></button>
 		<button type="button" class="button-link koomenit-logo-remove" style="margin-left:.5em;color:#b32d2e<?php echo $logo ? '' : ';display:none'; ?>"><?php esc_html_e( 'Verwijderen', 'koomenit' ); ?></button>
 		<p class="description"><?php esc_html_e( 'Verschijnt klein vóór de titel. Zonder uitgelichte afbeelding staat het logo ook groot op de kaart.', 'koomenit' ); ?></p>
+		<?php $mode = get_post_meta( $post->ID, 'koomenit_image_mode', true ); ?>
+		<p style="margin:1em 0 .3em"><label for="koomenit_image_mode"><strong><?php esc_html_e( 'Weergave uitgelichte afbeelding', 'koomenit' ); ?></strong></label></p>
+		<select id="koomenit_image_mode" name="koomenit_image_mode" style="width:100%">
+			<option value="" <?php selected( $mode, '' ); ?>><?php esc_html_e( 'Automatisch', 'koomenit' ); ?></option>
+			<option value="logo" <?php selected( $mode, 'logo' ); ?>><?php esc_html_e( 'Logo: passend, niet bijsnijden', 'koomenit' ); ?></option>
+			<option value="screenshot" <?php selected( $mode, 'screenshot' ); ?>><?php esc_html_e( 'Schermafbeelding: vlak vullen', 'koomenit' ); ?></option>
+		</select>
 	</div>
 	<?php
 }
@@ -419,6 +426,14 @@ function koomenit_logo_field( $post ) {
  * @param int $post_id Bericht-ID.
  */
 function koomenit_save_logo_field( $post_id ) {
+	if ( isset( $_POST['koomenit_image_mode'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$mode = sanitize_key( wp_unslash( $_POST['koomenit_image_mode'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( in_array( $mode, array( 'logo', 'screenshot' ), true ) ) {
+			update_post_meta( $post_id, 'koomenit_image_mode', $mode );
+		} else {
+			delete_post_meta( $post_id, 'koomenit_image_mode' );
+		}
+	}
 	if ( ! isset( $_POST['koomenit_logo'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		return;
 	}
