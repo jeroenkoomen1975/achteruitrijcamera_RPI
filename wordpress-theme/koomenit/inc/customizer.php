@@ -68,7 +68,7 @@ function koomenit_defaults() {
 		'koomenit_projects_eyebrow' => __( 'Projecten', 'koomenit' ),
 		'koomenit_projects_title'  => __( 'Recente projecten', 'koomenit' ),
 		'koomenit_projects_intro'  => __( 'Een selectie van recente projecten. Filter op platform om snel te vinden wat je zoekt.', 'koomenit' ),
-		'koomenit_projects_count'  => 6,
+		'koomenit_projects_count'  => 3,
 		'koomenit_projects_filter' => true,
 
 		// Websites.
@@ -76,7 +76,7 @@ function koomenit_defaults() {
 		'koomenit_websites_eyebrow' => __( 'Websites', 'koomenit' ),
 		'koomenit_websites_title'   => __( 'Gebouwde websites', 'koomenit' ),
 		'koomenit_websites_intro'   => __( 'Bedrijfswebsites, webshops, webapplicaties en webinterfaces voor hardware. Filter op type.', 'koomenit' ),
-		'koomenit_websites_count'   => 6,
+		'koomenit_websites_count'   => 3,
 		'koomenit_websites_filter'  => true,
 
 		// Over.

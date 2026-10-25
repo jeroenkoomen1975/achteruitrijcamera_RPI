@@ -80,6 +80,20 @@ function koomenit_register_websites() {
 			)
 		);
 	}
+
+	register_post_meta(
+		'website',
+		'koomenit_logo',
+		array(
+			'type'              => 'integer',
+			'single'            => true,
+			'show_in_rest'      => true,
+			'sanitize_callback' => 'absint',
+			'auth_callback'     => function () {
+				return current_user_can( 'edit_posts' );
+			},
+		)
+	);
 }
 add_action( 'init', 'koomenit_register_websites' );
 
@@ -125,6 +139,7 @@ add_action( 'add_meta_boxes', 'koomenit_website_metabox' );
 function koomenit_website_metabox_html( $post ) {
 	wp_nonce_field( 'koomenit_website_save', 'koomenit_website_nonce' );
 	$status = get_post_meta( $post->ID, 'koomenit_status', true );
+	koomenit_logo_field( $post );
 	$fields = array(
 		'koomenit_url'    => array( __( 'Webadres', 'koomenit' ), 'url', 'https://' ),
 		'koomenit_client' => array( __( 'Opdrachtgever', 'koomenit' ), 'text', __( 'bijv. eigen project', 'koomenit' ) ),
@@ -147,7 +162,7 @@ function koomenit_website_metabox_html( $post ) {
 			<input type="<?php echo esc_attr( $field[1] ); ?>" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( get_post_meta( $post->ID, $key, true ) ); ?>" placeholder="<?php echo esc_attr( $field[2] ); ?>" style="width:100%">
 		</p>
 	<?php endforeach; ?>
-	<p class="description"><?php esc_html_e( 'Kies rechts ook het websitetype en de technieken. Stel een screenshot in als uitgelichte afbeelding.', 'koomenit' ); ?></p>
+	<p class="description"><?php esc_html_e( 'Kies rechts ook het websitetype en de technieken. Stel een schermafbeelding in als uitgelichte afbeelding en het logo hierboven.', 'koomenit' ); ?></p>
 	<?php
 }
 
@@ -176,6 +191,8 @@ function koomenit_website_save( $post_id ) {
 			update_post_meta( $post_id, $key, call_user_func( $sanitize, wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- opgeschoond via $sanitize.
 		}
 	}
+
+	koomenit_save_logo_field( $post_id );
 
 	if ( isset( $_POST['koomenit_status'] ) ) {
 		$status = sanitize_key( wp_unslash( $_POST['koomenit_status'] ) );

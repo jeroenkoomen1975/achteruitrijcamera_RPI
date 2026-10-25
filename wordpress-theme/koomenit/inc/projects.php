@@ -102,6 +102,20 @@ function koomenit_register_projects() {
 			)
 		);
 	}
+
+	register_post_meta(
+		'project',
+		'koomenit_logo',
+		array(
+			'type'              => 'integer',
+			'single'            => true,
+			'show_in_rest'      => true,
+			'sanitize_callback' => 'absint',
+			'auth_callback'     => function () {
+				return current_user_can( 'edit_posts' );
+			},
+		)
+	);
 }
 add_action( 'init', 'koomenit_register_projects' );
 
@@ -194,6 +208,7 @@ add_action( 'add_meta_boxes', 'koomenit_project_metabox' );
 function koomenit_project_metabox_html( $post ) {
 	wp_nonce_field( 'koomenit_project_save', 'koomenit_project_nonce' );
 	$status = get_post_meta( $post->ID, 'koomenit_status', true );
+	koomenit_logo_field( $post );
 	?>
 	<p>
 		<label for="koomenit_status"><strong><?php esc_html_e( 'Status', 'koomenit' ); ?></strong></label><br>
@@ -247,6 +262,8 @@ function koomenit_project_save( $post_id ) {
 			update_post_meta( $post_id, $key, call_user_func( $sanitize, wp_unslash( $_POST[ $key ] ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- opgeschoond via $sanitize.
 		}
 	}
+
+	koomenit_save_logo_field( $post_id );
 
 	if ( isset( $_POST['koomenit_status'] ) ) {
 		$status = sanitize_key( wp_unslash( $_POST['koomenit_status'] ) );
@@ -376,3 +393,67 @@ function koomenit_term_filters( $taxonomy, $all_url, $active = '' ) {
 function koomenit_project_filters( $active = '' ) {
 	koomenit_term_filters( 'platform', get_post_type_archive_link( 'project' ), $active );
 }
+
+/**
+ * Logoveld met mediakiezer, voor projecten en websites.
+ *
+ * @param WP_Post $post Bericht.
+ */
+function koomenit_logo_field( $post ) {
+	$logo = (int) get_post_meta( $post->ID, 'koomenit_logo', true );
+	?>
+	<div class="koomenit-logo" style="margin:0 0 1em">
+		<p style="margin:0 0 .4em"><strong><?php esc_html_e( 'Logo', 'koomenit' ); ?></strong></p>
+		<div class="koomenit-logo__preview" style="max-width:120px;margin-bottom:.5em"><?php echo $logo ? wp_get_attachment_image( $logo, 'thumbnail', false, array( 'style' => 'max-width:100%;height:auto' ) ) : ''; ?></div>
+		<input type="hidden" name="koomenit_logo" value="<?php echo esc_attr( $logo ? $logo : '' ); ?>">
+		<button type="button" class="button koomenit-logo-select"><?php echo $logo ? esc_html__( 'Logo wijzigen', 'koomenit' ) : esc_html__( 'Logo kiezen', 'koomenit' ); ?></button>
+		<button type="button" class="button-link koomenit-logo-remove" style="margin-left:.5em;color:#b32d2e<?php echo $logo ? '' : ';display:none'; ?>"><?php esc_html_e( 'Verwijderen', 'koomenit' ); ?></button>
+		<p class="description"><?php esc_html_e( 'Verschijnt klein vóór de titel. Zonder uitgelichte afbeelding staat het logo ook groot op de kaart.', 'koomenit' ); ?></p>
+	</div>
+	<?php
+}
+
+/**
+ * Logoveld opslaan (de nonce is al gecontroleerd door de aanroeper).
+ *
+ * @param int $post_id Bericht-ID.
+ */
+function koomenit_save_logo_field( $post_id ) {
+	if ( ! isset( $_POST['koomenit_logo'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return;
+	}
+	$logo = absint( wp_unslash( $_POST['koomenit_logo'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( $logo && wp_attachment_is_image( $logo ) ) {
+		update_post_meta( $post_id, 'koomenit_logo', $logo );
+	} else {
+		delete_post_meta( $post_id, 'koomenit_logo' );
+	}
+}
+
+/**
+ * Mediakiezer laden op het bewerkscherm van projecten en websites.
+ *
+ * @param string $hook Huidige beheerpagina.
+ */
+function koomenit_admin_logo_script( $hook ) {
+	if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) ) {
+		return;
+	}
+	$screen = get_current_screen();
+	if ( ! $screen || ! in_array( $screen->post_type, array( 'project', 'website' ), true ) ) {
+		return;
+	}
+	wp_enqueue_media();
+	wp_enqueue_script( 'koomenit-admin-logo', get_template_directory_uri() . '/assets/js/admin-logo.js', array( 'jquery' ), KOOMENIT_VERSION, true );
+	wp_localize_script(
+		'koomenit-admin-logo',
+		'koomenitLogo',
+		array(
+			'title'  => __( 'Logo kiezen', 'koomenit' ),
+			'button' => __( 'Gebruik als logo', 'koomenit' ),
+			'change' => __( 'Logo wijzigen', 'koomenit' ),
+			'choose' => __( 'Logo kiezen', 'koomenit' ),
+		)
+	);
+}
+add_action( 'admin_enqueue_scripts', 'koomenit_admin_logo_script' );

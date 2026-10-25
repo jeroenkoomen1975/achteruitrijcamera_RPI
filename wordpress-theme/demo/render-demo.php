@@ -148,7 +148,7 @@ $GLOBALS['websites'] = array(
 		'content' => $koomenit_content, 'websitetype' => array( 'portfolio' ),
 		'techniek' => array( 'WordPress', 'PHP', 'JavaScript', 'CSS' ),
 		'meta' => array( 'koomenit_url' => 'https://koomen.it', 'koomenit_client' => 'Eigen website', 'koomenit_role' => 'Ontwerp en ontwikkeling', 'koomenit_status' => 'ontwikkeling', 'koomenit_year' => '2026' ),
-		'thumb' => 'img/koomen-it.jpg', 'image' => 'img/koomen-it-groot.jpg',
+		'thumb' => 'img/koomen-it.jpg', 'image' => 'img/koomen-it-groot.jpg', 'logo' => array( '../koomenit/assets/img/logo-mark.svg', 258, 328 ),
 	),
 	array(
 		'id' => 302, 'title' => 'Voorbeeld: website voor een fysiotherapiepraktijk', 'link' => 'websites.html',
@@ -156,6 +156,7 @@ $GLOBALS['websites'] = array(
 		'content' => $voorbeeld, 'websitetype' => array( 'bedrijfswebsite' ),
 		'techniek' => array( 'WordPress', 'PHP', 'CSS' ),
 		'meta' => array( 'koomenit_url' => 'https://example.com', 'koomenit_client' => 'Voorbeeldpraktijk', 'koomenit_role' => 'Ontwerp, bouw en beheer', 'koomenit_status' => 'live', 'koomenit_year' => '2025' ),
+		'logo' => array( 'img/voorbeeld-logo.svg', 200, 200 ),
 	),
 	array(
 		'id' => 303, 'title' => 'Voorbeeld: webshop voor 3D-geprinte onderdelen', 'link' => 'websites.html',
@@ -378,7 +379,31 @@ function get_the_terms( $id, $tax ) {
 	}
 	return array_map( function ( $slug ) use ( $tax ) { return demo_term( $tax, $slug ); }, $p[ $tax ] );
 }
+function get_post_thumbnail_id( $id = null ) {
+	$p = $id ? demo_find( $id ) : $GLOBALS['cur'];
+	return ! empty( $p['thumb'] ) ? $p['id'] * 10 + 1 : 0;
+}
+function demo_attachment( $att ) {
+	$p = demo_find( intdiv( $att, 10 ) );
+	if ( ! $p ) {
+		return null;
+	}
+	if ( 1 === $att % 10 ) {
+		$size = getimagesize( __DIR__ . '/' . $p['thumb'] );
+		return array( $p['thumb'], $size[0], $size[1], $p['image'] ?? $p['thumb'] );
+	}
+	return isset( $p['logo'] ) ? array( $p['logo'][0], $p['logo'][1], $p['logo'][2], $p['logo'][0] ) : null;
+}
+function wp_get_attachment_image_src( $att, $size = 'full' ) { $a = demo_attachment( $att ); return $a ? array( $a[0], $a[1], $a[2] ) : false; }
+function wp_get_attachment_image( $att, $size = 'full', $icon = false, $attr = array() ) {
+	$a = demo_attachment( $att );
+	return $a ? '<img src="' . esc_attr( 'large' === $size ? $a[3] : $a[0] ) . '" alt="' . esc_attr( $attr['alt'] ?? '' ) . '" loading="lazy">' : '';
+}
 function get_post_meta( $id, $key, $single = false ) {
+	if ( 'koomenit_logo' === $key ) {
+		$p = demo_find( $id );
+		return isset( $p['logo'] ) ? $id * 10 + 2 : '';
+	}
 	$p = demo_find( $id );
 	return isset( $p['meta'][ $key ] ) ? $p['meta'][ $key ] : '';
 }

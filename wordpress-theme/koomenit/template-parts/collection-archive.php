@@ -37,7 +37,7 @@ if ( $koomenit_term ) {
 				koomenit_term_filters( $koomenit_filter_by, get_post_type_archive_link( $koomenit_is_site ? 'website' : 'project' ), $koomenit_active );
 			}
 			?>
-			<div class="project-grid" data-filter-grid>
+			<div class="item-list" data-filter-grid>
 				<?php
 				while ( have_posts() ) {
 					the_post();

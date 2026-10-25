@@ -334,3 +334,72 @@ function koomenit_wireframe() {
 	</span>
 	<?php
 }
+
+/**
+ * Of een afbeelding eerder een logo is dan een schermafbeelding: staand, vierkant of
+ * nauwelijks breder dan hoog. Zulke afbeeldingen worden passend getoond, niet bijgesneden.
+ *
+ * @param int $attachment_id Bijlage-ID.
+ * @return bool
+ */
+function koomenit_is_logo_image( $attachment_id ) {
+	$src = $attachment_id ? wp_get_attachment_image_src( $attachment_id, 'full' ) : false;
+	if ( ! $src || empty( $src[1] ) || empty( $src[2] ) ) {
+		return false;
+	}
+	return ( $src[1] / $src[2] ) < 1.25;
+}
+
+/**
+ * Logo van een project of website (eigen logoveld, anders een logo-achtige uitgelichte afbeelding).
+ *
+ * @param int $post_id Bericht-ID.
+ * @return int Bijlage-ID of 0.
+ */
+function koomenit_item_logo_id( $post_id ) {
+	$logo = (int) get_post_meta( $post_id, 'koomenit_logo', true );
+	if ( $logo ) {
+		return $logo;
+	}
+	$thumb = (int) get_post_thumbnail_id( $post_id );
+	return ( $thumb && koomenit_is_logo_image( $thumb ) ) ? $thumb : 0;
+}
+
+/**
+ * Groot afbeeldingsvlak van een kaart of detailpagina: een schermafbeelding vult het vlak,
+ * een logo staat er passend in, en zonder afbeelding komt de meegegeven reserve.
+ *
+ * @param int    $post_id  Bericht-ID.
+ * @param string $size     Afbeeldingsgrootte voor een schermafbeelding.
+ * @param string $fallback HTML als er geen afbeelding is.
+ */
+function koomenit_item_media( $post_id, $size, $fallback ) {
+	$thumb = (int) get_post_thumbnail_id( $post_id );
+	if ( $thumb && ! koomenit_is_logo_image( $thumb ) ) {
+		echo '<span class="shot">' . wp_get_attachment_image( $thumb, $size, false, array( 'loading' => 'lazy' ) ) . '</span>';
+		return;
+	}
+	$logo = koomenit_item_logo_id( $post_id );
+	if ( $logo ) {
+		echo '<span class="shot shot--logo">' . wp_get_attachment_image( $logo, 'medium_large', false, array( 'loading' => 'lazy' ) ) . '</span>';
+		return;
+	}
+	echo '<span class="shot shot--empty">' . $fallback . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- door het thema opgebouwde HTML.
+}
+
+/**
+ * Klein logovlak vóór de titel; zonder logo een icoon.
+ *
+ * @param int    $post_id Bericht-ID.
+ * @param string $icon    Icoon als er geen logo is.
+ */
+function koomenit_logo_tile( $post_id, $icon ) {
+	$logo = koomenit_item_logo_id( $post_id );
+	echo '<span class="logo-tile' . ( $logo ? '' : ' logo-tile--icon' ) . '">';
+	if ( $logo ) {
+		echo wp_get_attachment_image( $logo, 'thumbnail', false, array( 'alt' => '' ) );
+	} else {
+		echo koomenit_icon( $icon ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+	echo '</span>';
+}

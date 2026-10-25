@@ -17,7 +17,7 @@ Theme Name: Koomen.IT
 Theme URI: https://koomen.it
 Author: Jeroen Koomen
 Description: Portfolio-thema in de huisstijl van koomen.it: helder blauw, donker leisteen en het netwerkmotief uit het logo. Met een eigen berichttype voor projecten, filters per platform (ESP32, Arduino, Raspberry Pi), projectgegevens zoals GitHub-link, status en hardware, en een volledig aanpasbare homepage via de Customizer.
-Version: 2.3.0
+Version: 2.4.0
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
@@ -402,6 +402,55 @@ a.card:hover .card__link .bl-icon { transform: translateX(3px); }
 .project-info__link { display: inline-flex; align-items: center; gap: 0.35em; font-family: var(--bl-font-mono); font-size: 0.9rem; }
 .project-info__link .bl-icon { width: 0.9em; height: 0.9em; }
 
+/* Liggende kaart voor projecten en websites */
+.item-list { display: flex; flex-direction: column; gap: 1.5rem; }
+.item-card {
+	position: relative; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); overflow: hidden;
+	border: 1px solid var(--bl-border); border-radius: var(--bl-radius); background: var(--bl-white);
+	transition: box-shadow 0.35s, border-color 0.35s, transform 0.35s var(--bl-ease);
+}
+.item-card:hover { transform: translateY(-3px); box-shadow: var(--bl-shadow-lg); border-color: color-mix(in srgb, var(--bl-primary) 35%, var(--bl-border)); }
+.item-card__media { position: relative; display: flex; flex-direction: column; min-width: 0; border-right: 1px solid var(--bl-border); background: var(--bl-light); }
+.item-card__media .shot { flex: 1; min-height: 240px; }
+.item-card--project .item-card__media { background: var(--bl-dark); }
+.item-card__body { display: flex; flex-direction: column; align-items: flex-start; gap: 0.65rem; min-width: 0; padding: clamp(1.3rem, 3vw, 1.9rem); }
+.item-card__meta { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; width: 100%; min-height: 1.2em; }
+.item-card__type { color: var(--bl-muted); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.item-card__heading { display: flex; align-items: center; gap: 0.85rem; min-width: 0; }
+.item-card__title { margin: 0; font-size: clamp(1.25rem, 2.2vw, 1.5rem); line-height: 1.2; min-width: 0; }
+.item-card__link { color: var(--bl-ink); }
+.item-card__link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.item-card:hover .item-card__link { color: var(--bl-primary); }
+.item-card__sub { display: block; margin-top: 0.2rem; color: var(--bl-muted); font-family: var(--bl-font-mono); font-size: 0.75rem; font-weight: 400; letter-spacing: 0; overflow-wrap: anywhere; }
+.item-card__excerpt { margin: 0; color: var(--bl-muted); }
+.item-card__facts { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; margin: 0; color: var(--bl-muted); font-size: 0.88rem; }
+.item-card__facts strong { color: var(--bl-ink); font-weight: 600; }
+.item-card__actions { position: relative; z-index: 2; display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: auto; padding-top: 0.5rem; }
+.item-card .project-card__platforms { z-index: 2; }
+.item-card__placeholder { display: grid; place-items: center; height: 100%; color: var(--bl-secondary); background: radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--bl-primary) 35%, transparent), transparent 60%), var(--bl-dark); }
+.item-card__placeholder .bl-icon { width: 56px; height: 56px; stroke-width: 1.5; }
+
+/* Afbeeldingsvlak: schermafbeelding vult, logo past */
+.shot { position: relative; display: block; aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden; background: var(--bl-white); }
+.shot img { width: 100%; height: 100%; object-fit: cover; object-position: left top; transition: transform 0.6s var(--bl-ease); }
+.item-card:hover .shot:not(.shot--logo) img { transform: scale(1.03); }
+.shot--logo { background: radial-gradient(rgba(148, 163, 184, 0.35) 1px, transparent 1.2px) 0 0 / 16px 16px, var(--bl-light); }
+.shot--logo img { position: absolute; inset: 12% 14%; width: 72%; height: 76%; object-fit: contain; object-position: center; }
+.shot--empty { background: var(--bl-white); }
+.item-card--project .shot--empty { background: var(--bl-dark); }
+.shot--empty > .wireframe, .shot--empty > .item-card__placeholder { position: absolute; inset: 0; }
+
+/* Logo vóór de titel */
+.logo-tile {
+	flex: 0 0 auto; display: grid; place-items: center; width: 52px; height: 52px; padding: 7px;
+	border: 1px solid var(--bl-border); border-radius: 11px; background: var(--bl-white); box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+}
+.logo-tile img { width: 100%; height: 100%; object-fit: contain; }
+.logo-tile--icon { color: var(--bl-primary); background: color-mix(in srgb, var(--bl-primary) 8%, var(--bl-white)); }
+.logo-tile--icon .bl-icon { width: 24px; height: 24px; }
+.page-hero__heading { display: flex; align-items: center; gap: 1rem; }
+.page-hero__heading .logo-tile { width: 64px; height: 64px; padding: 9px; border-color: rgba(148, 163, 184, 0.3); }
+
 /* Schets van een webpagina zonder screenshot */
 .wireframe { display: flex; flex-direction: column; gap: 7%; height: 100%; padding: 6% 7%; background: var(--bl-white); }
 .wireframe b, .wireframe i, .wireframe em { display: block; border-radius: 4px; }
@@ -700,6 +749,10 @@ a.post-card__cat:hover { color: var(--bl-secondary); text-decoration: underline;
 	.post-featured, .post-card--row { grid-template-columns: minmax(0, 1fr); }
 	.post-featured__media { min-height: 200px; }
 	.post-card--row .post-card__media { aspect-ratio: 16 / 9; height: auto; min-height: 0; }
+	.item-card { grid-template-columns: minmax(0, 1fr); }
+	.item-card__media { border-right: 0; border-bottom: 1px solid var(--bl-border); }
+	.item-card__media .shot { flex: none; min-height: 0; }
+	.page-hero__heading .logo-tile { width: 52px; height: 52px; }
 	.post-navigation .nav-links { grid-template-columns: 1fr; }
 	.hero__actions .btn, .page-hero__actions .btn { width: 100%; justify-content: center; }
 	.search-form { flex-direction: column; }
@@ -761,7 +814,9 @@ a.post-card__cat:hover { color: var(--bl-secondary); text-decoration: underline;
 									<span aria-hidden="true">/</span>
 					<a href="websites.html">Portfolio</a>
 							</nav>
-			<h1 class="page-hero__title">koomen.it</h1>
+			<div class="page-hero__heading">
+									<span class="logo-tile"><img src="../koomenit/assets/img/logo-mark.svg" alt="" loading="lazy"></span>								<h1 class="page-hero__title">koomen.it</h1>
+			</div>
 							<p class="page-hero__subtitle">Portfolio voor embedded projecten en websites, gebouwd als eigen WordPress-thema met filters, projectgegevens en een geanimeerd codevenster.</p>
 						<div class="page-hero__actions">
 									<a class="btn btn--primary" href="https://koomen.it" target="_blank" rel="noopener">Bezoek website <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
@@ -778,7 +833,7 @@ a.post-card__cat:hover { color: var(--bl-secondary); text-decoration: underline;
 					<span class="browser-bar__url"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>koomen.it</span>
 			</span>
 						<div class="site-frame__shot">
-													<img src="img/koomen-it-groot.jpg" alt="" loading="lazy">											</div>
+						<span class="shot"><img src="img/koomen-it-groot.jpg" alt="" loading="lazy"></span>					</div>
 				</div>
 				<div class="entry-content">
 					<p>De website waar je nu naar kijkt. Een eigen WordPress-thema in de huisstijl van koomen.it, gemaakt om embedded projecten en websites overzichtelijk te laten zien.</p>
@@ -824,94 +879,116 @@ a.post-card__cat:hover { color: var(--bl-secondary); text-decoration: underline;
 
 					<div class="container related">
 				<h2 class="related__title">Meer websites</h2>
-				<div class="project-grid">
-					<article id="post-302" class="project-card site-card reveal" data-terms="bedrijfswebsite">
-	<a class="site-card__frame" href="websites.html" tabindex="-1" aria-hidden="true">
+				<div class="item-list">
+					<article id="post-302" class="item-card reveal" data-terms="bedrijfswebsite">
+	<div class="item-card__media" aria-hidden="true">
 			<span class="browser-bar">
 		<span class="browser-bar__dots" aria-hidden="true"><i></i><i></i><i></i></span>
 					<span class="browser-bar__url"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>example.com</span>
 			</span>
-			<span class="site-card__shot">
-								<span class="wireframe" aria-hidden="true">
-		<span class="wireframe__nav"><b></b><i></i><i></i><i></i></span>
-		<span class="wireframe__hero"><b></b><i></i><i></i><em></em></span>
-		<span class="wireframe__cols"><i></i><i></i><i></i></span>
-	</span>
-						</span>
-	</a>
-	<div class="project-card__body">
-		<div class="project-card__meta">
-							<span class="project-card__type">Bedrijfswebsite</span>
-										<span class="status status--live">Live</span>
+			<span class="shot shot--logo"><img src="img/voorbeeld-logo.svg" alt="" loading="lazy"></span>	</div>
+	<div class="item-card__body">
+		<div class="item-card__meta">
+			<span class="item-card__type">Bedrijfswebsite</span>
+							<span class="status status--live">Live</span>
 					</div>
-		<h3 class="project-card__title"><a href="websites.html">Voorbeeld: website voor een fysiotherapiepraktijk</a></h3>
-		<p class="project-card__excerpt">Overzichtelijke website met behandelingen, team en online afspraken maken. Beheerd door de praktijk zelf.</p>
-					<ul class="chips">
+		<div class="item-card__heading">
+			<span class="logo-tile"><img src="img/voorbeeld-logo.svg" alt="" loading="lazy"></span>			<h3 class="item-card__title">
+				<a class="item-card__link" href="websites.html">Voorbeeld: website voor een fysiotherapiepraktijk</a>
+									<span class="item-card__sub">example.com</span>
+							</h3>
+		</div>
+		<p class="item-card__excerpt">Overzichtelijke website met behandelingen, team en online afspraken maken. Beheerd door de praktijk zelf.</p>
+					<p class="item-card__facts">
+									<span>Rol: <strong>Ontwerp, bouw en beheer</strong></span>
+													<span>Jaar: <strong>2025</strong></span>
+							</p>
+							<ul class="chips">
 									<li class="chip">WordPress</li>
 									<li class="chip">PHP</li>
 									<li class="chip">CSS</li>
 							</ul>
-							<a class="site-card__visit" href="https://example.com" target="_blank" rel="noopener">
-				Bezoek example.com				<svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>			</a>
-			</div>
+				<div class="item-card__actions">
+			<a class="btn btn--primary btn--sm" href="websites.html" tabindex="-1">Lees meer <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg></a>
+							<a class="btn btn--outline btn--sm" href="https://example.com" target="_blank" rel="noopener">Bezoek website <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+					</div>
+	</div>
 </article>
-<article id="post-303" class="project-card site-card reveal" data-terms="webshop">
-	<a class="site-card__frame" href="websites.html" tabindex="-1" aria-hidden="true">
+<article id="post-303" class="item-card reveal" data-terms="webshop">
+	<div class="item-card__media" aria-hidden="true">
 			<span class="browser-bar">
 		<span class="browser-bar__dots" aria-hidden="true"><i></i><i></i><i></i></span>
 					<span class="browser-bar__url"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>example.com</span>
 			</span>
-			<span class="site-card__shot">
-								<span class="wireframe" aria-hidden="true">
+			<span class="shot shot--empty">	<span class="wireframe" aria-hidden="true">
 		<span class="wireframe__nav"><b></b><i></i><i></i><i></i></span>
 		<span class="wireframe__hero"><b></b><i></i><i></i><em></em></span>
 		<span class="wireframe__cols"><i></i><i></i><i></i></span>
 	</span>
-						</span>
-	</a>
-	<div class="project-card__body">
-		<div class="project-card__meta">
-							<span class="project-card__type">Webshop</span>
-										<span class="status status--onderhoud">In beheer</span>
+	</span>	</div>
+	<div class="item-card__body">
+		<div class="item-card__meta">
+			<span class="item-card__type">Webshop</span>
+							<span class="status status--onderhoud">In beheer</span>
 					</div>
-		<h3 class="project-card__title"><a href="websites.html">Voorbeeld: webshop voor 3D-geprinte onderdelen</a></h3>
-		<p class="project-card__excerpt">Webshop met productvarianten, voorraadbeheer en betalen via iDEAL.</p>
-					<ul class="chips">
+		<div class="item-card__heading">
+			<span class="logo-tile logo-tile--icon"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>			<h3 class="item-card__title">
+				<a class="item-card__link" href="websites.html">Voorbeeld: webshop voor 3D-geprinte onderdelen</a>
+									<span class="item-card__sub">example.com</span>
+							</h3>
+		</div>
+		<p class="item-card__excerpt">Webshop met productvarianten, voorraadbeheer en betalen via iDEAL.</p>
+					<p class="item-card__facts">
+									<span>Rol: <strong>Bouw en koppelingen</strong></span>
+													<span>Jaar: <strong>2025</strong></span>
+							</p>
+							<ul class="chips">
 									<li class="chip">WooCommerce</li>
 									<li class="chip">WordPress</li>
 									<li class="chip">Mollie</li>
 							</ul>
-							<a class="site-card__visit" href="https://example.com" target="_blank" rel="noopener">
-				Bezoek example.com				<svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>			</a>
-			</div>
+				<div class="item-card__actions">
+			<a class="btn btn--primary btn--sm" href="websites.html" tabindex="-1">Lees meer <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg></a>
+							<a class="btn btn--outline btn--sm" href="https://example.com" target="_blank" rel="noopener">Bezoek website <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+					</div>
+	</div>
 </article>
-<article id="post-304" class="project-card site-card reveal" data-terms="webinterface">
-	<a class="site-card__frame" href="websites.html" tabindex="-1" aria-hidden="true">
+<article id="post-304" class="item-card reveal" data-terms="webinterface">
+	<div class="item-card__media" aria-hidden="true">
 			<span class="browser-bar">
 		<span class="browser-bar__dots" aria-hidden="true"><i></i><i></i><i></i></span>
 					<span class="browser-bar__url browser-bar__url--none">geen openbaar adres</span>
 			</span>
-			<span class="site-card__shot">
-								<span class="wireframe" aria-hidden="true">
+			<span class="shot shot--empty">	<span class="wireframe" aria-hidden="true">
 		<span class="wireframe__nav"><b></b><i></i><i></i><i></i></span>
 		<span class="wireframe__hero"><b></b><i></i><i></i><em></em></span>
 		<span class="wireframe__cols"><i></i><i></i><i></i></span>
 	</span>
-						</span>
-	</a>
-	<div class="project-card__body">
-		<div class="project-card__meta">
-							<span class="project-card__type">Webinterface voor hardware</span>
-										<span class="status status--live">Live</span>
+	</span>	</div>
+	<div class="item-card__body">
+		<div class="item-card__meta">
+			<span class="item-card__type">Webinterface voor hardware</span>
+							<span class="status status--live">Live</span>
 					</div>
-		<h3 class="project-card__title"><a href="websites.html">Voorbeeld: webinterface voor het ESP32-weerstation</a></h3>
-		<p class="project-card__excerpt">Een webpagina die rechtstreeks door de ESP32 wordt geserveerd, met actuele metingen en een grafiek van de afgelopen 24 uur.</p>
-					<ul class="chips">
+		<div class="item-card__heading">
+			<span class="logo-tile logo-tile--icon"><svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>			<h3 class="item-card__title">
+				<a class="item-card__link" href="websites.html">Voorbeeld: webinterface voor het ESP32-weerstation</a>
+							</h3>
+		</div>
+		<p class="item-card__excerpt">Een webpagina die rechtstreeks door de ESP32 wordt geserveerd, met actuele metingen en een grafiek van de afgelopen 24 uur.</p>
+					<p class="item-card__facts">
+									<span>Rol: <strong>Ontwerp en ontwikkeling</strong></span>
+													<span>Jaar: <strong>2025</strong></span>
+							</p>
+							<ul class="chips">
 									<li class="chip">HTML/CSS/JS</li>
 									<li class="chip">ESPAsyncWebServer</li>
 									<li class="chip">Chart.js</li>
 							</ul>
+				<div class="item-card__actions">
+			<a class="btn btn--primary btn--sm" href="websites.html" tabindex="-1">Lees meer <svg class="bl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m13 5 7 7-7 7"/></svg></a>
 					</div>
+	</div>
 </article>
 				</div>
 			</div>

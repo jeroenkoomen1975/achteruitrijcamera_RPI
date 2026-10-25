@@ -31,7 +31,12 @@ while ( have_posts() ) :
 					<a href="<?php echo esc_url( get_term_link( $koomenit_type ) ); ?>"><?php echo esc_html( $koomenit_type->name ); ?></a>
 				<?php endforeach; ?>
 			</nav>
-			<h1 class="page-hero__title"><?php the_title(); ?></h1>
+			<div class="page-hero__heading">
+				<?php if ( koomenit_item_logo_id( get_the_ID() ) ) : ?>
+					<?php koomenit_logo_tile( get_the_ID(), 'globe' ); ?>
+				<?php endif; ?>
+				<h1 class="page-hero__title"><?php the_title(); ?></h1>
+			</div>
 			<?php if ( has_excerpt() ) : ?>
 				<p class="page-hero__subtitle"><?php echo esc_html( get_the_excerpt() ); ?></p>
 			<?php endif; ?>
@@ -52,11 +57,11 @@ while ( have_posts() ) :
 				<div class="site-frame">
 					<?php koomenit_browser_bar( $koomenit_domain ); ?>
 					<div class="site-frame__shot">
-						<?php if ( has_post_thumbnail() ) : ?>
-							<?php the_post_thumbnail( 'large' ); ?>
-						<?php else : ?>
-							<?php koomenit_wireframe(); ?>
-						<?php endif; ?>
+						<?php
+						ob_start();
+						koomenit_wireframe();
+						koomenit_item_media( get_the_ID(), 'large', ob_get_clean() );
+						?>
 					</div>
 				</div>
 				<div class="entry-content">
@@ -128,7 +133,7 @@ while ( have_posts() ) :
 			?>
 			<div class="container related">
 				<h2 class="related__title"><?php esc_html_e( 'Meer websites', 'koomenit' ); ?></h2>
-				<div class="project-grid">
+				<div class="item-list">
 					<?php
 					while ( $koomenit_related->have_posts() ) {
 						$koomenit_related->the_post();

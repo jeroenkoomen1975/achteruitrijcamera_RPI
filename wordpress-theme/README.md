@@ -29,7 +29,8 @@ Ga in het dashboard naar **Projecten → Nieuw project**.
 |----------------------------|---------------------|
 | Titel en inhoud            | Projectpagina (gebruik gerust tabellen, codeblokken en afbeeldingen) |
 | Samenvatting               | Projectkaart en onder de titel op de projectpagina |
-| Projectafbeelding          | Projectkaart en bovenaan de projectpagina; zonder afbeelding toont de kaart een platformicoon |
+| Projectafbeelding          | Groot op de kaart en bovenaan de projectpagina; zonder afbeelding toont de kaart het logo of een platformicoon |
+| Logo (projectgegevens)     | Klein vóór de titel op de kaart en de projectpagina |
 | Platform                   | Badges, filterknoppen en de platformkaarten op de homepage |
 | Projecttype                | Label op de kaart en bij de projectgegevens |
 | Technieken                 | Labels op de kaart (C++, Python, MQTT, BME280, …) |
@@ -42,12 +43,18 @@ Ga in het dashboard naar **Websites → Nieuwe website**. Dit werkt hetzelfde al
 | Veld                       | Waar het verschijnt |
 |----------------------------|---------------------|
 | Titel, inhoud, samenvatting | Websitepagina en websitekaart |
-| Screenshot (uitgelichte afbeelding) | In een browservenster met adresbalk; zonder screenshot toont het thema een schets van een webpagina |
+| Schermafbeelding (uitgelichte afbeelding) | Groot in een browservenster met adresbalk; zonder schermafbeelding toont de kaart het logo groot, of een schets van een webpagina |
+| Logo (websitegegevens)     | Klein vóór de titel op de kaart en de websitepagina |
 | Websitetype                | Filterknoppen en label op de kaart |
 | Technieken                 | Labels (WordPress, WooCommerce, PHP, …); dezelfde lijst als bij projecten |
 | Websitegegevens (zijbalk)  | Webadres, opdrachtgever, rol, status (live, in ontwikkeling, in beheer, archief), jaar en optioneel GitHub |
 
 De knop *Bezoek website* verschijnt alleen als er een webadres is en de status niet *Archief* is.
+
+Projecten en websites staan als liggende kaarten onder elkaar: afbeelding links, logo, tekst en
+de knoppen *Lees meer* en *Bezoek website* (of *Code op GitHub*) rechts. De hele kaart is klikbaar.
+Een staande of vierkante uitgelichte afbeelding wordt als logo behandeld en dus passend getoond in
+plaats van bijgesneden.
 
 ## Blog
 

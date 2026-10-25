@@ -35,7 +35,7 @@ $koomenit_sites = new WP_Query(
 				koomenit_website_filters();
 			}
 			?>
-			<div class="project-grid" data-filter-grid>
+			<div class="item-list" data-filter-grid>
 				<?php
 				while ( $koomenit_sites->have_posts() ) {
 					$koomenit_sites->the_post();
